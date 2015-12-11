@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="H02.xsl" ?>
+<!DOCTYPE FERNBEDIENUNG [ <!ELEMENT FERNBEDIENUNG ANY> ] >
+<FERNBEDIENUNG>
+  <VERBINDUNG_HERSTELLEN>
+    <WEBSOCKET_KODI/>
+    <WEBSOCKET_RASPI/>
+    </VERBINDUNG_HERSTELLEN>
+  <hr/>
+  <TASTENFELDER>
+    <NEUE_ZEILE class="flexibel">
+      <STREAM text="ZDF" href="http://zdf_hds_de-f.akamaihd.net/i/de14_v1@147090/master.m3u8%26mode=12"/>
+      <STREAM text="ARD" href="http://daserste_live-lh.akamaihd.net/i/daserste_de@91204/master.m3u8%26mode=12"/>
+      <PAUSE_WEITER/>
+      </NEUE_ZEILE>
+    <hr/>
+    <NEUE_ZEILE text="zum Ausschalten:" class="flexibel">
+      <PLAYER text="Stop" method="Stop"/>
+      <SYSTEM text="Reboot" method="Reboot"/>
+      <SYSTEM text="Shutdown" method="Shutdown"/>
+      </NEUE_ZEILE>
+    <NEUE_ZEILE class="flexibel">
+      <MESSAGE text="Mittagessen fertig" 
+        title="Hallo liebe Frau Boes"
+        message="Das Mittagessen ist fertig, wir bitten Sie zu Tisch"
+        displaytime="20000"
+        />
+      <MESSAGE text="Kaffeetrinken" 
+        title="Hallo liebe Frau Boes"
+        message="Es gibt jetzt frischen Kuchen"
+        displaytime="20000"
+        />
+      </NEUE_ZEILE>
+    <hr/>
+    <NEUE_ZEILE class="zentriert">
+      <TEMPERATUR/>
+      <WAS_LÄUFT/>
+      </NEUE_ZEILE>
+    <hr/>
+    <NEUE_ZEILE class="flexibel">
+      <WETTER/>
+      <FILME/>
+      <TV_GUIDE/>
+      <UPDATE/>
+      </NEUE_ZEILE>
+    <NEUE_ZEILE class="flexibel">
+      <TV_CHANNELS/>
+      <ACTION action="pageup"  ><b>&#x219F;</b></ACTION>
+      <ACTION action="up"      ><b>&#x2191;</b></ACTION>
+      <ACTION action="left"    ><b>&#x2190;</b></ACTION>
+      <ACTION action="right"   ><b>&#x2192;</b></ACTION>
+      <ACTION action="down"    ><b>&#x2193;</b></ACTION>
+      <ACTION action="pagedown"><b>&#x21A1;</b></ACTION>
+      <ACTION action="select"  >select</ACTION>
+      </NEUE_ZEILE>
+    <hr/>
+    <NEUE_ZEILE text="zurück;" class="flexibel">
+      <GUI window="home"/>
+      <ACTION action="fullscreen"  >fullscreen</ACTION>
+      <ACTION action="back"        >back      </ACTION>
+      <ACTION action="rightclick"  >rightclick</ACTION>
+      </NEUE_ZEILE>
+    <hr/>
+    <NEUE_ZEILE class="flexibel">
+      <TON action="volampup"  >volampup</TON>
+      <TON action="volampdown">volampdown</TON>
+      <TON action="mute"      >mute</TON>
+      <TON action="volumeup"  >volumeup</TON>
+      <TON action="volumedown">volumedown</TON>
+      <GUI window="screensaver"/>
+      </NEUE_ZEILE>
+    <hr/><NEUE_ZEILE id="FavoritenHierHer" class="flexibel" text="Favoriten:"/>
+    <LOGAREA cols="99" rows="10"/>
+    <hr/><NEUE_ZEILE id="hier0" text="Zappen:"/>
+    <hr/><NEUE_ZEILE id="hier1" text="Verfügbare Input-Aktionen zum 1xDurchprobieren, ob noch was brauchbares dabei ist:"/>
+    <hr/><NEUE_ZEILE id="hier2" text="Verfügbare GUI-Fenster zum 1xDurchprobieren, ob auch da was brauchbares dabei ist:"/>
+    <hr/><NEUE_ZEILE id="hier3" text="Verfügbare Stereoskopie-Methoden:"/>
+
+    </TASTENFELDER>
+  </FERNBEDIENUNG>
