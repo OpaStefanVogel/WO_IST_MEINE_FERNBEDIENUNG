@@ -83,6 +83,13 @@ svg { font-size:150%; border:solid; border-color:cyan; font-family:Courier,monos
   margin: 5px ;
   border-radius: 40px ; 
   }
+.butdis { 
+  font-size:100%; 
+  background-color:LightGrey;   
+  border : solid ;
+  margin: 5px ;
+  border-radius: 0px ; 
+  }
 
 .smalltext { font-size: 50%; }
 .inputws { font-family:Courier,monospace; }
@@ -116,15 +123,34 @@ svg { font-size:150%; border:solid; border-color:cyan; font-family:Courier,monos
 -->
 <script type="application/ecmascript">
 
+
+
+
 var websocket=JSON.parse ( ' { "readyState" : 3 } ' ) ;
 var VORHERIGE_TASTE=0;
 var TASTE=0;
 var hier0=3;
 var da0=3;
+
 function init() {
+  UR=document.URL;//alert(UR);
+  URD=decodeURI(UR);//alert(URD);
+  URDS=URD.split("?");//alert(URDS);
+  URDST=URDS[1].split("&");//alert(URDST);
+  if ( 0 < URDST.length ) {
+    for ( var i=0; i<URDST.length;i++) {
+      j=URDST[i];
+      k=j.split("=");
+      k0=decodeURIComponent(k[0]);
+      k1=decodeURIComponent(k[1]);
+      l=k0+'="'+k1+'"';//alert(l);
+      eval(l);
+      document.getElementById(k0).setAttribute("value",k1);
+      }
+
 //  output = document.getElementById("output");
 // alert(document.getElementById("inputws").getAttribute("value"));
-  websocket = new WebSocket(document.getElementById("inputws").value); 
+  websocket = new WebSocket(document.getElementById("WEBSOCKET_KODI").value); 
 //  alert(document.getElementById("inputws").value);
   websocket.onopen = function() {
     document.getElementById("connectbox").setAttribute("style","display:none");
@@ -146,11 +172,15 @@ function init() {
   websocket.onerror = function() { writeToScreen(event.data) };
   initTemp();
   }
+    } else {  }
+
 function ws_close() {
 //  alert("Websocket wird jetzt geschlossen");
-  websocket.close();
+    document.getElementById("connectbox").setAttribute("style","display:block");
+  scrollTo(0,0);
   writeToScreen("CLOSING....................");
-  //event.preventDefault();
+  event.preventDefault();
+  websocket.close();
   wsTemp_close();
   }
 function doSend(message) {
@@ -354,7 +384,7 @@ function STEREOMO(action) {doSend('{"id":9,"jsonrpc":"2.0","method":"GUI.SetSter
 var websocketTemp=0;
 function initTemp() {
   if (websocketTemp) {websocketTemp.close()}
-  websocketTemp = new WebSocket(document.getElementById("inputwsTemp").value,"fiktiv"); 
+  websocketTemp = new WebSocket(document.getElementById("WEBSOCKET_TEMP").value,"fiktiv"); 
   websocketTemp.onmessage = function() { writeToScreenTemp(event.data); }; 
   }
 
@@ -371,15 +401,12 @@ function writeToScreenTemp(message) {
 
   </head>
 <body onload="init()" onclose="ws_close()">
-<div id="connectbox" style="display:none">
-<small>Diese Seite verwendet Websocket <input id="inputws" class="inputws" value="ws:192.168.1.118:9090/jsonrpc" size="29"/>, also eine Adresse <u>im lokalen Netz!</u> Falls nötig ändern.<span id="STATUS">DISCONNECTED</span></small>
-<br/><small>und <input id="inputwsTemp" class="inputws" value="ws:192.168.1.109:8080/temp" size="29"/> für den Temperatursensor (CPU im Raspberry B).</small>
-<div>Dann
-<button id="erst" type="button" class="butconnect" onclick="init()">connect</button> und los gehts mit den Tasten, wenn fertig wieder
-<button id="erst" type="button" class="butconnect" onclick="ws_close()" ontouchstart="ws_close()">disconnect</button>.
-</div>
-</div>
+<div id="connectbox" style="display:block">
+<FORM METHOD="GET" ACTION="">
+<small>Diese Seite verwendet Websocket KODI <input id="WEBSOCKET_KODI" name="WEBSOCKET_KODI" class="inputws" value="ws:192.168.1.118:9090/jsonrpc" size="30"/>, also eine Adresse <u>im lokalen Netz!</u> Falls nötig ändern. Und <input id="WEBSOCKET_TEMP" name="WEBSOCKET_TEMP" class="inputws" value="ws:192.168.1.109:8080/temp" size="27"/> steht für den Temperatursensor (z.B. CPU im Raspberry B). Diese Einstellungen werden oben an die Adresszeile angefügt, so dass sie zur Wiederverwendung gleich mit im Lesezeichen landen. Jetzt<!--input id="Jahr" type="hidden" name="Jahr" value="2015"/--> aber endlich richtig <input type="submit" value="verbinden (connect)"/>. <span id="STATUS">DISCONNECTED</span></small>
+</form>
 <hr/>
+</div>
 <div class="hieruberall">
 <button class="butbut" onclick="doSend3()">ZDF</button>
 <button class="butbut" onclick="doSend4()">ARD</button>
@@ -462,5 +489,8 @@ function writeToScreenTemp(message) {
 IN  19:35:36 CONNECTED
 
 -->
-</body>
+<hr/>
+<div>
+<small><input type="submit" onclick="ws_close()" value="Websocket beenden"/></small></button>
+</div></body>
 </html>
