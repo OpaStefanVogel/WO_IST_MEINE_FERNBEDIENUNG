@@ -407,8 +407,19 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
 
   </head>
 <body onload="init()" onclose="ws_close()">
+<div id="connectbox" style="display:block">
+<FORM METHOD="GET" ACTION="">
+<small>Diese Seite verwendet Websocket KODI <input id="WEBSOCKET_KODI" name="WEBSOCKET_KODI" class="inputws" value="ws:192.168.1.118:9090/jsonrpc" size="30"/>, also eine Adresse <u>im lokalen Netz!</u> Falls nötig ändern. Und <input id="WEBSOCKET_TEMP" name="WEBSOCKET_TEMP" class="inputws" value="ws:192.168.1.109:8080/temp" size="27"/> steht für den Temperatursensor (z.B. CPU im Raspberry B). Diese Einstellungen werden oben an die Adresszeile angefügt, so dass sie zur Wiederverwendung gleich mit im Lesezeichen landen. Jetzt<!--input id="Jahr" type="hidden" name="Jahr" value="2015"/--> aber endlich richtig <input type="submit" value="verbinden (connect)"/>. <span id="STATUS">DISCONNECTED</span></small>
+</form>
+ <hr/>
+</div>
+
     <xsl:apply-templates />
 
+<hr/>
+<div>
+<small><input type="submit" onclick="ws_close()" value="Websocket beenden"/></small>
+</div>
 </body>
 </html>
 
@@ -417,7 +428,7 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
 <xsl:template match="hr"><xsl:copy-of select="." /></xsl:template>
 
 
-<xsl:template match="WEBSOCKET_KODI">
+<xsl:template match="WEBSOCKET_KODI2">
 <div id="connectbox" style="display:none">
 <small>Diese Seite verwendet Websocket <input id="inputws" class="inputws" value="ws:192.168.1.118:9090/jsonrpc" size="29"/>, also eine Adresse <u>im lokalen Netz!</u> Falls nötig ändern.<span id="STATUS">DISCONNECTED</span></small>
 <div>Dann
@@ -427,7 +438,7 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
 </div>
   </xsl:template>
 
-<xsl:template match="WEBSOCKET_RASPI">
+<xsl:template match="WEBSOCKET_RASPI2">
 <div>
 <small>und <input id="inputwsTemp" class="inputws" value="ws:192.168.1.109:8080/temp" size="29"/> für den Temperatursensor (CPU im Raspberry B).</small>
 </div>
