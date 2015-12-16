@@ -133,13 +133,11 @@ var hier0=3;
 var da0=3;
 
 function init() {
-  document.getElementById("Jahr").setAttribute("value",DIESES_JAHR);
-
   UR=document.URL;//alert(UR);
   URD=decodeURI(UR);//alert(URD);
   URDS=URD.split("?");//alert(URDS);
-  URDST=URDS[1].split("&");//alert(URDST);
-  if ( 0 < URDST.length ) {
+  if ( URDS.length == 2 ) {
+    URDST=URDS[1].split("&");//alert(URDST);
     for ( var i=0; i<URDST.length;i++) {
       j=URDST[i];
       k=j.split("=");
@@ -360,6 +358,8 @@ function doSend8() { doSend('{"id":8,"jsonrpc":"2.0","method":"Player.Stop","par
 
 function Input(action) {doSend('{"id":9,"jsonrpc":"2.0","method":"Input.ExecuteAction","params":{"action":"'+action+'"}}');};
 
+function Input2(action) {Input(action);event.preventDefault()};
+
 function doSend10(message) {doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"title":"Hallo liebe Frau Boes","message":"'+message+'","image":"info","displaytime":20000}}');};
 
 function doSend11(message) {doSend('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "album", "artist", "season", "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails"], "playerid": 1 }, "id": "VideoGetItem"}');};
@@ -438,12 +438,12 @@ function writeToScreenTemp(message) {
 <button class="buttonGUI" onclick="GUI('tvguide');alert('Falls die TV-Vorschau leer bleibt, das laufende Programm stoppen und gleich wieder anschalten. In der kurzen Zwischenzeit lädt die TV-Vorschau. Das tritt nämlich immer dann auf, wenn der RPI gleich beim Einschalten mit dem zuletzt gesehenen Programm fortsetzt.\n\nzurück mit Taste [home] und dann [fullscreen]')">tvguide</button>
 <button class="buttonGUI" onclick="doSend4aaaab('script.openelec.devupdate');alert('Geduld - bis das startet, vergehen etliche (20) Sekunden.\n\nzurück mit Taste [back]')">update</button>
 <button class="buttonGUI" onclick="GUI('tvchannels')">tvchannels</button>
-<button class="button" onclick="Input('pageup')"><b>&#x219F;</b></button>
-<button class="button" onclick="Input('up')"><b>&#x2191;</b></button>
-<button class="button" onclick="Input('left')"><b>&#x2190;</b></button>
-<button class="button" onclick="Input('right')"><b>&#x2192;</b></button>
-<button class="button" onclick="Input('down')"><b>&#x2193;</b></button>
-<button class="button" onclick="Input('pagedown')"><b>&#x21A1;</b></button>
+<button class="button" ontouchstart="Input2('pageup')" onclick="Input2('pageup')"><b>&#x219F;</b></button>
+<button class="button" ontouchstart="Input2('up')" onclick="Input2('up')"><b>&#x2191;</b></button>
+<button class="button" ontouchstart="Input2('left')" onclick="Input2('left')"><b>&#x2190;</b></button>
+<button class="button" ontouchstart="Input2('right')" onclick="Input2('right')" ><b>&#x2192;</b></button>
+<button class="button" ontouchstart="Input2('down')" onclick="Input2('down')"><b>&#x2193;</b></button>
+<button class="button" ontouchstart="Input2('pagedown')" onclick="Input2('pagedown')"><b>&#x21A1;</b></button>
 <button class="button" onclick="Input('select')">select</button>
 </div>
 <hr/>
@@ -455,11 +455,11 @@ function writeToScreenTemp(message) {
   </div>
 <hr/>
 <div class="hieruberall"><i></i>
-<button class="butamp" onclick="Input('volampup')">volampup</button>
-<button class="butamp" onclick="Input('volampdown')">volampdown</button>
+<button class="butamp" ontouchstart="Input2('volampup')" onclick="Input2('volampup')">volampup</button>
+<button class="butamp" ontouchstart="Input2('volampdown')" onclick="Input2('volampdown')">volampdown</button>
 <button class="butamp" onclick="Input('mute')">mute</button><br/>
-<button class="butamp" onclick="Input('volumeup')">volumeup</button>
-<button class="butamp" onclick="Input('volumedown')">volumedown</button>
+<button class="butamp" ontouchstart="Input2('volumeup')" onclick="Input2('volumeup')">volumeup</button>
+<button class="butamp" ontouchstart="Input2('volumedown')" onclick="Input2('volumedown')">volumedown</button>
 <button class="butstop" onclick="GUI('screensaver')">screensaver</button>
 </div>
 <hr/>
