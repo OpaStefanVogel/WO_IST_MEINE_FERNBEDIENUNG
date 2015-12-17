@@ -4,7 +4,8 @@
 <html>
 <head>
   <title>KODI Remote</title>
-<style type="text/css"> 
+  <meta charset="utf-8"/>
+  <style type="text/css"> 
 body {  font-size:100%; border:solid; margin-right:120px; 
   padding:0px;
   }
