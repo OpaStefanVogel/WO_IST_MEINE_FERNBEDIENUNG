@@ -2,11 +2,6 @@
 <?xml-stylesheet type="text/xsl" href="H02.xsl" ?>
 <!DOCTYPE FERNBEDIENUNG [ <!ELEMENT FERNBEDIENUNG ANY> ] >
 <FERNBEDIENUNG>
-  <VERBINDUNG_HERSTELLEN>
-    <WEBSOCKET_KODI/>
-    <WEBSOCKET_RASPI/>
-    </VERBINDUNG_HERSTELLEN>
-  <hr/>
   <TASTENFELDER>
     <NEUE_ZEILE class="flexibel">
       <STREAM text="ZDF" href="http://zdf_hds_de-f.akamaihd.net/i/de14_v1@147090/master.m3u8%26mode=12"/>
@@ -51,23 +46,23 @@
       <ACTION action="right"   ><b>&#x2192;</b></ACTION>
       <ACTION action="down"    ><b>&#x2193;</b></ACTION>
       <ACTION action="pagedown"><b>&#x21A1;</b></ACTION>
-      <ACTION action="select"  >select</ACTION>
+      <INPUT action="select"  >select</INPUT>
       </NEUE_ZEILE>
     <hr/>
     <NEUE_ZEILE text="zurück;" class="flexibel">
-      <GUI window="home"/>
-      <ACTION action="fullscreen"  >fullscreen</ACTION>
-      <ACTION action="back"        >back      </ACTION>
-      <ACTION action="rightclick"  >rightclick</ACTION>
+      <GUI window="home">home</GUI>
+      <INPUT action="fullscreen"  >fullscreen</INPUT>
+      <INPUT action="back"        >back      </INPUT>
+      <INPUT action="rightclick"  >rightclick</INPUT>
       </NEUE_ZEILE>
     <hr/>
     <NEUE_ZEILE class="flexibel">
       <TON action="volampup"  >volampup</TON>
       <TON action="volampdown">volampdown</TON>
-      <TON action="mute"      >mute</TON>
+      <INPUT action="mute"      >mute</INPUT>
       <TON action="volumeup"  >volumeup</TON>
       <TON action="volumedown">volumedown</TON>
-      <GUI window="screensaver"/>
+      <GUI window="screensaver" >screensaver</GUI>
       </NEUE_ZEILE>
     <hr/><NEUE_ZEILE id="FavoritenHierHer" class="flexibel" text="Favoriten:"/>
     <LOGAREA cols="99" rows="10"/>

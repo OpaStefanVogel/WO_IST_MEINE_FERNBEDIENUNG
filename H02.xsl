@@ -4,7 +4,8 @@
 <html>
 <head>
   <title>KODI Remote</title>
-<style type="text/css"> 
+  <meta charset="utf-8"/>
+  <style type="text/css"> 
 body {  font-size:100%; border:solid; margin-right:120px; 
   padding:0px;
   }
@@ -24,8 +25,8 @@ button { font-size:300%;
   flex-grow: 1;
   flex-basis: auto;
   }
-.buttonGUI { font-size:300%; 
-  background-color:LightGreen; 
+.butinp { font-size:300%; 
+  background-color:PeachPuff; 
   border : solid ;
   border-radius: 30px ; 
   margin : 3px ;
@@ -102,7 +103,14 @@ svg { font-size:150%; border:solid; border-color:cyan; font-family:Courier,monos
   margin: 5px ;
   border-radius: 40px ; 
   }
-
+}
+.butdis { 
+  font-size:100%; 
+  background-color:LightGrey;   
+  border : solid ;
+  margin: 5px ;
+  border-radius: 0px ; 
+  }
 .smalltext { font-size: 50%; }
 .inputws { font-family:Courier,monospace; }
 #STATUS { float : right ; color : red ; }
@@ -135,15 +143,37 @@ svg { font-size:150%; border:solid; border-color:cyan; font-family:Courier,monos
 -->
 <script type="application/ecmascript">
 <![CDATA[
+DIESES_JAHR=(new Date()).getFullYear();
+
 var websocket=JSON.parse ( ' { "readyState" : 3 } ' ) ;
 var VORHERIGE_TASTE=0;
 var TASTE=0;
 var hier0=3;
 var da0=3;
+
 function init() {
+  UR=document.URL;//alert(UR);
+  URD=decodeURI(UR);//alert(URD);
+  URDS=URD.split("?");//alert(URDS);
+  if ( URDS.length == 2 ) {
+    URDST=URDS[1].split("&");//alert(URDST);
+    for ( var i=0; i<URDST.length;i++) {
+      j=URDST[i];
+      k=j.split("=");
+      k0=decodeURIComponent(k[0]);
+      k1=decodeURIComponent(k[1]);
+      l=k0+'="'+k1+'"';//alert(l);
+      eval(l);
+      document.getElementsByName(k0)[0].setAttribute("value",k1);
+      }
+    }
+
+  document.getElementById("Jahr").setAttribute("value",DIESES_JAHR);
+  if ( JAHR==DIESES_JAHR ) {
+    writeToPage("CONNECTING....")
 //  output = document.getElementById("output");
 // alert(document.getElementById("inputws").getAttribute("value"));
-  websocket = new WebSocket(document.getElementById("inputws").value); 
+  websocket = new WebSocket(document.getElementById("WEBSOCKET_KODI").value); 
 //  alert(document.getElementById("inputws").value);
   websocket.onopen = function() {
     document.getElementById("connectbox").setAttribute("style","display:none");
@@ -164,12 +194,15 @@ function init() {
     }; 
   websocket.onerror = function() { writeToScreen(event.data) };
   initTemp();
+    } else { }
   }
 function ws_close() {
 //  alert("Websocket wird jetzt geschlossen");
-  websocket.close();
+  document.getElementById("connectbox").setAttribute("style","display:block");
+  scrollTo(0,0);
   writeToScreen("CLOSING....................");
-  //event.preventDefault();
+  event.preventDefault();
+  websocket.close();
   wsTemp_close();
   }
 function doSend(message) {
@@ -343,6 +376,8 @@ function doSend8() { doSend('{"id":8,"jsonrpc":"2.0","method":"Player.Stop","par
 
 function Input(action) {doSend('{"id":9,"jsonrpc":"2.0","method":"Input.ExecuteAction","params":{"action":"'+action+'"}}');};
 
+function InputPre(action) {Input(action);event.preventDefault()};
+
 function doSend10(message) {doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"title":"Hallo liebe Frau Boes","message":"'+message+'","image":"info","displaytime":20000}}');};
 
 function doSend11(message) {doSend('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "album", "artist", "season", "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails"], "playerid": 1 }, "id": "VideoGetItem"}');};
@@ -368,7 +403,7 @@ function STEREOMO(action) {doSend('{"id":9,"jsonrpc":"2.0","method":"GUI.SetSter
 var websocketTemp=0;
 function initTemp() {
   if (websocketTemp) {websocketTemp.close()}
-  websocketTemp = new WebSocket(document.getElementById("inputwsTemp").value,"fiktiv"); 
+  websocketTemp = new WebSocket(document.getElementById("WEBSOCKET_TEMP").value,"fiktiv"); 
   websocketTemp.onmessage = function() { writeToScreenTemp(event.data); }; 
   }
 
@@ -407,31 +442,25 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
 
   </head>
 <body onload="init()" onclose="ws_close()">
+<div id="connectbox" style="display:block">
+<form>
+<small>Diese Seite verwendet Websocket KODI <input id="WEBSOCKET_KODI" name="WEBSOCKET_KODI" class="inputws" value="ws:192.168.1.118:9090/jsonrpc" size="30"/>, also eine Adresse <u>im lokalen Netz!</u> Falls nötig ändern. Und <input id="WEBSOCKET_TEMP" name="WEBSOCKET_TEMP" class="inputws" value="ws:192.168.1.109:8080/temp" size="27"/> steht für den Temperatursensor (z.B. CPU im Raspberry B). Diese Einstellungen werden oben an die Adresszeile angefügt, so dass sie zur Wiederverwendung gleich mit im Lesezeichen landen. <i>Automatisch wird auch die Jahreszahl<input id="Jahr" type="hidden" name="JAHR" value="xxxx"/> angefügt, weil sich alles weiterentwickelt und ältere Lesezeichen später möglicherweise was ganz anderes schalten könnten.</i>Jetzt aber endlich <input type="submit" value="Websocket verbinden (connect)"/>. <span id="STATUS">DISCONNECTED</span></small>
+</form>
+ <hr/>
+</div>
+
     <xsl:apply-templates />
 
+<hr/>
+<div>
+<small><input type="submit" onclick="ws_close()" value="Websocket beenden"/></small>
+</div>
 </body>
 </html>
 
   </xsl:template>
 
 <xsl:template match="hr"><xsl:copy-of select="." /></xsl:template>
-
-
-<xsl:template match="WEBSOCKET_KODI">
-<div id="connectbox" style="display:none">
-<small>Diese Seite verwendet Websocket <input id="inputws" class="inputws" value="ws:192.168.1.118:9090/jsonrpc" size="29"/>, also eine Adresse <u>im lokalen Netz!</u> Falls nötig ändern.<span id="STATUS">DISCONNECTED</span></small>
-<div>Dann
-<button id="erst" type="button" class="butconnect" onclick="init()">connect</button> und los gehts mit den Tasten, wenn fertig wieder
-<button id="erst" type="button" class="butconnect" onclick="ws_close()" ontouchstart="ws_close()">disconnect</button>.
-</div>
-</div>
-  </xsl:template>
-
-<xsl:template match="WEBSOCKET_RASPI">
-<div>
-<small>und <input id="inputwsTemp" class="inputws" value="ws:192.168.1.109:8080/temp" size="29"/> für den Temperatursensor (CPU im Raspberry B).</small>
-</div>
-  </xsl:template>
 
 <xsl:template match="NEUE_ZEILE">
   <div>
@@ -523,10 +552,22 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
   <button class="buttonGUI" onclick="GUI('tvchannels')">tvchannels</button>
   </xsl:template>
 
+<xsl:template match="INPUT">
+  <button class="butinp">
+    <xsl:attribute name="onclick">
+      Input('<xsl:value-of select="." />');
+      </xsl:attribute>
+    <xsl:value-of select="." />
+    </button>
+  </xsl:template>
+
 <xsl:template match="ACTION">
   <button class="button">
+    <xsl:attribute name="ontouchstart">
+      InputPre('<xsl:value-of select="@action" />')
+      </xsl:attribute>
     <xsl:attribute name="onclick">
-      Input('<xsl:value-of select="@action" />');
+      InputPre('<xsl:value-of select="@action" />')
       </xsl:attribute>
     <xsl:value-of select="." />
     </button>
@@ -537,14 +578,17 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
     <xsl:attribute name="onclick">
       GUI('<xsl:value-of select="@window" />');
       </xsl:attribute>
-    <xsl:value-of select="@window" />
+    <xsl:value-of select="." />
     </button>
   </xsl:template>
 
 <xsl:template match="TON">
   <button class="butamp">
+    <xsl:attribute name="ontouchstart">
+      InputPre('<xsl:value-of select="@action" />')
+      </xsl:attribute>
     <xsl:attribute name="onclick">
-      Input('<xsl:value-of select="@action" />');
+      InputPre('<xsl:value-of select="@action" />')
       </xsl:attribute>
     <xsl:value-of select="." />
     </button>
