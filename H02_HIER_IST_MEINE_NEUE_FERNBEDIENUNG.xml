@@ -4,8 +4,8 @@
 <FERNBEDIENUNG>
   <TASTENFELDER>
     <NEUE_ZEILE class="flexibel">
-      <STREAM text="ZDF" href="http://zdf_hds_de-f.akamaihd.net/i/de14_v1@147090/master.m3u8%26mode=12"/>
-      <STREAM text="ARD" href="http://daserste_live-lh.akamaihd.net/i/daserste_de@91204/master.m3u8%26mode=12"/>
+      <STREAM text="ZDF">plugin://plugin.video.zdf_de_lite/?url=1822600&amp;mode=playVideo</STREAM>
+      <STREAM text="ARD">plugin://plugin.video.ardmediathek_de/?url=&amp;mode=playLiveARD</STREAM>
       <PAUSE_WEITER/>
       </NEUE_ZEILE>
     <hr/>
@@ -15,7 +15,7 @@
       <SYSTEM text="Shutdown" method="Shutdown"/>
       </NEUE_ZEILE>
     <NEUE_ZEILE class="flexibel">
-      <MESSAGE text="Mittagessen fertig" 
+      <MESSAGE text="Mittagessen fertig"
         title="Hallo liebe Frau Boes"
         message="Das Mittagessen ist fertig, wir bitten Sie zu Tisch"
         displaytime="20000"

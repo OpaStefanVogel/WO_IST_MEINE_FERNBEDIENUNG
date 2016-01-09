@@ -350,12 +350,6 @@ function doSend1(i,m) { doSend('{"id":'+i+',"jsonrpc":"2.0","method":"'+m+'"}');
 
 function doSend2() { doSend('{"id":2,"jsonrpc":"2.0","method":"Input.Back"}'); };
 
-function doSend3() { doSend('{"id":3,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.live.streams/?url=http://zdf_hds_de-f.akamaihd.net/i/de14_v1@147090/master.m3u8&mode=12" } } }');
-//alert("ZDF");
- };
-
-function doSend4() { doSend('{"id":4  ,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.live.streams/?url=http://daserste_live-lh.akamaihd.net/i/daserste_de@91204/master.m3u8&mode=12" } } }');
-  };
 function doSend4aaaa(mfhw) { doSend('{"id":4,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "'+mfhw+'" } } }');
   };
 function doSend4aaaab(mfhw) { doSend('{"jsonrpc":"2.0","method":"Addons.ExecuteAddon","params":{"addonid":"'+mfhw+'"},"id":1}');
@@ -420,7 +414,7 @@ function writeToScreenTemp(message) {
 
 //neu in H02
 function doSendSTREAM(href) {
-  doSend('{ "id": "STREAM", "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": { "file": "plugin://plugin.video.live.streams/?url='+href+'" } } }')
+  doSend('{ "id": "STREAM", "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": { "file": "'+href+'" } } }')
   }
 
 function doSendPLAYER(method) {
@@ -478,7 +472,7 @@ doSend('{"id":10,"jsonrpc":"2.0","method":"GUI.ShowNotification","params":{"titl
 <xsl:template match="STREAM">
   <button class="butbut">
     <xsl:attribute name="onclick">
-      doSendSTREAM('<xsl:value-of select="@href" />');
+      doSendSTREAM('<xsl:value-of select="." />');
       </xsl:attribute>
     <xsl:value-of select="@text" />
     </button>

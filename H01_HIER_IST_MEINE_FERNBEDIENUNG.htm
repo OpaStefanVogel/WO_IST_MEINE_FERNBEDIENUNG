@@ -333,11 +333,11 @@ function doSend1(i,m) { doSend('{"id":'+i+',"jsonrpc":"2.0","method":"'+m+'"}');
 
 function doSend2() { doSend('{"id":2,"jsonrpc":"2.0","method":"Input.Back"}'); };
 
-function doSend3() { doSend('{"id":3,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.live.streams/?url=http://zdf_hds_de-f.akamaihd.net/i/de14_v1@147090/master.m3u8&mode=12" } } }');
+function doSend3() { doSend('{"id":3,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.zdf_de_lite/?url=1822600&mode=playVideo" } } }');
 //alert("ZDF");
  };
 
-function doSend4() { doSend('{"id":4  ,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.live.streams/?url=http://daserste_live-lh.akamaihd.net/i/daserste_de@91204/master.m3u8&mode=12" } } }');
+function doSend4() { doSend('{"id":4  ,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.ardmediathek_de/?url=&mode=playLiveARD" } } }');
   };
 function doSend4aaaa(mfhw) { doSend('{"id":4,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "'+mfhw+'" } } }');
   };
