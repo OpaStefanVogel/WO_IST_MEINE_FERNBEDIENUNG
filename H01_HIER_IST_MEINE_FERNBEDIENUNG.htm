@@ -176,7 +176,7 @@ function init() {
     }; 
   websocket.onerror = function() { writeToScreen(event.data) };
       } else {  }
-  alert("alles durch");
+//  alert("alles durch");
   initTemp();
 }
 
@@ -393,7 +393,7 @@ var websocketTemp=0;
 function initTemp() {
   if (websocketTemp) {websocketTemp.close()}
   websocketTemp = new WebSocket(document.getElementById("WEBSOCKET_TEMP").value,"fiktiv");
-  alert(document.getElementById("WEBSOCKET_TEMP").value);
+//  alert(document.getElementById("WEBSOCKET_TEMP").value);
   websocketTemp.onmessage = function() { writeToScreenTemp(event.data); }; 
   }
 
