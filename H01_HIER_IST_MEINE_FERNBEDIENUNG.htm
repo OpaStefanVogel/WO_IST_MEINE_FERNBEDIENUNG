@@ -94,8 +94,11 @@ svg { font-size:150%; border:solid; border-color:cyan; font-family:Courier,monos
 
 .smalltext { font-size: 50%; }
 .inputws { font-family:Courier,monospace; }
+.inputjt { font-family:Courier,monospace; font-size:200%;}
 #STATUS { float : right ; color : red ; }
-#hier0, .hier0x, .hieruberall {
+#hier0, 
+.hier0x, 
+.hieruberall {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -377,6 +380,10 @@ doSend('{"id":13,"jsonrpc":"2.0", "method": "Favourites.GetFavourites", "params"
 function doSendYouTube() { doSend('{"id":3,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.youtube/play/?video_id='+document.getElementById("YouTube").value+'" } } }');
 //alert("YouTube");
  };
+function doSendDailymotion() { doSend('{"id":3,"jsonrpc":"2.0","method": "Player.Open", "params":{"item": {"file": "plugin://plugin.video.dailymotion/?url='+document.getElementById("Dailymotion").value+'&mode=playVideo" } } }');
+//alert("YouTube");
+ };
+
 /*
 IN  17:57:08 {"id":"GetFavourites","jsonrpc":"2.0","result":{"favourites":[{"path":"plugin://plugin.video.live.streams/?url=http%3A%2F%2Fzdf_hds_de-f.akamaihd.net%2Fi%2Fde14_v1%40147090%2Fmaster.m3u8&mode=12","thumbnail":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/ZDF.svg/200px-ZDF.svg.png","title":"ZDF","type":"media"},{"path":"plugin://plugin.video.live.streams/?url=http%3A%2F%2Fdaserste_live-lh.akamaihd.net%2Fi%2Fdaserste_de%4091204%2Fmaster.m3u8&mode=12","thumbnail":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/ARD_logo.svg/200px-ARD_logo.svg.png","title":"Das Erste","type":"media"},{"path":"plugin://plugin.video.youtube/play/?video_id=r3b7I1jGugU","thumbnail":"https://i.ytimg.com/vi/r3b7I1jGugU/hqdefault.jpg","title":"Auf, auf, zum fröhlichen Jagen","type":"media"},{"path":"pvr://channels/tv/Alle Kanäle/pvr.iptvsimple_31303179.pvr","thumbnail":"http://logo.tvip.ga/0419.png","title":"[COLOR red]Fashion TV[/COLOR]","type":"media"},{"path":"pvr://channels/tv/Alle Kanäle/pvr.iptvsimple_444447853.pvr","thumbnail":"http://logo.tvip.ga/0049.png","title":"[COLOR orange]Eurosport[/COLOR]","type":"media"},{"path":"pvr://channels/tv/Alle Kanäle/pvr.iptvsimple_158629571.pvr","thumbnail":"http://logo.tvip.ga/0403.png","title":"[COLOR orange]BBC Two[/COLOR]","type":"media"},{"path":"pvr://channels/tv/Alle Kanäle/pvr.iptvsimple_177658874.pvr","thumbnail":"http://logo.tvip.ga/0203.png","title":"[COLOR orange]France 2[/COLOR]","type":"media"},{"path":"pvr://channels/tv/Alle Kanäle/pvr.iptvsimple_1515339840.pvr","thumbnail":"http://logo.tvip.ga/0042.png","title":"[COLOR orange]JOIZ CH[/COLOR]","type":"media"},{"path":"pvr://channels/tv/Alle Kanäle/pvr.iptvsimple_375012287.pvr","thumbnail":"http://logo.tvip.ga/0034.png","title":"[COLOR orange]n-tv[/COLOR]","type":"media"},{"path":"plugin://plugin.audio.radio_de/station/13925","thumbnail":"http://static.radio.de/images/broadcasts/e7/f9/13925/t100.png","title":"Live Ireland Channel 1","type":"media"},{"path":"plugin://plugin.audio.radio_de/station/3457","thumbnail":"http://static.radio.de/images/broadcasts/e1/fc/3457/t100.png","title":"Radio SRF Virus","type":"media"},{"path":"script.openelec.devupdate","thumbnail":"/storage/.kodi/addons/script.openelec.devupdate/icon.png","title":"[COLOR green]OpenELEC[/COLOR] - [COLOR blue]Dev Update[/COLOR]","type":"script"}],"limits":{"end":12,"start":0,"total":12}}}
 OUT 17:57:08 { "jsonrpc": "2.0", "method": "Favourites.GetFavourites", "params": { "properties": ["window","path","thumbnail","windowparameter"] }, "id": "GetFavourites" }
@@ -459,7 +466,10 @@ function writeToScreenTemp(message) {
   </div>
 <hr/>
 <div class="hieruberall"><i></i>
-youtube/play/?video_id=<input id="YouTube" class="inputws" value="4NpN6syNWaI" size="27"/><button class="button" onclick="doSendYouTube()">Play</button>
+<ran>youtube/play/?video_id=</ran><input id="YouTube" class="inputjt" value="4NpN6syNWaI" size="13"/><button class="button" onclick="doSendYouTube()">Play YouTube</button>
+  </div>
+<div class="hieruberall"><i></i>
+<ran>dailymotion/?url=</ran><input id="Dailymotion" class="inputjt" value="x3no3dl" size="13"/><button class="button" onclick="doSendDailymotion()">Play Dailymotion</button>
   </div>
 <hr/>
 <div class="hieruberall"><i></i>
