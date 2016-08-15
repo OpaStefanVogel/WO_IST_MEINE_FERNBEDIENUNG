@@ -1,16 +1,35 @@
-<html>
-  <head>
-  <meta charset="utf-8"/>
-  <title>Snooker</title>
-  </head>
+<HTML>
+  <HEAD>
+  <META charset="utf-8"/>
+  <TITLE>Snooker</TITLE>
+  </HEAD>
 
-  <style type="text/css"> 
-body { font-family: Courier,monospace; font-size:300%}
-Teams { display: flex; flex-direction: row; }
-Team { display: flex; flex-direction: column; }
+  <STYLE type="text/css"> 
+BODY { font-family: Courier,monospace; font-size:300%}
+PARTIE { display: flex; flex-direction:column; align-items:stretch; text-align:center}
+SPIELSTAND { font-size:300%; border:solid;}
+TEAMS { display: flex; flex-direction: row; align-items:center}
+TEAM  { display: flex; flex-direction: column; flex-basis:50%;align-items:center;}
+SPIELER { border:solid; padding:20px; margin:10px;}
+TEXT { align-item:center}
+BUTTONS { display: flex; flex-direction: column; align-items:center}
+BUTT { flex-basis:50%; border:solid}
 
-    </style> 
+    </STYLE> 
 
-<body onload="los()">
-<Teams><Team>Team 1</Team><Team>Team 2</Team></Teams>
-  </body></html>
+<BODY onload="">
+<PARTIE>
+<SPIELSTAND>0:0</SPIELSTAND>
+<TEAMS>
+  <TEAM>Team 1
+    <SPIELER>ich</SPIELER>
+    <SPIELER>du</SPIELER>
+    </TEAM>
+  <TEAM>Team 2
+    <SPIELER>er</SPIELER>
+    <SPIELER>sie</SPIELER>
+  </TEAM>
+    </TEAMS>
+    <BUTT ontouchstart="confirm('zurück auf 0:0?')">Restart</BUTT>
+  <PARTIE>
+  </BODY></HTML>
