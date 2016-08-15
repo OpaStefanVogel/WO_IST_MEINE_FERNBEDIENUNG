@@ -2,7 +2,6 @@
   <HEAD>
   <META charset="utf-8"/>
   <TITLE>Snooker</TITLE>
-  </HEAD>
 
   <STYLE type="text/css"> 
 BODY { font-family: Courier,monospace; font-size:300%}
@@ -17,6 +16,33 @@ BUTT { flex-basis:50%; border:solid}
 
     </STYLE> 
 
+  <SCRIPT>
+  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
+  websocket.onmessage = function() {
+    var w;
+    w=event.data;
+    alert(w);
+    }; 
+  
+</SCRIPT><SCRIP>
+//  alert(document.getElementById("inputws").value);
+  websocket.onopen = function() {
+    document.getElementById("connectbox").setAttribute("style","display:none");
+    writeToPage("CONNECTED");
+    doSend4b();doSend03();
+    doSend0('Input.Action','type');
+    doSend0('GUI.Window','type')
+    }; 
+  websocket.onclose = function() {
+    writeToPage("DISCONNECTED")
+    document.getElementById("connectbox").setAttribute("style","display:block");
+    }; 
+  websocket.onerror = function() { writeToScreen(event.data) };
+  initTemp();
+      } else {  }
+}
+    </SKRIP>
+  </HEAD>
 <BODY onload="">
 <PARTIE>
 <SPIELSTAND>0:0</SPIELSTAND>
@@ -30,6 +56,24 @@ BUTT { flex-basis:50%; border:solid}
     <SPIELER>sie</SPIELER>
   </TEAM>
     </TEAMS>
-    <BUTT ontouchstart="confirm('zurück auf 0:0?')">Restart</BUTT>
+    <BUTT ontouchstart="confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
   <PARTIE>
+<BUTTON onclick="websocket.close()">Websocket close</BUTTON>
+
+<!--
+var ids = context.get('ids')||[99];
+ids.push(msg._session.id);
+msg.payload="empfangen:"+msg.payload+" "+ids.length+" "+msg._session.id;
+var msg1={"payload":"nocheine Message gleich hinterher", "_session": { "type": "websocket", "id": "fc1ba443.03e458" }};
+msg1._session.id=ids[1];
+context.set('ids',ids);
+return [[msg,msg1]];
+
+var count = context.get('count')||0;
+count += 1;
+// store the value back
+context.set('count',count);
+// make it part of the outgoing msg object
+msg.count = count;
+-->
   </BODY></HTML>
