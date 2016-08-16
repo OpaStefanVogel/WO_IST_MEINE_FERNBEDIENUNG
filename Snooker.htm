@@ -37,24 +37,7 @@ function du_bist_dran(Spieler) {
   document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:yellow");
   //alert(dran_ist);
   }
-</SCRIPT><SCRIP>
-//  alert(document.getElementById("inputws").value);
-  websocket.onopen = function() {
-    document.getElementById("connectbox").setAttribute("style","display:none");
-    writeToPage("CONNECTED");
-    doSend4b();doSend03();
-    doSend0('Input.Action','type');
-    doSend0('GUI.Window','type')
-    }; 
-  websocket.onclose = function() {
-    writeToPage("DISCONNECTED")
-    document.getElementById("connectbox").setAttribute("style","display:block");
-    }; 
-  websocket.onerror = function() { writeToScreen(event.data) };
-  initTemp();
-      } else {  }
-}
-    </SKRIP>
+</SCRIPT>
   </HEAD>
 <BODY onload="">
 <PARTIE>
@@ -62,18 +45,18 @@ function du_bist_dran(Spieler) {
 <TEAMS onclick="du_bist_dran()">
   <TEAM>Team 1
     <SPIELER id="Team1/Spieler1">ich</SPIELER>
-    <SPIELER id="Team1/Spieler2">du</SPIELER>
+    <SPIELER id="Team1/Spieler2">er</SPIELER>
     <SPIELER id="Team1/Spieler3">I</SPIELER>
-    <SPIELER id="Team1/Spieler4">you</SPIELER>
+    <SPIELER id="Team1/Spieler4">he</SPIELER>
     <SPIELER id="Team1/Spieler5">je</SPIELER>
-    <SPIELER id="Team1/Spieler6">tu</SPIELER>
+    <SPIELER id="Team1/Spieler6">il</SPIELER>
     </TEAM>
   <TEAM>Team 2
-    <SPIELER id="Team2/Spieler1">er</SPIELER>
+    <SPIELER id="Team2/Spieler1">du</SPIELER>
     <SPIELER id="Team2/Spieler2">sie</SPIELER>
-    <SPIELER id="Team2/Spieler3">he</SPIELER>
+    <SPIELER id="Team2/Spieler3">you</SPIELER>
     <SPIELER id="Team2/Spieler4">she</SPIELER>
-    <SPIELER id="Team2/Spieler5">il</SPIELER>
+    <SPIELER id="Team2/Spieler5">tu</SPIELER>
     <SPIELER id="Team2/Spieler6">elle</SPIELER>
   </TEAM>
     </TEAMS>
