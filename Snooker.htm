@@ -66,14 +66,16 @@ function du_bist_dran(Spieler) {
 
 <!--
 var ids = context.get('ids')||[99];
+var ret = [[]];
 var ind = ids.indexOf(msg._session.id);
 if (ind==-1) {ids.push(msg._session.id)};
-var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": "" }}
-msg1.payload=msg.payload;
-msg1._session.id=ids[1];
+for (i=0;i<ids.length;i++) {
+  var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": ids[i] }}
+  ret[0].push(msg1);
+  }
 context.set('ids',ids);
 node.status({fill:"green",shape:"dot",text:ids.length});
-return [[msg,msg1]];
+return ret;
 
 
 .. bei neu hinzuschalten aktuellen Stand holen
