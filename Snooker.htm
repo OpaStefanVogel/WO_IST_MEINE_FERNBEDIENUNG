@@ -83,10 +83,11 @@ function du_bist_dran(Spieler) {
 
 <!--
 var ids = context.get('ids')||[99];
-ids.push(msg._session.id);
-var msg1={"payload":"nocheine Message gleich hinterher", "_session": { "type": "websocket", "id": "fc1ba443.03e458" }};
-msg1._session.id=ids[1];
+var ind = ids.indexOf(msg._session.id);
+if (ind==-1) {ids.push(msg._session.id)};
+var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": "" }}
 msg1.payload=msg.payload;
+msg1._session.id=ids[1];
 context.set('ids',ids);
 node.status({fill:"green",shape:"dot",text:ids.length});
 return [[msg,msg1]];
@@ -94,7 +95,13 @@ return [[msg,msg1]];
 
 .. bei neu hinzuschalten aktuellen Stand holen
 .. Kleingedrucktes
-.. node function mit ids.length
+ok node function mit ids.length
+.. ids auf aktuelle beschränken
+.. alle Fenster aktualisieren
+merk:
+.. opera classic macht nur buttons mit onclick
+.. gh-pages jetzt vorneweg
+xWtH8a1QzQ0 das ende der erde
 var count = context.get('count')||0;
 count += 1;
 // store the value back
