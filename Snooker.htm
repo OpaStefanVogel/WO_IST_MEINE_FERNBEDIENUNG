@@ -23,7 +23,21 @@ BUTT { flex-basis:50%; border:solid}
     w=event.data;
     alert(w);
     }; 
-  
+
+var dran_ist="Team1/Spieler1"
+function du_bist_dran(Spieler) {
+  if (event.target.getAttribute("id")>"") {
+    document.getElementById(dran_ist).setAttribute("style","background-color:white");
+    document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:white");
+    if (Spieler!=undefined) { dran_ist=Spieler } else {
+      dran_ist=event.target.getAttribute("id");
+      };
+    document.getElementById(dran_ist).setAttribute("style","background-color:red");
+    document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:yellow");
+    //alert(dran_ist);
+    //websocket.send([dran_ist]);
+    }
+  }
 </SCRIPT><SCRIP>
 //  alert(document.getElementById("inputws").value);
   websocket.onopen = function() {
@@ -46,17 +60,25 @@ BUTT { flex-basis:50%; border:solid}
 <BODY onload="">
 <PARTIE>
 <SPIELSTAND>0:0</SPIELSTAND>
-<TEAMS>
+<TEAMS onclick="du_bist_dran()">
   <TEAM>Team 1
-    <SPIELER>ich</SPIELER>
-    <SPIELER>du</SPIELER>
+    <SPIELER id="Team1/Spieler1">ich</SPIELER>
+    <SPIELER id="Team1/Spieler2">du</SPIELER>
+    <SPIELER id="Team1/Spieler3">I</SPIELER>
+    <SPIELER id="Team1/Spieler4">you</SPIELER>
+    <SPIELER id="Team1/Spieler5">je</SPIELER>
+    <SPIELER id="Team1/Spieler6">tu</SPIELER>
     </TEAM>
   <TEAM>Team 2
-    <SPIELER>er</SPIELER>
-    <SPIELER>sie</SPIELER>
+    <SPIELER id="Team2/Spieler1">er</SPIELER>
+    <SPIELER id="Team2/Spieler2">sie</SPIELER>
+    <SPIELER id="Team2/Spieler3">he</SPIELER>
+    <SPIELER id="Team2/Spieler4">she</SPIELER>
+    <SPIELER id="Team2/Spieler5">il</SPIELER>
+    <SPIELER id="Team2/Spieler6">elle</SPIELER>
   </TEAM>
     </TEAMS>
-    <BUTT ontouchstart="confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
+    <BUTT ontouchstart="du_bist_dran('Team1/Spieler1');confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
   <PARTIE>
 <BUTTON onclick="websocket.close()">Websocket close</BUTTON>
 
