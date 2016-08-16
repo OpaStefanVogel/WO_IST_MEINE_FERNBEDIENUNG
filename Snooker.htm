@@ -21,22 +21,21 @@ BUTT { flex-basis:50%; border:solid}
   websocket.onmessage = function() {
     var w;
     w=event.data;
-    alert(w);
+    //alert(w);
+    du_bist_dran(w);
     }; 
 
 var dran_ist="Team1/Spieler1"
 function du_bist_dran(Spieler) {
-  if (event.target.getAttribute("id")>"") {
-    document.getElementById(dran_ist).setAttribute("style","background-color:white");
-    document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:white");
-    if (Spieler!=undefined) { dran_ist=Spieler } else {
-      dran_ist=event.target.getAttribute("id");
-      };
-    document.getElementById(dran_ist).setAttribute("style","background-color:red");
-    document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:yellow");
-    //alert(dran_ist);
-    //websocket.send([dran_ist]);
-    }
+  document.getElementById(dran_ist).setAttribute("style","background-color:white");
+  document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:white");
+  if (Spieler!=undefined) { dran_ist=Spieler } else {
+    dran_ist=event.target.getAttribute("id");
+    websocket.send([dran_ist]);
+    };
+  document.getElementById(dran_ist).setAttribute("style","background-color:red");
+  document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:yellow");
+  //alert(dran_ist);
   }
 </SCRIPT><SCRIP>
 //  alert(document.getElementById("inputws").value);
@@ -85,11 +84,13 @@ function du_bist_dran(Spieler) {
 <!--
 var ids = context.get('ids')||[99];
 ids.push(msg._session.id);
-msg.payload="empfangen:"+msg.payload+" "+ids.length+" "+msg._session.id;
 var msg1={"payload":"nocheine Message gleich hinterher", "_session": { "type": "websocket", "id": "fc1ba443.03e458" }};
 msg1._session.id=ids[1];
+msg1.payload=msg.payload;
 context.set('ids',ids);
 return [[msg,msg1]];
+
+
 
 var count = context.get('count')||0;
 count += 1;
