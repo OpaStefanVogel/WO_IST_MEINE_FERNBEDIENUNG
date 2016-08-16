@@ -88,10 +88,13 @@ var msg1={"payload":"nocheine Message gleich hinterher", "_session": { "type": "
 msg1._session.id=ids[1];
 msg1.payload=msg.payload;
 context.set('ids',ids);
+node.status({fill:"green",shape:"dot",text:ids.length});
 return [[msg,msg1]];
 
 
-
+.. bei neu hinzuschalten aktuellen Stand holen
+.. Kleingedrucktes
+.. node function mit ids.length
 var count = context.get('count')||0;
 count += 1;
 // store the value back
