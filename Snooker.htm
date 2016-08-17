@@ -49,8 +49,11 @@ function anzeigen(neuer_Spielstand) {
   document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:white");
   document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:white");
   Spielstand=neuer_Spielstand;
-  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background:linear-gradient(red,red 80%,blue)");
   document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
+  var Teilnehmerzahl=Spielstand.dran_ist.length;
+  for (var i=0;i<Teilnehmerzahl;i++) {
+    document.getElementById(Spielstand.dran_ist[i]).setAttribute("style","background:linear-gradient(red, red "+(i/Teilnehmerzahl*100)+"%, blue)");
+    }
   //alert(dran_ist);
   }
 </SCRIPT>
