@@ -13,6 +13,7 @@ SPIELER { border:solid; padding:20px; margin:10px;}
 TEXT { align-item:center}
 BUTTONS { display: flex; flex-direction: column; align-items:center}
 BUTT { flex-basis:50%; border:solid}
+HISTORY {display:none;}
 
     </STYLE> 
 
@@ -22,19 +23,19 @@ BUTT { flex-basis:50%; border:solid}
     var w;
     w=event.data;
     //alert(w);
-    du_bist_dran(w);
+    du_bist_dran(JSON.parse(w).dran_ist[0]);
     }; 
 
-var dran_ist="Team1/Spieler1"
+var Spielstand={dran_ist:["Team1/Spieler1"],Zwischenstand:[0,0]};
 function du_bist_dran(Spieler) {
-  document.getElementById(dran_ist).setAttribute("style","background-color:white");
-  document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:white");
-  if (Spieler!=undefined) { dran_ist=Spieler } else {
-    dran_ist=event.target.getAttribute("id");
-    websocket.send([dran_ist]);
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:white");
+  document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:white");
+  if (Spieler!=undefined) { Spielstand.dran_ist[0]=Spieler } else {
+    Spielstand.dran_ist[0]=event.target.getAttribute("id");
+    websocket.send(JSON.stringify(Spielstand));
     };
-  document.getElementById(dran_ist).setAttribute("style","background-color:red");
-  document.getElementById(dran_ist).parentNode.setAttribute("style","background-color:yellow");
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:red");
+  document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
   //alert(dran_ist);
   }
 </SCRIPT>
@@ -63,8 +64,9 @@ function du_bist_dran(Spieler) {
     <BUTT ontouchstart="du_bist_dran('Team1/Spieler1');confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
   <PARTIE>
 
+<HISTORY>
 <!--
-var ids = context.get('ids')||[99];
+var ids = context.get('ids')||[];
 var ret = [[]];
 var ind = ids.indexOf(msg._session.id);
 if (ind==-1) {ids.push(msg._session.id)};
@@ -80,8 +82,11 @@ return ret;
 .. bei neu hinzuschalten aktuellen Stand holen
 .. Kleingedrucktes
 ok node function mit ids.length
-.. ids auf aktuelle beschränken
-.. alle Fenster aktualisieren
+ok ids auf aktuelle beschränken
+ok alle Fenster aktualisieren
+ok kompletten Spielstand als json-Objekt senden
+.. bei onclose den id aus ids entfernen
+
 merk:
 .. opera classic macht nur buttons mit onclick
 .. gh-pages jetzt vorneweg
@@ -92,5 +97,5 @@ count += 1;
 context.set('count',count);
 // make it part of the outgoing msg object
 msg.count = count;
--->
+</HISTORY>
   </BODY></HTML>
