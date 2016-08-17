@@ -25,6 +25,10 @@ HISTORY {display:none;}
     //alert(w);
     anzeigen(JSON.parse(w));
     };
+  websocket.onopen = function() {
+    //alert(77);
+    websocket.send("");//aktuellen Stand holen
+    }; 
   websocket.onclose = function() {
     //alert(77);
     //websocket.send("close");
@@ -42,6 +46,7 @@ function du_bist_dran() {
     }
   var neuer_Spielstand=Object.create(Spielstand);
   neuer_Spielstand.dran_ist=neu_dran;
+  anzeigen(neuer_Spielstand);
   websocket.send(JSON.stringify(neuer_Spielstand));
   }
 
@@ -87,13 +92,16 @@ function anzeigen(neuer_Spielstand) {
 
 if (msg.payload=="resetIds") {var ids=[]} else {
   var ids = context.get('ids')||[];
-var ret = [[]];
-var ind = ids.indexOf(msg._session.id);
-if (ind==-1) {ids.push(msg._session.id)};
-for (i=0;i<ids.length;i++) {
-  var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": ids[i] }}
-  ret[0].push(msg1);
-  }
+  var ret = [[]];
+  var ind = ids.indexOf(msg._session.id);
+  if (ind==-1) {ids.push(msg._session.id)};
+  if (msg.payload!="") {
+  for (i=0;i<ids.length;i++) {
+    if (i!=ind) {
+      var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": ids[i] }}
+      ret[0].push(msg1);
+      }
+    }
   }
 context.set('ids',ids);
 node.status({fill:"green",shape:"dot",text:ids.length});
@@ -107,8 +115,9 @@ ok ids auf aktuelle beschränken
 ok alle Fenster aktualisieren
 ok kompletten Spielstand als json-Objekt senden
 .. bei onclose den id aus ids entfernen
-.. Reihenfolge geeignet markieren
+ok Reihenfolge geeignet markieren
 ok dazu neuer_Spielstand vollständig kopiert
+ok nicht an das eigene Fenster zurückschicken
 
 merk:
 ok opera classic macht nur buttons mit onclick
