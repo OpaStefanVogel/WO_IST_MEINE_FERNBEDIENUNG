@@ -23,24 +23,39 @@ HISTORY {display:none;}
     var w;
     w=event.data;
     //alert(w);
-    du_bist_dran(JSON.parse(w).dran_ist[0]);
+    anzeigen(JSON.parse(w));
+    };
+  websocket.onclose = function() {
+    //alert(77);
+    //websocket.send("close");
     }; 
 
+
 var Spielstand={dran_ist:["Team1/Spieler1"],Zwischenstand:[0,0]};
-function du_bist_dran(Spieler) {
+
+function du_bist_dran() {
+  var neu_dran=[event.target.getAttribute("id")];
+  for (var i=0;i<Spielstand.dran_ist.length;i++) {
+    if (Spielstand.dran_ist[i]!=neu_dran[0]) {
+      neu_dran.push(Spielstand.dran_ist[i]);
+      }
+    }
+  var neuer_Spielstand=Object.create(Spielstand);
+  neuer_Spielstand.dran_ist=neu_dran;
+  websocket.send(JSON.stringify(neuer_Spielstand));
+  }
+
+function anzeigen(neuer_Spielstand) {
   document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:white");
   document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:white");
-  if (Spieler!=undefined) { Spielstand.dran_ist[0]=Spieler } else {
-    Spielstand.dran_ist[0]=event.target.getAttribute("id");
-    websocket.send(JSON.stringify(Spielstand));
-    };
-  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:red");
+  Spielstand=neuer_Spielstand;
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background:linear-gradient(red,red 80%,blue)");
   document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
   //alert(dran_ist);
   }
 </SCRIPT>
   </HEAD>
-<BODY onload="">
+<BODY onload="" onbevoreunload="websocket.send('close')">
 <PARTIE>
 <SPIELSTAND>0:0</SPIELSTAND>
 <TEAMS onclick="du_bist_dran()">
@@ -61,7 +76,7 @@ function du_bist_dran(Spieler) {
     <SPIELER id="Team2/Spieler6">elle</SPIELER>
   </TEAM>
     </TEAMS>
-    <BUTT ontouchstart="du_bist_dran('Team1/Spieler1');confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
+    <BUTT ontouchstart="confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
   <PARTIE>
 
 <HISTORY>
@@ -86,10 +101,13 @@ ok ids auf aktuelle beschränken
 ok alle Fenster aktualisieren
 ok kompletten Spielstand als json-Objekt senden
 .. bei onclose den id aus ids entfernen
+.. Reihenfolge geeignet markieren
+ok dazu neuer_Spielstand vollständig kopiert
 
 merk:
-.. opera classic macht nur buttons mit onclick
-.. gh-pages jetzt vorneweg
+ok opera classic macht nur buttons mit onclick
+ok gh-pages jetzt vorneweg, auch mit Voreinstellung
+ok Object.create zum vollständigen Kopieren
 xWtH8a1QzQ0 das ende der erde
 var count = context.get('count')||0;
 count += 1;
