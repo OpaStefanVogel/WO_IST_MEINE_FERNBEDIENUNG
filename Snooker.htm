@@ -1,0 +1,147 @@
+<HTML>
+  <HEAD>
+  <META charset="utf-8"/>
+  <TITLE>Snooker</TITLE>
+
+  <STYLE type="text/css"> 
+BODY { font-family: Courier,monospace; font-size:300%}
+PARTIE { display: flex; flex-direction:column; align-items:stretch; text-align:center}
+SPIELSTAND { font-size:300%; border:solid;}
+TEAMS { display: flex; flex-direction: row; align-items:center}
+TEAM  { display: flex; flex-direction: column; flex-basis:50%;align-items:center;}
+SPIELER { border:solid; padding:20px; margin:10px;}
+TEXT { align-item:center}
+BUTTONS { display: flex; flex-direction: column; align-items:center}
+BUTT { flex-basis:50%; border:solid}
+HISTORY {display:none;}
+
+    </STYLE> 
+
+<script type="application/ecmascript">
+function init() {
+  websockets = new WebSocket("wss://192.168.1.107:1880/ws/snooker"); 
+  alert("Versuch gestartet, websocket zu öffnen");   
+  websockets.onopen = function() {
+    websockets.send("auch ein hallo von kodi");
+    alert("hat funktioniert");
+    }
+  }
+
+function init() {
+  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
+  //websocket.send("hallo2");
+  websocket.onmessage = function() {
+    var w;
+    w=event.data;
+    //alert(w);
+    anzeigen(JSON.parse(w));
+    };
+  websocket.onopen = function() {
+    //alert(77);
+    websocket.send("hallo");//aktuellen Stand holen
+    }; 
+  websocket.onclose = function() {
+    //alert(77);
+    //websocket.send("close");
+    };
+  }
+
+
+var Spielstand={dran_ist:["Team1/Spieler1"],Zwischenstand:[0,0]};
+
+function du_bist_dran() {
+  var neu_dran=[event.target.getAttribute("id")];
+  for (var i=0;i<Spielstand.dran_ist.length;i++) {
+    if (Spielstand.dran_ist[i]!=neu_dran[0]) {
+      neu_dran.push(Spielstand.dran_ist[i]);
+      }
+    }
+  var neuer_Spielstand=Object.create(Spielstand);
+  neuer_Spielstand.dran_ist=neu_dran;
+  anzeigen(neuer_Spielstand);
+  websocket.send(JSON.stringify(neuer_Spielstand));
+  }
+
+function anzeigen(neuer_Spielstand) {
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:white");
+  document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:white");
+  Spielstand=neuer_Spielstand;
+  document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
+  var Teilnehmerzahl=Spielstand.dran_ist.length;
+  for (var i=0;i<Teilnehmerzahl;i++) {
+    document.getElementById(Spielstand.dran_ist[i]).setAttribute("style","background:linear-gradient(red, red "+(i/Teilnehmerzahl*100)+"%, blue)");
+    }
+  //alert(dran_ist);
+  }
+</script>
+
+  </head>
+<body onload="init()">Test Websocket über githubio öffnen</body>
+<PARTIE>
+<SPIELSTAND>0:0</SPIELSTAND>
+<TEAMS onclick="du_bist_dran()">
+  <TEAM>Team 1
+    <SPIELER id="Team1/Spieler1">ich</SPIELER>
+    <SPIELER id="Team1/Spieler2">er</SPIELER>
+    <SPIELER id="Team1/Spieler3">I</SPIELER>
+    <SPIELER id="Team1/Spieler4">he</SPIELER>
+    <SPIELER id="Team1/Spieler5">je</SPIELER>
+    <SPIELER id="Team1/Spieler6">il</SPIELER>
+    </TEAM>
+  <TEAM>Team 2
+    <SPIELER id="Team2/Spieler1">du</SPIELER>
+    <SPIELER id="Team2/Spieler2">sie</SPIELER>
+    <SPIELER id="Team2/Spieler3">you</SPIELER>
+    <SPIELER id="Team2/Spieler4">she</SPIELER>
+    <SPIELER id="Team2/Spieler5">tu</SPIELER>
+    <SPIELER id="Team2/Spieler6">elle</SPIELER>
+  </TEAM>
+    </TEAMS>
+    <BUTT ontouchstart="confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
+  <PARTIE>
+
+<HISTORY>
+<!--
+
+if (msg.payload=="resetIds") {var ids=[]} else {
+  var ids = context.get('ids')||[];
+  var ret = [[]];
+  var ind = ids.indexOf(msg._session.id);
+  if (ind==-1) {ids.push(msg._session.id)};
+  if (msg.payload!="") {
+  for (i=0;i<ids.length;i++) {
+    if (i!=ind) {
+      var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": ids[i] }}
+      ret[0].push(msg1);
+      }
+    }
+  }
+context.set('ids',ids);
+node.status({fill:"green",shape:"dot",text:ids.length});
+return ret;
+
+
+.. bei neu hinzuschalten aktuellen Stand holen
+.. Kleingedrucktes
+ok node function mit ids.length
+ok ids auf aktuelle beschränken
+ok alle Fenster aktualisieren
+ok kompletten Spielstand als json-Objekt senden
+.. bei onclose den id aus ids entfernen
+ok Reihenfolge geeignet markieren
+ok dazu neuer_Spielstand vollständig kopiert
+ok nicht an das eigene Fenster zurückschicken
+
+merk:
+ok opera classic macht nur buttons mit onclick
+ok gh-pages jetzt vorneweg, auch mit Voreinstellung
+ok Object.create zum vollständigen Kopieren
+xWtH8a1QzQ0 das ende der erde
+var count = context.get('count')||0;
+count += 1;
+// store the value back
+context.set('count',count);
+// make it part of the outgoing msg object
+msg.count = count;
+</HISTORY>
+</html>
