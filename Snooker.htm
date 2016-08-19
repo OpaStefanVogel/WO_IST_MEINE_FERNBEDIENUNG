@@ -18,6 +18,7 @@ HISTORY {display:none;}
     </STYLE> 
 
   <SCRIPT>
+function init() {
   websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
   websocket.onmessage = function() {
     var w;
@@ -32,7 +33,8 @@ HISTORY {display:none;}
   websocket.onclose = function() {
     //alert(77);
     //websocket.send("close");
-    }; 
+    };
+  }
 
 
 var Spielstand={dran_ist:["Team1/Spieler1"],Zwischenstand:[0,0]};
@@ -63,7 +65,7 @@ function anzeigen(neuer_Spielstand) {
   }
 </SCRIPT>
   </HEAD>
-<BODY onload="" onbevoreunload="websocket.send('close')">
+<BODY onload="init()" onbevoreunload="websocket.send('close')">
 <PARTIE>
 <SPIELSTAND>0:0</SPIELSTAND>
 <TEAMS onclick="du_bist_dran()">
