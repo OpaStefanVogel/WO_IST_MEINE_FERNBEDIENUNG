@@ -17,9 +17,19 @@ HISTORY {display:none;}
 
     </STYLE> 
 
-  <SCRIPT>
+<script type="application/ecmascript">
+function init() {
+  websockets = new WebSocket("wss://192.168.1.107:1880/ws/snooker"); 
+  alert("Versuch gestartet, websocket zu öffnen");   
+  websockets.onopen = function() {
+    websockets.send("auch ein hallo von kodi");
+    alert("hat funktioniert");
+    }
+  }
+
 function init() {
   websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
+  //websocket.send("hallo2");
   websocket.onmessage = function() {
     var w;
     w=event.data;
@@ -28,7 +38,7 @@ function init() {
     };
   websocket.onopen = function() {
     //alert(77);
-    websocket.send("");//aktuellen Stand holen
+    websocket.send("hallo");//aktuellen Stand holen
     }; 
   websocket.onclose = function() {
     //alert(77);
@@ -63,9 +73,10 @@ function anzeigen(neuer_Spielstand) {
     }
   //alert(dran_ist);
   }
-</SCRIPT>
-  </HEAD>
-<BODY onload="init()" onbevoreunload="websocket.send('close')">
+</script>
+
+  </head>
+<body onload="init()">Test Websocket über githubio öffnen</body>
 <PARTIE>
 <SPIELSTAND>0:0</SPIELSTAND>
 <TEAMS onclick="du_bist_dran()">
@@ -133,4 +144,4 @@ context.set('count',count);
 // make it part of the outgoing msg object
 msg.count = count;
 </HISTORY>
-  </BODY></HTML>
+</html>
