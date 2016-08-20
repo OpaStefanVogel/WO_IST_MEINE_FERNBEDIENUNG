@@ -69,14 +69,14 @@ function anzeigen(neuer_Spielstand) {
   document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
   var Teilnehmerzahl=Spielstand.dran_ist.length;
   for (var i=0;i<Teilnehmerzahl;i++) {
-    document.getElementById(Spielstand.dran_ist[i]).setAttribute("style","background:linear-gradient(red, red "+(i/Teilnehmerzahl*100)+"%, blue)");
+    document.getElementById(Spielstand.dran_ist[i]).setAttribute("style","background:linear-gradient(to top,green, green "+(i/(Teilnehmerzahl-1)*100-15)+"%, white "+(i/(Teilnehmerzahl-1)*100+15)+"%, white)");
     }
   //alert(dran_ist);
   }
 </script>
 
   </head>
-<body onload="init()">Test Websocket über githubio öffnen</body>
+<body onload="init()">
 <PARTIE>
 <SPIELSTAND>0:0</SPIELSTAND>
 <TEAMS onclick="du_bist_dran()">
@@ -136,6 +136,7 @@ merk:
 ok opera classic macht nur buttons mit onclick
 ok gh-pages jetzt vorneweg, auch mit Voreinstellung
 ok Object.create zum vollständigen Kopieren
+ok auf github https:// abwählen, sonst geht ws: nicht
 xWtH8a1QzQ0 das ende der erde
 var count = context.get('count')||0;
 count += 1;
@@ -144,4 +145,4 @@ context.set('count',count);
 // make it part of the outgoing msg object
 msg.count = count;
 </HISTORY>
-</html>
+</body></html>
