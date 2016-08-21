@@ -34,7 +34,7 @@ function init() {
     var w;
     w=event.data;
     //alert(w);
-    anzeigen(JSON.parse(w));
+    if (w!="{}") anzeigen(JSON.parse(w));
     };
   websocket.onopen = function() {
     //alert(77);
@@ -103,7 +103,17 @@ function anzeigen(neuer_Spielstand) {
 <HISTORY>
 <!--
 
-if (msg.payload=="resetIds") {var ids=[]} else {
+switch (msg.payload) {
+  case "resetIds": 
+    var ids=[]; 
+    break;
+  case "hallo": 
+    msg.payload=context.get('Spielstand')||{};
+    var ids = context.get('ids')||[];
+    ret=msg; 
+    break;
+  default:
+    context.set('Spielstand',msg.payload);
   var ids = context.get('ids')||[];
   var ret = [[]];
   var ind = ids.indexOf(msg._session.id);
@@ -114,6 +124,7 @@ if (msg.payload=="resetIds") {var ids=[]} else {
       var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": ids[i] }}
       ret[0].push(msg1);
       }
+    }
     }
   }
 context.set('ids',ids);
