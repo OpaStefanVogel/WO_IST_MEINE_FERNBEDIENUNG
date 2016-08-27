@@ -6,7 +6,10 @@
   <STYLE type="text/css"> 
 BODY { font-family: Courier,monospace; font-size:300%}
 PARTIE { display: flex; flex-direction:column; align-items:stretch; text-align:center}
-SPIELSTAND { font-size:300%; border:solid;}
+SPIELSTAND { display: flex; border:solid; align-items:center}
+TASTEN { display: flex; flex-direction:column; flex-basis:15% }
+TASTE { border:solid;}
+STAND { font-size:300%; flex-basis:100% }
 TEAMS { display: flex; flex-direction: row; align-items:center}
 TEAM  { display: flex; flex-direction: column; flex-basis:50%;align-items:center;}
 SPIELER { border:solid; padding:20px; margin:10px;}
@@ -14,6 +17,9 @@ TEXT { align-item:center}
 BUTTONS { display: flex; flex-direction: column; align-items:center}
 BUTT { flex-basis:50%; border:solid}
 HISTORY {display:none;}
+
+.jetztdran:before { content:"gerade dran: "; font-size:40% }
+.danachdran:before { content:"als nächstes dran: "; font-size:40% }
 
     </STYLE> 
 
@@ -28,7 +34,8 @@ function init() {
   }
 
 function init() {
-  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
+//  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
+  websocket = new WebSocket("ws://localhost:2005");
   //websocket.send("hallo2");
   websocket.onmessage = function() {
     var w;
@@ -50,7 +57,12 @@ function init() {
 var Spielstand={dran_ist:["Team1/Spieler1"],Zwischenstand:[0,0]};
 
 function du_bist_dran() {
-  var neu_dran=[event.target.getAttribute("id")];
+  var neu_dran=0;
+  if (event.target.nodeName=="SPIELER") {
+    neu_dran=[event.target.getAttribute("id")] } else {
+      //Spielstand.dran_ist.unshift(Spielstand.dran_ist.pop());
+      neu_dran=[Spielstand.dran_ist[Spielstand.dran_ist.length-1]];
+      }
   for (var i=0;i<Spielstand.dran_ist.length;i++) {
     if (Spielstand.dran_ist[i]!=neu_dran[0]) {
       neu_dran.push(Spielstand.dran_ist[i]);
@@ -69,16 +81,39 @@ function anzeigen(neuer_Spielstand) {
   document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
   var Teilnehmerzahl=Spielstand.dran_ist.length;
   for (var i=0;i<Teilnehmerzahl;i++) {
-    document.getElementById(Spielstand.dran_ist[i]).setAttribute("style","background:linear-gradient(to top,green, green "+(i/(Teilnehmerzahl-1)*100-15)+"%, white "+(i/(Teilnehmerzahl-1)*100+15)+"%, white)");
+    var derx=document.getElementById(Spielstand.dran_ist[i]);
+    derx.setAttribute("style","background:linear-gradient(to top,aquamarine, aquamarine "+((Teilnehmerzahl-1-i)/(Teilnehmerzahl-1)*100-15)+"%, white "+((Teilnehmerzahl-1-i)/(Teilnehmerzahl-1)*100+15)+"%, white)");
+    derx.setAttribute("class","");
     }
+  document.getElementById(Spielstand.dran_ist[Spielstand.dran_ist.length-1]).setAttribute("class","danachdran");
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("class","jetztdran");
+  document.getElementById("zu").firstChild.nodeValue=Spielstand.Zwischenstand[0]+":"+Spielstand.Zwischenstand[1];
   //alert(dran_ist);
   }
+
+function gewonnen(t1,t2) {
+  var SZ=Spielstand.Zwischenstand;
+  Spielstand.Zwischenstand=[SZ[0]+t1,SZ[1]+t2];
+  anzeigen(Spielstand);
+  websocket.send(JSON.stringify(Spielstand));
+  }
+
 </script>
 
   </head>
 <body onload="init()">
 <PARTIE>
-<SPIELSTAND>0:0</SPIELSTAND>
+<SPIELSTAND>
+  <TASTEN>
+    <TASTE onclick="gewonnen(1,0)">+1</TASTE>
+    <TASTE onclick="gewonnen(-1,0)">-1</TASTE>
+    </TASTEN>
+  <STAND id="zu">0:0</STAND>
+  <TASTEN>
+    <TASTE onclick="gewonnen(0,1)">+1</TASTE>
+    <TASTE onclick="gewonnen(0,-1)">-1</TASTE>
+    </TASTEN>
+  </SPIELSTAND>
 <TEAMS onclick="du_bist_dran()">
   <TEAM>Team 1
     <SPIELER id="Team1/Spieler1">ich</SPIELER>
@@ -97,7 +132,6 @@ function anzeigen(neuer_Spielstand) {
     <SPIELER id="Team2/Spieler6">elle</SPIELER>
   </TEAM>
     </TEAMS>
-    <BUTT ontouchstart="confirm('zurück auf 0:0?');websocket.send('restart')">Restart</BUTT>
   <PARTIE>
 
 <HISTORY>
