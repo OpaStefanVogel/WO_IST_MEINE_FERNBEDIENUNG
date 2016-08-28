@@ -34,9 +34,7 @@ function init() {
   }
 
 function init() {
-//  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
-  websocket = new WebSocket("ws://localhost:2005");
-  //websocket.send("hallo2");
+  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
   websocket.onmessage = function() {
     var w;
     w=event.data;
