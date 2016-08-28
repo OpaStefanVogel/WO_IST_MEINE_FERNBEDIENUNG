@@ -43,7 +43,7 @@ function init() {
     };
   websocket.onopen = function() {
     //alert(77);
-    websocket.send("hallo");//aktuellen Stand holen
+    //websocket.send("hallo");//aktuellen Stand holen
     }; 
   websocket.onclose = function() {
     //alert(77);
@@ -66,8 +66,9 @@ function du_bist_dran() {
       neu_dran.push(Spielstand.dran_ist[i]);
       }
     }
-  var neuer_Spielstand=Object.create(Spielstand);
+  var neuer_Spielstand=JSON.parse(JSON.stringify(Spielstand));
   neuer_Spielstand.dran_ist=neu_dran;
+  //alert(JSON.stringify(neuer_Spielstand));
   anzeigen(neuer_Spielstand);
   websocket.send(JSON.stringify(neuer_Spielstand));
   }
