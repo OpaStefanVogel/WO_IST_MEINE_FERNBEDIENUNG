@@ -1,0 +1,150 @@
+<html><head><meta charset="utf-8"></head>
+<body>
+Text1<table><tr><td>Text2</td></tr></table>
+<div>
+  <audio id="Alizee_Player" src="http://shared.real.de/familymanager/kinderlieder/downloads/schlaflieder/kinderlieder-weisst-du-wie-viel-sternlein-stehen.mp3" controls="controls" volume="1"></audio>
+  <audio id="Alizee_Player2" src="/storage/emulated/0/Download/kinderlieder-weisst-du-wie-viel-sternlein-stehen.mp3" controls="controls" volume="0.5"></audio>
+</div>
+<span class="Al_class">
+  <button style="font-size:300%;border:solid" onclick="document.getElementById('Alizee_Player').currentTime = 0;getElementById('Alizee_Player').requestFullscreen;document.getElementById('Alizee_Player').play()">Lied starten</button><button style="font-size:300%;border:solid" onclick="document.getElementById('Alizee_Player').pause()">Pause</button>
+</span> 
+<svg id="wq" xmlns="http://www.w3.org/2000/svg" 
+  version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%" 
+  style="border:dotted; font-family:Arial;"
+  viewBox="0 0 422 100"
+  preserveAspectRatio="xMinYMin">
+<defs>
+<circle cx="30" cy="30" r="30"/>
+<path id="Ei" d="M30,0C
+45,0 60,20 60,40,
+60,55 48,70 30,70,
+12,70 0,55 0,40,
+0,20 15,0 30,0,
+Z"/>
+</defs>
+<title>Eieruhr</title>
+
+<g id="gesamt" ontouchstart="Restart(evt)"> 
+<g opacity="1" stroke="black" transform="translate(0,70)">
+<g fill="yellow">
+<use xlink:href="#Ei" x="0" y="0" width="10" height="10"/>
+<use xlink:href="#Ei" x="60" y="0" />
+<use xlink:href="#Ei" x="120" y="0" />
+<use xlink:href="#Ei" x="180" y="0" />
+<use xlink:href="#Ei" x="240" y="0" />
+<use xlink:href="#Ei" x="240" y="0" />
+</g>
+<g fill="red">
+<use xlink:href="#Ei" x="300" y="0" />
+<use xlink:href="#Ei" x="360" y="0" />
+</g>
+<rect id="Deckel" x="1000" y="-1" width="710" height="80" 
+  fill="white" stroke="white" fill-opacity="0.9"/>
+</g>
+<text x="00" y="00" transform="scale(1) translate(0,20)">
+HALLO. Zum Starten der Eieruhr auf das jeweilige Ei tippen.
+<tspan x="0" dy="20">Von insgesamt 
+<tspan id="von" von="7">7</tspan> Minuten sind es jetzt noch 
+<tspan id="noch" noch="421">7:00</tspan> Minuten.</tspan></text>
+  <animate attributeName="opacity"
+    begin="0" dur="1"
+    values="0;1" fill="freeze"/>
+
+</g>
+
+<a xlink:href="UHR.xml"
+     xlink:title="Verweis zu einer HTML-Seite">
+    <rect x="900" y="300" ry="5" width="80" height="160"
+    style="fill:limegreen; stroke:black;" />
+  </a>
+<script type="application/ecmascript"> 
+<![CDATA[
+setInterval(Eieruhr,1000);
+
+var Startzeit=Date.now();
+var Istzeit=Startzeit;
+
+function Eieruhr(){
+  var n=document.getElementById("noch").getAttribute("noch");
+  n=n-1;//60
+  var von=document.getElementById("von").getAttribute("von")*60;
+  Istzeit=Date.now();
+  //alert(Istzeit-Startzeit);
+  n=Math.round(von-(Istzeit-Startzeit)/1000);
+  Minuten=(n-n%60)/60;
+  if (n<=-0) {
+    n=document.getElementById("von").getAttribute("von")*60;
+    Startzeit=Date.now();
+    };
+  document.getElementById("noch").setAttribute("noch",n);
+  if (10>n%60) {
+    document.getElementById("noch").lastChild.textContent=(n-n%60)/60+":0"+n%60;
+    } else {
+      document.getElementById("noch").lastChild.textContent=(n-n%60)/60+":"+n%60;
+      };
+  document.getElementById("Deckel").setAttribute("x",n);
+//SecFromTime(n);
+//  alert(n);
+  if (0==n%60) {
+    switch (Minuten) {
+      case 3: {
+var worte = new SpeechSynthesisUtterance("Eieruhr noch drei Minuten, denk auch an die Brötchen und den Tee"); break;} 
+      case 1: {document.getElementById('Alizee_Player').currentTime = 0;document.getElementById('Alizee_Player').play();
+var worte = new SpeechSynthesisUtterance("Eieruhr noch eine Minute, denk auch an die Brötchen. Jetzt wird das eine Auge zugemacht."); break;} 
+      case 0: {document.getElementById('Alizee_Player').currentTime = 0;document.getElementById('Alizee_Player').play(); 
+var worte = new SpeechSynthesisUtterance("Jetzt werden die Eier herausgenommen, und die Brötchen auch. Liebe Kinder, jetzt werden die Augen zugemacht. Aufpassen, jetzt kommt gleich noch ein Lied.");break;} 
+      default: {
+var worte = new SpeechSynthesisUtterance("Eieruhr noch"+Minuten+" Minuten, denk auch an die Brötchen und das Geheimnis.");break;}
+      }
+worte.lang = "de-DE";
+window.speechSynthesis.speak(worte);
+    //alert("sprech");
+    }
+  };
+function Restart(evt){
+  www=document.getElementById("gesamt").getCTM().a;
+  xxx=evt.touches.item(0).pageX/60/www;
+  yyy=xxx-xxx%1+1;
+//alert(www+" "+xxx+" "+yyy);
+Startzeit=Date.now();
+  document.getElementById("noch").setAttribute("noch",yyy*60+1);
+  document.getElementById("von").setAttribute("von",yyy);
+  document.getElementById("von").lastChild.textContent=yyy;
+//alert(evt.touches.item(0).clientX);//bez. svg.-Ausschnittsfensterrahmen
+//alert(evt.touches.item(0).screenX);//bez. html-document.
+//alert(evt.touches.item(0).pageX);//bez. svg-document
+//alert(document.getElementById("gesamt").getCTM().a);
+//  ccc=document.getElementById("gesamt").cloneNode(document.getElementById("von"));
+//alert(ccc);
+//  document.getElementById("gesamt").appendChild(ccc);
+//alert(document.getElementById("gesamt").textContent);
+  Eieruhr();
+  };
+
+//document.getElementById("gesamt").addEventListener("touchstart",Restart,false);
+Eieruhr();
+]]> </script> 
+  </svg>
+</body>
+</html>  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+

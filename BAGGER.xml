@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+[
+<!ENTITY % SVG.GraphicalEvents.extra.attrib 
+  "ontouchstart CDATA #IMPLIED
+   ontouchmove CDATA #IMPLIED
+   ontouchend CDATA #IMPLIED">
+]
+>
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%"
+  viewBox="0 0 800 400"
+  preserveAspectRatio="xMinYMin"
+  style="border:dotted"
+  onload="jedeSek()"
+  ontouchstart="prev(evt)">
+<title>Bagger</title>
+<symbol id="schieber">
+  <rect x="0" y="0" ry="40" width="100" height="80"/>
+  <path transform="translate(10,40)" d="M0,0l9 9v-3h60v3l9-9l-9-9v3h-60v-3l-9,9l9,9" 
+    stroke="white" stroke-width="3" stroke-opacity="0.9"></path>
+  </symbol>
+<svg>
+<g id="bagger" bx="300" bd="0" transform="translate(300)" 
+  stroke-width="6" stroke-dasharray="6,6" stroke-opacity="0.8"
+  stroke-dashoffset="0">
+  <rect id="baggeri" x="0" y="0" ry="10" width="200" height="100" fill="black"/>
+  <g id="oberarm" bx="-100" bd="0" transform="translate(0) rotate(-100)">
+    <rect id="oberarmi" x="0" y="-20" ry="10" width="200" height="40" fill="green"/>
+    <g id="unterarm" bx="-120" bd="0" transform="translate(200,0) rotate(-120)">
+      <rect id="unterarmi" x="0" y="-15" ry="10" width="200" height="30" fill="yellow"/>
+      <g id="unterarmfortsetzung" transform="translate(200,0) rotate(0)">
+        </g>
+      </g>
+    </g>
+  </g>
+
+<g id="greifer" bx="90" bd="0" transform="translate(0) rotate(90)">
+  <rect x="0" y="-5" ry="10" width="20" height="10" fill="red"/>
+  <circle id="ballo" cx="0" cy="0" r="0" transform="translate(60)" fill="red"/>
+  <g id="zangerechts" bx="40" bd="0" transform="translate(20,0) rotate(40)">
+    <rect x="0" y="-5" ry="10" width="50" height="10" fill="darkred"/>
+    <rect x="45" y="-20" ry="10" width="10" height="20" fill="darkred"/>
+    </g>
+  <g id="zangelinks" bx="-40" bd="0" transform="translate(20,0) rotate(-40)">
+    <rect x="0" y="-5" ry="10" width="50" height="10" fill="darkred"/>
+    <rect x="45" y="0" ry="10" width="10" height="20" fill="darkred"/>
+    </g>
+  </g>
+<circle id="ball" cx="20" cy="380" r="20" fill="red" opacity="0.5"/>
+<circle id="ball1" cx="80" cy="380" r="20" fill="red" opacity="0.5"/>
+<circle id="ball2" cx="140" cy="380" r="20" fill="red" opacity="0.5"/>
+<circle id="ball3" cx="200" cy="380" r="20" fill="red" opacity="0.5"/>
+<circle id="ball4" cx="260" cy="380" r="20" fill="green" opacity="0.5"/>
+<circle id="ball5" cx="20" cy="280" r="20" fill="red" opacity="0.5"/>
+<circle id="ball6" cx="80" cy="280" r="20" fill="red" opacity="0.5"/>
+<circle id="ball7" cx="140" cy="280" r="20" fill="red" opacity="0.5"/>
+<circle id="ball8" cx="200" cy="280" r="20" fill="red" opacity="0.5"/>
+<circle id="ball9" cx="260" cy="280" r="20" fill="green" opacity="0.5"/>
+<circle id="ball10" cx="20" cy="180" r="20" fill="red" opacity="0.5"/>
+<circle id="ball11" cx="80" cy="180" r="20" fill="yellow" opacity="0.5"/>
+<circle id="ball12" cx="140" cy="180" r="20" fill="red" opacity="0.5"/>
+<circle id="ball13" cx="200" cy="180" r="20" fill="red" opacity="0.5"/>
+<circle id="ball14" cx="260" cy="180" r="20" fill="green" opacity="0.5"/>
+<circle id="ball15" cx="20" cy="230" r="20" fill="blue" opacity="0.5"/>
+<circle id="ball16" cx="80" cy="230" r="20" fill="red" opacity="0.5"/>
+<circle id="ball17" cx="140" cy="230" r="20" fill="darkred" opacity="0.5"/>
+<circle id="ball18" cx="200" cy="230" r="20" fill="red" opacity="0.5"/>
+<circle id="ball19" cx="260" cy="230" r="20" fill="green" opacity="0.5"/>
+<circle id="ball20" cx="20" cy="330" r="20" fill="red" opacity="0.5"/>
+<circle id="ball21" cx="80" cy="330" r="20" fill="yellow" opacity="0.5"/>
+<circle id="ball22" cx="140" cy="330" r="20" fill="red" opacity="0.5"/>
+<circle id="ball23" cx="200" cy="330" r="20" fill="red" opacity="0.5"/>
+<circle id="ball24" cx="260" cy="330" r="20" fill="green" opacity="0.5"/>
+
+</svg>
+
+<use id="baggerplus" xlink:href="#schieber" x="600" y="320" fill="black"
+  ontouchstart="baggerplus(evt)"
+  ontouchmove="baggermove(evt)"
+  ontouchend="baggernull(evt)"
+  ontouchcancel="baggernull(evt)"
+  ontouchleave="baggernull(evt)"
+/>
+<use id="oberplus" xlink:href="#schieber" x="600" y="240" fill="green"
+  ontouchstart="oberplus(evt)"
+  ontouchmove="obermove(evt)"
+  ontouchend="obernull(evt)"
+  ontouchcancel="obernull(evt)"
+  ontouchleave="obernull(evt)"
+/>
+<use id="unterplus" xlink:href="#schieber" x="600" y="160" fill="yellow"
+  ontouchstart="unterplus(evt)"
+  ontouchmove="untermove(evt)"
+  ontouchend="unternull(evt)"
+  ontouchcancel="unternull(evt)"
+  ontouchleave="unternull(evt)"
+/>
+<use id="greiferplus" xlink:href="#schieber" x="600" y="80" fill="red" ontouchstart="greiferplus(evt)"
+  ontouchmove="greifermove(evt)"
+  ontouchend="greifernull(evt)"
+  ontouchcancel="greifernull(evt)"
+  ontouchleave="greifernull(evt)"
+/>
+<use id="zangeplus" xlink:href="#schieber" x="600" y="0" fill="darkred"
+  ontouchstart="zangeplus(evt)"
+  ontouchmove="zangemove(evt)"
+  ontouchend="zangenull(evt)"
+  ontouchcancel="zangenull(evt)"
+  ontouchleave="zangenull(evt)"
+/>
+
+<rect id="unterplu" x="750" y="0" ry="10" width="100" height="80" fill="yellow" ontouchstart="baggerplus(evt)" ontouchend="alert(8)"/>
+<text id="showy" x="10" y="80" align="central" font-size="100%">.</text>
+
+
+<!--Rester, nicht mehr gebraucht:
+  <a xlink:href="INDUKTIONSKOCHPLATTE.xml"
+     xlink:title="Induktionskochplatte" id="hr">
+    <rect x="0" y="0" ry="4" width="100" height="50"
+    style="fill:limegreen; stroke:black;"/>
+    <use xlink:href="INDUKTIONSKOCHPLATTE.svg#backg"/>
+    <image xlink:href="EIERUHR.svg" x="0" y="0" width="100" height="100"/>
+    <text x="00" y="40" width="100" height="30" display-align="center" text-align="end" 
+      font-size="300%" font-style="italic" fill="black">next</text>
+  </a>
+
+
+  style="border:dotted"
+  width="100%" height="100%"
+  preserveAspectRatio="xMinYMin meet"
+/-->
+
+<script type="application/ecmascript"> 
+<![CDATA[
+function prev(evt) {
+  evt.preventDefault();
+  };
+ 
+function baggerplus(evt) {
+//alert(evt.target);
+  document.getElementById("bagger").setAttribute("xpos",evt.touches.item(0).screenX);
+  document.getElementById("baggeri").setAttribute("stroke","red");
+  }
+function baggermove(evt) {
+  document.getElementById("bagger").setAttribute("bd",
+  (evt.touches.item(0).screenX-
+  eval(document.getElementById("bagger").getAttribute("xpos")))/20
+  );
+  }
+function display(evt) {
+alert("Fehlersuche:");
+//alert(document.getElementById("baggerplus").attributes.length);
+//alert(document.getElementById("baggerplus").attributes[1].nodeName);
+//alert(document.getElementById("baggerplus").attributes[1].name);
+//alert(document.getElementById("baggerplus").attributes[1].nodeValue);
+//alert(document.getElementById("baggerplus").attributes[1].ownerDocument);
+//alert(document.getElementById("baggerplus").transform);
+//alert(document.getElementById("baggerplus").transform.baseVal);
+//alert(document.getElementById("baggerplus").transform.baseVal.numberOfItems);
+//alert(document.getElementById("greifer").transform.baseVal.getItem(1).angle);
+//document.getElementById("greifer").transform.baseVal.getItem(1).setRotate(11,0,0);
+//alert(document.getElementById("greifer").transform.baseVal.getItem(1).angle);
+//alert(document.getElementById("greifer").getAttribute("transform"));
+//alert(document.getElementById("baggerplus").ontouchstart);
+//alert(document.getElementById("baggerplus").getAttribute("ontouchstart"));
+//alert(document.getElementById("baggerplus").getCTM());
+//alert(document.getElementById("greifer").getCTM().a+"*");
+//alert(document.getElementById("greifer").getCTM().e);
+//alert(document.getElementById("greifer").getScreenCTM().e);
+//alert(document.getElementById("hr").href.baseVal);// na jetzt wird es
+//alert(document.getElementById("baggerplus").getCTM().flipX);
+alert(document.getElementById("ballo").getCTM().e);
+alert(document.getElementById("ball").getAttribute("cx"));
+alert(document.getElementById("ballo").getCTM().f);
+alert(document.getElementById("ball").getAttribute("cy"));
+alert(document.getElementById("zangerechts").getAttribute("bx"));
+  }
+function baggernull(evt) {
+  document.getElementById("bagger").setAttribute("bd",0);
+  document.getElementById("baggeri").setAttribute("stroke","");
+  }
+function oberplus(evt) {
+  document.getElementById("oberarm").setAttribute("xpos",evt.touches.item(0).screenX);
+//  document.getElementById("oberarmi").setAttribute("stroke","red");
+  }
+function obermove(evt) {
+  document.getElementById("oberarm").setAttribute("bd",
+  (evt.touches.item(0).screenX-
+  eval(document.getElementById("oberarm").getAttribute("xpos")))/40
+  );
+  }
+function obernull(evt) {
+  document.getElementById("oberarm").setAttribute("bd",0);
+  document.getElementById("oberarmi").setAttribute("stroke","");
+  }
+function unterplus(evt) {
+  document.getElementById("unterarm").setAttribute("xpos",evt.touches.item(0).screenX);
+//  document.getElementById("unterarmi").setAttribute("stroke","red");
+  }
+function untermove(evt) {
+  document.getElementById("unterarm").setAttribute("bd",
+  (evt.touches.item(0).screenX-
+  eval(document.getElementById("unterarm").getAttribute("xpos")))/40
+  );
+  }
+function unternull(evt) {
+  document.getElementById("unterarm").setAttribute("bd",0);
+  document.getElementById("unterarmi").setAttribute("stroke","");
+  }
+function greiferplus(evt) {
+  document.getElementById("greifer").setAttribute("xpos",evt.touches.item(0).screenX);
+  }
+function greifermove(evt) {
+  document.getElementById("greifer").setAttribute("bd",
+  (evt.touches.item(0).screenX-
+  eval(document.getElementById("greifer").getAttribute("xpos")))/40
+  );
+  }
+function greifernull(evt) {
+  document.getElementById("greifer").setAttribute("bd",0);
+  }
+function zangeplus(evt) {
+  document.getElementById("zangerechts").setAttribute("xpos",evt.touches.item(0).screenX);
+  document.getElementById("zangelinks").setAttribute("xpos",evt.touches.item(0).screenX);
+  }
+function zangemove(evt) {
+  document.getElementById("zangerechts").setAttribute("bd",
+  (evt.touches.item(0).screenX-
+  eval(document.getElementById("zangerechts").getAttribute("xpos")))/40
+  );
+  document.getElementById("zangelinks").setAttribute("bd",
+  -(evt.touches.item(0).screenX-
+  eval(document.getElementById("zangelinks").getAttribute("xpos")))/40
+  );
+  }
+function zangenull(evt) {
+  document.getElementById("zangerechts").setAttribute("bd",0);
+  document.getElementById("zangelinks").setAttribute("bd",0);
+  }
+
+function baggerplu(teil,prefix,posfix) {
+  bx=document.getElementById(teil).getAttribute("bx");
+  bd=document.getElementById(teil).getAttribute("bd");
+  bx=eval(bx)+eval(bd);
+  cx=prefix+bx+posfix;
+  document.getElementById(teil).setAttribute("bx",bx);
+  document.getElementById(teil).setAttribute("transform",cx);
+  }
+
+function greiferplu(teil) {
+//alert(document.getElementById(teil).getAttribute("transform"));
+  bx=document.getElementById(teil).getAttribute("bx");
+  bd=document.getElementById(teil).getAttribute("bd");
+  bx=eval(bx)+eval(bd);
+//alert(bx);
+  document.getElementById(teil).setAttribute("bx",bx);
+  document.getElementById(teil).transform.baseVal.getItem(1).setRotate(bx,0,0);
+  }
+
+function gr(ball){
+  if (
+    Math.abs(eval(document.getElementById("ballo").getCTM().e-
+      document.getElementById(ball).getAttribute("cx")))<10 && 
+    Math.abs(eval(document.getElementById("ballo").getCTM().f-
+      document.getElementById(ball).getAttribute("cy")))<10 && 
+    eval(document.getElementById("zangerechts").getAttribute("bx"))<=39 && 
+    1==1
+    ) {
+//alert("jetzt");
+//alert(document.getElementById(ball).getCTM().e)
+//alert(document.getElementById("ballo").getCTM().e)
+  document.getElementById(ball).setAttribute("cx",document.getElementById("ballo").getCTM().e);
+  document.getElementById(ball).setAttribute("cy",document.getElementById("ballo").getCTM().f);
+  document.getElementById("zangerechts").setAttribute("bx",39);
+  document.getElementById("zangelinks").setAttribute("bx",-39);
+    };
+
+}
+
+setInterval(jedeSek,100);
+
+function jedeSek(){
+  baggerplu("bagger","translate(",",296)");
+  greiferplu("oberarm");
+  greiferplu("unterarm");
+  document.getElementById("greifer").transform.baseVal.getItem(0).setTranslate(
+    document.getElementById("unterarmfortsetzung").getCTM().e,
+    document.getElementById("unterarmfortsetzung").getCTM().f);
+  greiferplu("greifer");
+  greiferplu("zangelinks");
+  greiferplu("zangerechts");
+  offs=-document.getElementById("greifer").getCTM().e;
+  document.getElementById("bagger").setAttribute("stroke-dashoffset",offs);
+//  document.getElementById("showy").childNodes[0].nodeValue=
+//    document.getElementById("greifer").getCTM().f;
+  gr("ball");
+  gr("ball1");
+  gr("ball2");
+  gr("ball3");
+  gr("ball4");
+  gr("ball5");
+  gr("ball6");
+  gr("ball7");
+  gr("ball8");
+  gr("ball9");
+  gr("ball10");
+  gr("ball11");
+  gr("ball12");
+  gr("ball13");
+  gr("ball14");
+  gr("ball15");
+  gr("ball16");
+  gr("ball17");
+  gr("ball18");
+  gr("ball19");
+  gr("ball20");
+  gr("ball21");
+  gr("ball22");
+  gr("ball23");
+  gr("ball24");
+
+
+  };
+
+function Restart(evt){jedeSek()};
+
+ ]]> </script> 
+
+ </svg>
