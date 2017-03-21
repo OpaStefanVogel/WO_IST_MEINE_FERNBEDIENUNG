@@ -1,13 +1,5 @@
-<html><head><meta charset="utf-8"></head>
-<body>
-Text1<table><tr><td>Text2</td></tr></table>
-<div>
-  <audio id="Alizee_Player" src="http://shared.real.de/familymanager/kinderlieder/downloads/schlaflieder/kinderlieder-weisst-du-wie-viel-sternlein-stehen.mp3" controls="controls" volume="1"></audio>
-  <audio id="Alizee_Player2" src="/storage/emulated/0/Download/kinderlieder-weisst-du-wie-viel-sternlein-stehen.mp3" controls="controls" volume="0.5"></audio>
-</div>
-<span class="Al_class">
-  <button style="font-size:300%;border:solid" onclick="document.getElementById('Alizee_Player').currentTime = 0;getElementById('Alizee_Player').requestFullscreen;document.getElementById('Alizee_Player').play()">Lied starten</button><button style="font-size:300%;border:solid" onclick="document.getElementById('Alizee_Player').pause()">Pause</button>
-</span> 
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg id="wq" xmlns="http://www.w3.org/2000/svg" 
   version="1.1" baseProfile="full" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -44,7 +36,7 @@ Z"/>
   fill="white" stroke="white" fill-opacity="0.9"/>
 </g>
 <text x="00" y="00" transform="scale(1) translate(0,20)">
-HALLO. Zum Starten der Eieruhr auf das jeweilige Ei tippen.
+Zum Starten der Eieruhr auf das jeweilige Ei tippen.
 <tspan x="0" dy="20">Von insgesamt 
 <tspan id="von" von="7">7</tspan> Minuten sind es jetzt noch 
 <tspan id="noch" noch="421">7:00</tspan> Minuten.</tspan></text>
@@ -91,12 +83,10 @@ function Eieruhr(){
     switch (Minuten) {
       case 3: {
 var worte = new SpeechSynthesisUtterance("Eieruhr noch drei Minuten, denk auch an die Brötchen und den Tee"); break;} 
-      case 1: {document.getElementById('Alizee_Player').currentTime = 0;document.getElementById('Alizee_Player').play();
-var worte = new SpeechSynthesisUtterance("Eieruhr noch eine Minute, denk auch an die Brötchen. Jetzt wird das eine Auge zugemacht."); break;} 
-      case 0: {document.getElementById('Alizee_Player').currentTime = 0;document.getElementById('Alizee_Player').play(); 
-var worte = new SpeechSynthesisUtterance("Jetzt werden die Eier herausgenommen, und die Brötchen auch. Liebe Kinder, jetzt werden die Augen zugemacht. Aufpassen, jetzt kommt gleich noch ein Lied.");break;} 
+      case 1: {
+var worte = new SpeechSynthesisUtterance("Eieruhr noch eine Minute, denk auch an die Brötchen"); break;} 
       default: {
-var worte = new SpeechSynthesisUtterance("Eieruhr noch"+Minuten+" Minuten, denk auch an die Brötchen und das Geheimnis.");break;}
+var worte = new SpeechSynthesisUtterance("Eieruhr noch"+Minuten+" Minuten, denk auch an die Brötchen");break;}
       }
 worte.lang = "de-DE";
 window.speechSynthesis.speak(worte);
@@ -127,8 +117,7 @@ Startzeit=Date.now();
 Eieruhr();
 ]]> </script> 
   </svg>
-</body>
-</html>  
+  
   
   
   
