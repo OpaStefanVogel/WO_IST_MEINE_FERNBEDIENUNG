@@ -1,0 +1,26 @@
+<html>
+<head>
+  <title>Plauener Modelleisenbahn</title>
+  <meta charset="utf-8"/>
+  <style type="text/css"> 
+</style> 
+<script type="application/ecmascript">
+function init() {
+  websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
+  websocket.onopen = function() {
+    alert("CONNECTED");
+    }; 
+  websocket.onclose = function() {
+    alert("DISCONNECTED");
+    }; 
+  websocket.onmessage = function() {
+    alert("event.data="+event.data);
+    }; 
+  websocket.onerror = function() { alert(event.data) };
+  alert("Websocket gestartet");
+  }
+  </script>
+<body onload="init()">
+  Hallo
+  </body>
+  </html>
