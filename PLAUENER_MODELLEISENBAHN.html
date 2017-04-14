@@ -5,6 +5,11 @@
   <style type="text/css"> 
 </style> 
 <script type="application/ecmascript">
+function Sprich(was) {
+  var worte = new SpeechSynthesisUtterance(was);
+  worte.lang = "de-DE";
+  window.speechSynthesis.speak(worte);
+  }
 function init() {
   websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
   websocket.onopen = function() {
@@ -14,7 +19,8 @@ function init() {
     alert("DISCONNECTED");
     }; 
   websocket.onmessage = function() {
-    alert("event.data="+event.data);
+    Sprich("Vorsicht am Gleis 1, es fährt ein der Zug aus Chemnitz");
+    //alert("event.data="+event.data);
     }; 
   websocket.onerror = function() { alert(event.data) };
   alert("Websocket gestartet");
