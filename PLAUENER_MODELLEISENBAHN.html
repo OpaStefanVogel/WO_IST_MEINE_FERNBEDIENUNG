@@ -10,9 +10,14 @@ function Logfile(Logtext) {
   if (Logfile.hasChildNodes()==false) Logfile.appendChild(document.createTextNode(" "));
   Logfile.firstChild.nodeValue=Logtext;
   }
-function Sprich(was) {
+function SprichDE(was) {
   var worte = new SpeechSynthesisUtterance(was);
   worte.lang = "de-DE";
+  window.speechSynthesis.speak(worte);
+  }
+function SprichFR(was) {
+  var worte = new SpeechSynthesisUtterance(was);
+  worte.lang = "fr-FR";
   window.speechSynthesis.speak(worte);
   }
 function init() {
@@ -24,7 +29,8 @@ function init() {
     Logfile("DISCONNECTED");
     }; 
   websocket.onmessage = function() {
-    Sprich("Vorsicht am Gleis 1, es fährt ein der Zug aus Chemnitz");
+    SprichDE("Vorsicht am Gleis 1, es fährt ein der Zug aus Chemnitz");
+    SprichFR("Attention à la voie 1, arrivée du train de Chemnitz");
     Logfile("event.data="+event.data);
     }; 
   websocket.onerror = function() { Logfile("onerror="+event.data) };
