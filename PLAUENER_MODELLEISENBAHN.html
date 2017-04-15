@@ -5,6 +5,11 @@
   <style type="text/css"> 
 </style> 
 <script type="application/ecmascript">
+function Logfile(Logtext) {
+  var Logfile=document.getElementById("Logfile");
+  if (Logfile.hasChildNodes()==false) Logfile.appendChild(document.createTextNode(" "));
+  Logfile.firstChild.nodeValue=Logtext;
+  }
 function Sprich(was) {
   var worte = new SpeechSynthesisUtterance(was);
   worte.lang = "de-DE";
@@ -13,20 +18,20 @@ function Sprich(was) {
 function init() {
   websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
   websocket.onopen = function() {
-    alert("CONNECTED");
+    Logfile("CONNECTED");
     }; 
   websocket.onclose = function() {
-    alert("DISCONNECTED");
+    Logfile("DISCONNECTED");
     }; 
   websocket.onmessage = function() {
     Sprich("Vorsicht am Gleis 1, es fährt ein der Zug aus Chemnitz");
-    //alert("event.data="+event.data);
+    Logfile("event.data="+event.data);
     }; 
-  websocket.onerror = function() { alert(event.data) };
-  alert("Websocket gestartet");
+  websocket.onerror = function() { Logfile("onerror="+event.data) };
+  Logfile("Websocket gestartet");
   }
   </script>
 <body onload="init()">
-  Hallo
+  letzte Aktion: <span id="Logfile">Seite geladen</span>
   </body>
   </html>
