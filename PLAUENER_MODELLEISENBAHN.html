@@ -21,7 +21,8 @@ function SprichFR(was) {
   window.speechSynthesis.speak(worte);
   }
 function init() {
-  websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
+  //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
+  websocket = new WebSocket("ws:192.168.2.100:1880/ws/gpio"); 
   websocket.onopen = function() {
     Logfile("CONNECTED");
     }; 
@@ -29,9 +30,10 @@ function init() {
     Logfile("DISCONNECTED");
     }; 
   websocket.onmessage = function() {
-    SprichDE("Vorsicht am Gleis 1, es fährt ein der Zug aus Chemnitz");
-    SprichFR("Attention à la voie 1, arrivée du train de Chemnitz");
     Logfile("event.data="+event.data);
+    SprichDE("Vorsicht am Gleis 1, es kommt ein Zug aus Chemnitz");
+    //SprichFR("Attention à la voie 1, arrivée du train de Chemnitz");
+    Logfile("event.data="+event.data+" durch");
     }; 
   websocket.onerror = function() { Logfile("onerror="+event.data) };
   Logfile("Websocket gestartet");
