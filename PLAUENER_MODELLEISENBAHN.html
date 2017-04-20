@@ -5,6 +5,7 @@
   <style type="text/css"> 
 </style> 
 <script type="application/ecmascript">
+var eventnr=0;
 function Logfile(Logtext) {
   var Logfile=document.getElementById("Logfile");
   if (Logfile.hasChildNodes()==false) Logfile.appendChild(document.createTextNode(" "));
@@ -30,10 +31,11 @@ function init() {
     Logfile("DISCONNECTED");
     }; 
   websocket.onmessage = function() {
+    eventnr=eventnr+1;
     Logfile("event.data="+event.data);
     SprichDE("Vorsicht am Gleis 1, es kommt ein Zug aus Chemnitz");
     //SprichFR("Attention à la voie 1, arrivée du train de Chemnitz");
-    Logfile("event.data="+event.data+" durch");
+    Logfile("event.data="+event.data+" durch "+eventnr);
     }; 
   websocket.onerror = function() { Logfile("onerror="+event.data) };
   Logfile("Websocket gestartet");
