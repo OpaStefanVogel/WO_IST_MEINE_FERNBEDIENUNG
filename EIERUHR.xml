@@ -57,8 +57,9 @@ setInterval(Eieruhr,1000);
 
 var Startzeit=Date.now();
 var Istzeit=Startzeit;
+var EinAus="aus";
 
-function Eieruhr(){
+function Eieruhr(){ if (EinAus=="ein") {
   var n=document.getElementById("noch").getAttribute("noch");
   n=n-1;//60
   var von=document.getElementById("von").getAttribute("von")*60;
@@ -92,8 +93,10 @@ worte.lang = "de-DE";
 window.speechSynthesis.speak(worte);
     //alert("sprech");
     }
-  };
+  } };
+
 function Restart(evt){
+  EinAus="ein";
   www=document.getElementById("gesamt").getCTM().a;
   xxx=evt.touches.item(0).pageX/60/www;
   yyy=xxx-xxx%1+1;
@@ -114,7 +117,9 @@ Startzeit=Date.now();
   };
 
 //document.getElementById("gesamt").addEventListener("touchstart",Restart,false);
-Eieruhr();
+worte=new SpeechSynthesisUtterance("");
+worte.lang = "de-DE";
+window.speechSynthesis.speak(worte);
 ]]> </script> 
   </svg>
   
