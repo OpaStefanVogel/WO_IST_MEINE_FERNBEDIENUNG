@@ -56,5 +56,34 @@ Licht
 Waldcafe 
 <button class="Licht_an" onclick='websocket.send("5");Logfile("Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("Licht aus")'>aus</button>
-  </body>
+</p>
+  <svg id="Grafik" width="800" height="420" viewBox="0 0 800 420" style="border:solid 1px black" xmlns:xlink="http://www.w3.org/1999/xlink" fill="black" stroke="red">
+    <title>Streichholzgraph</title>
+    <defs>
+      <g id="Weiche" fill="none" stroke="blue">
+        <!--path d="M0,0 l100,0 M0,20 l100,0 M0,0 A200,200 0,0,1 100,26.8 M0,20 A180,180 0,0,1 90,44.12" fill="none" stroke="red"/-->
+        <path d="M5,0.2 A200,200 0,0,1 87.178,20 L5,18">
+<animate attributeName="d" from="M5,0.2 A200,200 0,0,1 87.178,20 L5,18" to="M4.9,2.2 A200,200 0,0,1 87.178,20 L4.95,20" dur="0.5" fill="freeze" begin="2" end="100"/>
+<animate attributeName="d" to="M5,0.2 A200,200 0,0,1 87.178,20 L5,18" from="M4.9,2.2 A200,200 0,0,1 87.178,20 L4.95,20" dur="0.5" fill="freeze" begin="gerade.click" end="100"/>
+          </path>
+        <path d="M100,20 L87.178,20 A200,200 0,0,1 100,26.8" stroke-linejoin="miter" stroke-miterlimit="20" stroke="white" transform="translate(-2,-0.5)"/>
+        <path d="M0,0 l100,0 M100,20 L87.178,20 A200,200 0,0,1 100,26.8 M0,20 A180,180 0,0,1 90,44.12" stroke-linejoin="miter" stroke-miterlimit="20"/>
+        </g>
+      <line id="Streichholz" x1="0" y1="0" x2="0" y2="100"/>
+      <circle id="Streichholzmarkierung" cx="0" cy="0" r="3" />
+      </defs>
+    <!--use id="Weiche1" xlink:href="#Weiche" x="100" y="100" stroke="blue"/-->
+      <g id="Weiche" fill="none" stroke="blue" transform="translate(100,100)">
+        <!--path d="M0,0 l100,0 M0,20 l100,0 M0,0 A200,200 0,0,1 100,26.8 M0,20 A180,180 0,0,1 90,44.12" fill="none" stroke="red"/-->
+        <path d="M5,0.2 A200,200 0,0,1 87.178,20 L5,18">
+<animate attributeName="d" from="M5,0.2 A200,200 0,0,1 87.178,20 L5,18" to="M4.9,2.2 A200,200 0,0,1 87.178,20 L4.95,20" dur="0.5" fill="freeze" begin="krumm.click" end="100"/>
+<animate attributeName="d" to="M5,0.2 A200,200 0,0,1 87.178,20 L5,18" from="M4.9,2.2 A200,200 0,0,1 87.178,20 L4.95,20" dur="0.5" fill="freeze" begin="gerade.click" end="100"/>
+          </path>
+        <path d="M100,20 L87.178,20 A200,200 0,0,1 100,26.8" stroke-linejoin="miter" stroke-miterlimit="20" stroke="white" transform="translate(-2,-0.5)"/>
+        <path d="M0,0 l100,0 M100,20 L87.178,20 A200,200 0,0,1 100,26.8 M0,20 A180,180 0,0,1 90,44.12" stroke-linejoin="miter" stroke-miterlimit="20"/>
+        <circle id="krumm" cx="100" cy="-12" r="5" fill="green"/>
+        <circle id="gerade" cx="90" cy="55" r="5" fill="orange"/>
+        </g>
+    </svg>
+</body>
   </html>
