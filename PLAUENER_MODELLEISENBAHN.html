@@ -53,20 +53,22 @@ function Test() {
   Logfile("Test gestartet");
   //document.getElementById("Weiche").lastElementChild.tagName.setAttribute("fill","red");
   //alert(document.getElementById("Weiche2").instanceRoot);
-  alert(document.getElementById("Grafik").pauseAnimations());
-  alert(document.getElementById("Grafik").animationsPaused());
+  alert(document.getElementById("Weiche2").shadowRoot);
+  //alert(document.getElementById("Grafik").pauseAnimations());
+  //alert(document.getElementById("Grafik").animationsPaused());
   Logfile("Test beendet");
   }
 
   </script>
 <body onload="init()">
-  letzte Aktion: <span id="Logfile">Seite geladen</span>
+auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/PLAUENER_MODELLEISENBAHN.html">PLAUENER_MODELLEISENBAHN.html</a>
+<p>  letzte Aktion: <span id="Logfile">Seite geladen</span></p>
 <p>
 Licht
 Waldcafe 
 <button class="Licht_an" onclick='websocket.send("5");Logfile("Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("Licht aus")'>aus</button>
-<!--button class="Licht_an" onclick='Test()'>Test</button-->
+<button class="Licht_an" onclick='Test()'>Test</button>
 </p>
   <svg id="Grafik" width="800" height="420" viewBox="0 0 800 420" style="border:solid 1px black" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" stroke="darkgrey">
     <title>Streichholzgraph</title>
@@ -85,8 +87,8 @@ Waldcafe
       <line id="Streichholz" x1="0" y1="0" x2="0" y2="100"/>
       <circle id="Streichholzmarkierung" cx="0" cy="0" r="3" />
       </defs>
-    <!--use id="Weiche1" xlink:href="#Weiche" x="200" y="200"/-->
-    <!--use id="Weiche2" xlink:href="#Weiche" x="300" y="200"/-->
+    <use id="Weiche1" xlink:href="#Weiche" x="200" y="200"/>
+    <use id="Weiche2" xlink:href="#Weiche" x="300" y="200"/>
       <g id="Weiche0" transform="translate(100,100)">
         <!--path d="M0,0 l100,0 M0,20 l100,0 M0,0 A200,200 0,0,1 100,26.8 M0,20 A180,180 0,0,1 90,44.12" fill="none" stroke="red"/-->
         <path d="M5,0.2 A200,200 0,0,1 87.178,20 L5,18">
