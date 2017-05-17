@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Einkaufsliste</title>
+  <meta charset="utf-8"/>
+  <style type="text/css">
+v { display: inline-flex; flex-direction: column; align-items: stretch;  background-color: Bisque; border:solid; margin: 8px; flex-grow:1; max-width: 800px}
+h { display: flex; flex-direction: row; align-items: stretch;  background-color: grey; border:solid; margin: 8px; flex-wrap:wrap;}
+e { display: flex; background-color: white; }
+e:active { background-color: green; }
+.selected { background-color: aquamarine; }
+uu {position:fixed;
+  top: 0em;
+  left:50em;
+  }
+    </style>
+<script type="application/ecmascript">
+function ergänzen() {
+  t=event.target;
+  tv=t.firstChild.nodeValue.trim();
+  einkl=document.getElementById("Einkaufsliste");
+  if (t.nodeName=='E' && t.parentNode.nodeName=='V') {
+    if (t.getAttribute('class')) {
+      //t.setAttribute('class','');
+      einkl.removeChild(document.getElementById(tv));
+        lis=document.getElementsByTagName('E');
+        for (var i=0;i<lis.length;i++) {
+          tvn=lis[i].firstChild.nodeValue.trim();
+          if (tv==tvn) {
+            //alert(tvn);
+            lis[i].setAttribute('class','');
+            }
+          }
+      } else {
+        tcn=t.cloneNode(true);
+        tcn.setAttribute('id',tv);
+        einkl.appendChild(tcn);
+        lis=document.getElementsByTagName('E');
+        counter=0;
+        for (var i=0;i<lis.length;i++) {
+          tvn=lis[i].firstChild.nodeValue.trim();
+          if (tv==tvn) {
+            //alert(tvn);
+            lis[i].setAttribute('class','selected');
+            counter=counter+1;
+            }
+          }
+        if (counter<3) {alert("fehlt")}
+var worte = new SpeechSynthesisUtterance(tv);
+worte.lang = "de-DE";
+window.speechSynthesis.speak(worte);
+        }
+    }
+  if (t.nodeName=='V') {
+    el=prompt("ergänze "+tv+" um:");
+    //alert(el);
+    if (el) {
+      ele=document.createElement("e");
+      ele.appendChild(document.createTextNode(el));
+      t.appendChild(ele);
+      }
+    }
+  }
+  </script>
+  </head>
+<body onload="invertieren()" onclick="ergänzen()">
+<v>
+<h>
+<v>hinten links &#9776;
+<e>Mehl</e>
+<e>Zucker</e>
+<e>Weichweizengrieß</e>
+<e>brauner Zucker</e>
+<e>Lasagneplatten</e>
+  </v>
+<v>hinten rechts
+<e>Küchenpapier</e>
+<e>Obsttortenobst</e>
+<e>Cornflakes</e>
+<e>Schokoflakes</e>
+<e>Lasagnefix</e>
+<e>Apfelmus</e>
+  </v>
+  </h>
+<h>
+<v>
+ <v>
+  <v>Teeschrank
+<e>Backmischung</e>
+<e>Baguettes</e>
+<e>Obsttortenboden</e>
+<e>Wiener Boden</e>
+<e>Fencheltee</e>
+<e>Ingwertee</e>
+<e>schwarzer Tee</e>
+    </v>
+  <v>Kühlschrank
+<e>Milch</e>
+<e>Butter</e>
+<e>Frischkäse</e>
+<e>Gouda</e>
+<e>Tilsiter</e>
+<e>Tsatsiki</e>
+<e>Leberwurst</e>
+<e>frische Hefe</e>
+    </v>
+  <v>Saftschrank
+<e>Apfelschorle</e>
+<e>Mineralwasser</e>
+<e>Apfelsaft</e>
+<e>Sirup</e>
+    </v>
+   </v>
+  <v>Backfach
+<e>Backpapier</e>
+<e>Eier</e>
+<e>Backpulver</e>
+<e>Vanillezucker</e>
+<e>Puddingpulver</e>
+    </v>
+  <v>Brotfach
+<e>Brot</e>
+    </v>
+  <v>Tellerschrank
+<e>Marmelade</e>
+<e>Honig</e>
+<e>Nutella</e>
+<e>Senf</e>
+
+    </v>
+</v>
+<v>Platzda</v>
+<v>
+  <v>Ölregal
+<e>Streichhölzer</e>
+<e>Salz</e>
+<e>Paniermehl</e>
+<e>Mehlschwitze dunkel</e>
+<e>Mehlschwitze hell</e>
+<e>Gemüsebrühpulver</e>
+<e>Sauce Hollondaise</e>
+<e>THOMY-Sonnenblumenöl</e>
+<e>Smanta</e>
+    </v>
+  <v>Gewürzschrank
+<e>Pfeffer</e>
+<e>Paprika</e>
+<e>Muskatnuss</e>
+<e>Suppengrün</e>
+<e>Zimt</e>
+    </v>
+  <v>Gemüsefach
+<e>Blumenkohl</e>
+<e>Zwiebeln</e>
+<e>Ingwer</e>
+<e>Tomaten</e>
+<e>Gurken</e>
+<e>Eisbergsalat</e>
+<e>Bananen</e>
+<e>Pilze</e>
+<e>Möhren</e>
+    </v>
+</v>
+  </h>
+</v>
+<v>
+<v>Gefrierschrank
+<e>Eis</e>
+<e>Fischstäbchen</e>
+<e>Fischpfanne</e>
+<e>Mischgemüse</e>
+  </v>
+<uu id="Einkaufsliste">fertige Einkaufsliste
+  </uu>
+  </v>
+<hr/>
+<v>Edeka
+  <h>Fleischerei
+    <v><e>Hackfleisch</e><e>Schnitzel</e><e>Rinderbraten</e><e>Kochrindfleisch</e>
+      </v>
+    <v><e>Leberwurst</e><e>Aufschnitt</e><e>Teewurst</e>
+      </v>
+    </h>
+  <h>Regale
+    <v>links
+      <v>Getränke
+        <e>Apfelschorle</e><e>Mineralwasser</e><e>Apfelsaft</e><e>Sirup</e>
+        </v>
+      <v>Süßigkeiten
+        <e>Fred Ferkel</e><e>Schnüre</e>
+        </v>
+      <v>Seife
+        <e>Zahnpasta</e><e>Creme</e>
+        </v>
+      <v>Krimskrams
+        <e>Zeitungen</e><e>Wolle</e><e>Streichhölzer</e>
+        </v> 
+      </v>
+    <v>mitte
+      <v>Gefrierfächer
+        <e>Fischpfanne</e><e>Fischstäbchen</e><e>Mischgemüse</e><e>Eis</e>
+        </v>
+      <v>nochmal Krimskrams
+        <e>Backpapier</e><e>Küchenpapier</e><e>Babywindeln</e>
+        </v>
+      <v>Suppen
+        <e>Spirelli</e><e>Lasagneplatten</e><e>Lasagnefix</e><e>Senf</e><e>Salz</e><e>Weichweizengrieß</e><e>Ketchup</e><e>Tomatenmark</e><e>Tomatenpüree</e><e>Dosentomaten</e><e>Gewürzgurken</e><e>Paniermehl</e><e>Obsttortenobst</e><e>Mehlschwitze dunkel</e><e>Mehlschwitze hell</e><e>Gemüsebrühpulver</e><e>Smanta</e><e>THOMY-Sonnenblumenöl</e><e>Sauce Hollondaise</e><e>Apfelmus</e>
+        </v>
+      <v>Backsachen
+         <e>Mehl</e><e>Zucker</e><e>Kouvertüre</e><e>Puddingpulver</e><e>Vanillezucker</e><e>Backpulver</e><e>Backmischung</e><e>brauner Zucker</e>
+         </v>
+      <v>Cerealien
+        <e>Whiteflakes</e><e>Cornflakes</e><e>Schokoflakes</e><e>Marmelade</e><e>Honig</e><e>Nutella</e><e>Fencheltee</e><e>Ingwertee</e><e>schwarzer Tee</e>
+        </v>
+      </v>
+    <v>rechts
+      <v>Wurstfach
+        <e>Roster</e><e>Salami</e><e>Teewurst</e>
+        </v>
+      <v>Käsefach
+        <e>Tilsiter</e><e>Frischkäse</e><e>Camembert</e><e>Gouda</e><e>Butter</e><e>frische Hefe</e>
+        </v>
+      <v>Milchfach
+        <e>Milch</e><e>Quark</e><e>Jogurth</e><e>Schmand</e><e>Tsatsiki</e><e>saure Sahne</e>
+        </v> 
+      </v>
+    </h>
+  <h>
+    <v>Obst
+      <e>Bananen</e><e>Eisbergsalat</e><e>Tomaten</e><e>Äpfel</e>
+      </v>
+    <v>Gemüse
+      <e>Blumenkohl</e><e>Ingwer</e><e>Gurken</e><e>Kraut</e><e>Möhren</e><e>Porree</e><e>Zwiebeln</e><e>Sauerkraut</e><e>Pilze</e><e>Eier</e>
+      </v>
+    <v>Gewürze
+      <e>Pfeffer</e><e>Muskatnuss</e><e>Paprika</e><e>Zimt</e><e>Suppengrün</e>
+      </v>
+    <v>Brotfach
+      <e>Brot</e><e>Brötchen</e><e>Obsttortenboden</e><e>Wiener Boden</e><e>Baguettes</e>
+      </v>
+    </h>
+  </v>
+  </body>
+  </html>
