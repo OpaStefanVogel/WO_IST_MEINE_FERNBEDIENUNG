@@ -30,7 +30,7 @@ function SprichFR(was) {
   }
 function init() {
   //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
-  websocket = new WebSocket("ws:192.168.2.100:1880/ws/gpio"); 
+  websocket = new WebSocket("ws:192.168.2.101:1880/ws/gpio"); 
   //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
   websocket.onopen = function() {
     Logfile("CONNECTED");
@@ -66,7 +66,7 @@ auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/P
 <p>
 Licht
 Waldcafe 
-<button class="Licht_an" onclick='websocket.send("5");Logfile("Licht ein")'>ein</button>
+<button class="Licht_an" onclick='websocket.send("50");Logfile("Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("Licht aus")'>aus</button>
 <!--button class="Licht_an" onclick='Test()'>Test</button-->
 </p>
