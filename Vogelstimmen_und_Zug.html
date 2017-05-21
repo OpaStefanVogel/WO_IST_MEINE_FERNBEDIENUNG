@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vogelstimmen und Zug</title>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+<hr/>
+<!--neu aus https://developer.mozilla.org/de/docs/Web/HTML/Using_HTML5_audio_and_video-->
+Die Vogelstimmen sind von <a href="http://www.vogelstimmen.info/Vogelstimmen_Hoerproben_GRATIS.html">http://www.vogelstimmen.info/Vogelstimmen_Hoerproben_GRATIS.html</a>
+
+<div><audio id="Amsel" src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Amsel_Turdus_merula_G_AMPLE14748101.mp3" controls="controls" volume="1.0"></audio> Amsel_Turdus_merula_G_AMPLE14748101.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Buchfink_Fringilla_coelebs_G_AMPLE-E16361R.mp3" controls="controls" volume="1.0"></audio> Buchfink_Fringilla_coelebs_G_AMPLE-E16361R.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Feldlerche_Alauda_arvensis_G_AMPLE-E09331R.mp3" controls="controls" volume="1.0"></audio> Feldlerche_Alauda_arvensis_G_AMPLE-E09331R.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Gruenfink_Carduelis_chloris_G_AMPLE-E16571D.mp3" controls="controls" volume="1.0"></audio> Gruenfink_Carduelis_chloris_G_AMPLE-E16571D.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Haussperling_Passer_domesticus_G_AMPLE-E1601R.mp3" controls="controls" volume="1.0"></audio> Haussperling_Passer_domesticus_G_AMPLE-E1601R.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Kohlmeise_Parus_major_G_AMPLE-E15261R.mp3" controls="controls" volume="1.0"></audio> Kohlmeise_Parus_major_G_AMPLE-E15261R.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Mauersegler_Apus_apus_R_AMPLE-E08342D.mp3" controls="controls" volume="1.0"></audio> Mauersegler_Apus_apus_R_AMPLE-E08342D.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Rohrammer_Emberiza_schoeniclus_G_AMPLE-E17501R.mp3" controls="controls" volume="1.0"></audio> Rohrammer_Emberiza_schoeniclus_G_AMPLE-E17501R.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Rotkehlchen_Erithacus_rubecula_G_AMPLE-E11031D.mp3" controls="controls" volume="1.0"></audio> Rotkehlchen_Erithacus_rubecula_G_AMPLE-E11031D.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Singdrossel_Turdus_philomelos_G_AMPLE-E10651D.mp3" controls="controls" volume="1.0"></audio> Singdrossel_Turdus_philomelos_G_AMPLE-E10651D.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Star_Sturnus_vulgaris_G_AMPLE-E10201W.mp3" controls="controls" volume="1.0"></audio> Star_Sturnus_vulgaris_G_AMPLE-E10201W.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Stieglitz_Carduelis_carduelis_G_AMPLE-E16591W.mp3" controls="controls" volume="1.0"></audio> Stieglitz_Carduelis_carduelis_G_AMPLE-E16591W.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Turteltaube_Streptopelia_turtur_G_AMPLE-E07651R.mp3" controls="controls" volume="1.0"></audio> Turteltaube_Streptopelia_turtur_G_AMPLE-E07651R.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/Wanderdrossel_Turdus_migratorius_G_AMPLE-E1071.mp3" controls="controls" volume="1.0"></audio> Wanderdrossel_Turdus_migratorius_G_AMPLE-E1071.mp3</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/" controls="controls" volume="1.0"></audio> noch nix</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/" controls="controls" volume="1.0"></audio> noch nix</div>
+<div><audio src="http://www.vogelstimmen.info/Vogelstimmen_GRATIS/" controls="controls" volume="1.0"></audio> noch nix</div>
+<div style="120%">
+<button style="font-size:100%" onclick="Alle_zusammen()">Alle zusammen auf einmal.</button>
+<hr/>
+Zug: <button style="font-size:500%" onclick="Sprich('nächste Haltestelle Plauen, Wir wünschen Ihnen noch einen schönen Abend')">Plauen</button>
+<button style="font-size:500%" onclick="Sprich('Bitte alle einsteigen, der Zugnfährt gleich los')">Einsteigen</button>
+<button style="font-size:500%" onclick="Sprich('nächste Haltestelle Chemnitz, Wir wünschen Ihnen noch einen schönen Tag')">Chemnitz</button>
+<button style="font-size:500%" onclick="Sprich('Bitte das Kaubongbongpapier nicht auf den Fußboden schmeißen, sondern in den Müllbehälter')">Bonbonpapier</button>
+<button style="font-size:500%" onclick="Sprich('Bitte keine Stöcke mit in den Zug nehmen')">Stöcke</button>
+<button style="font-size:500%" onclick="Sprich('Vorsicht am Bahnsteig 10, der Zug fährt gleich ein, bitte zurückgehen hinter die weiße Linie')">Einfahrt</button>
+<button style="font-size:500%; display:none" onclick="Sprich('Bitte mit den Schuhen auf die Sitze stellen, damit der Fußboden nicht schmutzig wird')">Schuhe</button>
+<button style="font-size:500%" onclick="Sprich('Bitte die Füße auf den Fußboden stellen, damit der Sitz nicht schmutzig wird')">Füße</button>
+<button style="font-size:500%" onclick="Sprich('')"></button>
+  </div>
+<script>
+function Sprich(was) {
+  var worte = new SpeechSynthesisUtterance(was);
+  worte.lang = "de-DE";
+  window.speechSynthesis.speak(worte);
+  }
+
+//Sprich("Es kann losgehen");
+
+function Alle_zusammen() {
+  var Liste=document.getElementsByTagName("audio");
+  for (var i=0;i<Liste.length;i++) {
+    Liste[i].play();
+    } 
+  }
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

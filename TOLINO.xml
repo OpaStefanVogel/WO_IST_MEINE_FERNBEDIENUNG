@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Spartan3E vom TOLINO aus anschauen</title></head>
+<script> var x = new XML(document);
+//alert (x);
+  </script>
+<body style="font-size:300%;" onload="//alert(x)">
+<a href="#Internet">Internet</a>
+/ <a href="file://localhost/storage/emulated/0/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/REZEPTE/REZEPTE.xml" target="_blank">Rezepte</a>
+/ <a href="../">SD-Card</a>/<a href="file://localhost/storage/emulated/0/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/los2017.xml#letztes_ok" target="_blank">los.xml</a>
+/ <a href="INHALT_GREP.xml" target="_blank">gespeicherte Opera Seiten</a>
+<ul>
+<li><tspan style="font-size:150%; color:red">Spartan3E:</tspan>
+<ul>
+<li><iframe src="SONNE_UND_MOND.xml" type="text/xml" width="120" height="120"/>
+  <a href="SONNE_UND_MOND.xml">Sonne und Mond</a></li>
+<li><iframe src="UHR.xml" width="120" height="120"/>
+  <a href="UHR.xml">Uhr nur aus Kreisen</a></li>
+<li><iframe src="EIERUHR.xml" width="120" height="120"/>
+  <a href="EIERUHR.xml">Eieruhr 7 Minuten</a></li>
+<li><iframe src="BAGGER.xml" type="text/xml" width="120" height="120"/>
+  <a href="BAGGER.xml">Bagger</a></li>
+<li><iframe src="STERN.xml" type="text/xml" width="120" height="120"/>
+  <a href="STERN.xml">Stern zum Abpausen</a></li>
+<li><iframe2 src="pochpoch.xml" type="text/xml" width="120" height="120"/>
+  <a href="pochpoch.xml">Pulsmesser</a></li>
+<li><iframe2 src="SCHIEBEREGLER.xml" type="text/xml" width="120" height="120"/>
+  <a href="SCHIEBEREGLER.xml">Schieberegler</a></li>
+<li><iframe src="INDUKTIONSKOCHPLATTE.xml" type="text/xml" width="120" height="120"/>
+  <a href="INDUKTIONSKOCHPLATTE.xml">Induktionskochplatte</a></li>
+<li><iframe src="KARTOFFELN.xml" type="text/xml" width="120" height="120"/>
+  <a href="KARTOFFELN.xml">Kartoffeln</a></li>
+<li><iframe src="TESTBILD.xml" type="text/xml" width="120" height="120"/>
+  <a href="TESTBILD.xml">Testbild</a></li>
+<li><iframe2 src="EINKAUFSLISTE" type="text/xml" width="120" height="120"/>
+  <a href="EINKAUFSLISTE">EINKAUFSLISTE</a></li>
+<li><iframe2 src="INHALT.htm" type="text/html" width="120" height="120"/>
+  <a href="INHALT.htm">zum PID-Regler wechseln</a></li>
+</ul>
+</li>
+<li>noch nicht ganz fertig (danach geht eventuell nix mehr und muss Reset machen):
+<ul>
+<li><iframe2 src="AJAXMITSVG.xml" type="text/xml" width="120" height="120"/>
+  <a href="AJAXMITSVG.xml">AJAXMITSVG.xml</a></li>
+<li><iframe2 src="EDITOR.xml" type="text/xml" width="120" height="120"/>
+  <a href="EDITOR.xml">EDITOR.xml</a></li>
+<li><iframe2 src="BATTERIE.xml" type="text/xml" width="120" height="120"/>
+  <a href="BATTERIE.xml">Test1</a></li>
+</ul>
+</li>
+<li id="Internet">Internet:
+<ul>
+<li><a href="http://www.cvag.de/eza/liste.html?station=CAG-194">Endhaltestelle Flemmingstraße</a></li>
+<li><a href="http://reiseauskunft.bahn.de/bin/bhftafel.exe/dn?ld=9689%26rt=1%26input=Chemnitz%20Hbf%238010184%26boardType=dep%26time=actual%26productsFilter=11111%26start=yes" target="_blank">Hauptbahnhof Chemnitz</a> <a href="http://reiseauskunft.bahn.de/bin/bhftafel.exe/dn?ld=9689%26rt=1%26input=Chemnitz%20Hbf%238010184%26boardType=dep%26time=actual%26productsFilter=11111%26REQTrain_name=RE%202%26start=yes" target="_blank">RE 2</a> <a href="http://reiseauskunft.bahn.de/bin/bhftafel.exe/dn?ld=9689%26rt=1%26input=Chemnitz%20Hbf%238010184%26boardType=dep%26time=actual%26productsFilter=11111%26REQTrain_name=RB%202%26start=yes" target="_blank">RB 2</a></li>
+<li><a href="http://reiseauskunft.bahn.de/bin/bhftafel.exe/dn?ld=9689%26rt=1%26input=Plauen(Vogtl)%20ob%20Bf%238010275%26boardType=dep%26time=actual%26productsFilter=11111%26start=yes" target="_blank">Plauen Oberer Bahnhof</a></li>
+<li><a href="http://wolframalpha.com/input/?i=weather+of+Chemnitz+next+week&#38;x=6&#38;y=7" target="_blank">Wetter Chemnitz</a></li>
+<li><a href="http://www.niederschlagsradar.de/niederschlagsprognose.aspx?type=1" target="_blank">Regenradar 7 Tage Vorhersage</a></li>
+<li><a href="http://www.niederschlagsradar.de/h3.aspx?j=-3&#38;srt=loopvorhersage" target="_blank">Regenradar 3h Vorhersage</a></li>
+<li><a href="http://www.raiffeisen.com/markt/telegramm/produkt/eurex/kartoffeln">aktueller Kartoffelpreis</a></li>
+<li><a href="http://www.kiraka.de/startseite/">Kiraka</a></li>
+<li><a href="http://www.schulferien.org/Sachsen/sachsen.html" target="_blank">Schulferien Sachsen 2017, 2018</a></li>
+</ul>
+</li>
+<li>ob .xsl auch in iframe geht? Ist zu hoch, 
+liegt aber an dem html statt svg
+und xhtml geht genauso nicht, muss ich noch rausbekommen
+in OPERA PLUS stimmt wenigstens w und h, allerdings kein zoom 
+und .xsl ohnehin nicht
+<ul>
+<li><iframe2 src="AUDIO.htm" type="text/html" width="120px" height="120px"/>
+  <a href="AUDIO.htm">AUDIO.htm</a></li>
+</ul>
+</li>
+</ul>
+<a href="file://localhost/mnt/external_sd/download/Bernoulli.pdf">Test1</a>
+<math onclick="alert(77)">\mathbb{P}_{\tau_s} = \mathbb{P}_{s-X}' al/} = \mathbb{P}_{s-X}</math>
+<math><mrow>
+  <mi>x</mi>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mrow>
+        <mo>-</mo>
+        <mi>b</mi>
+      </mrow>
+      <mo>&#xB1;<!--PLUS-MINUS SIGN--></mo>
+      <msqrt>
+        <mrow>
+          <msup>
+            <mi>b</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>-</mo>
+          <mrow>
+            <mn>4</mn>
+            <mo>&#x2062;<!--INVISIBLE TIMES--></mo>
+            <mi>a</mi>
+            <mo>&#x2062;<!--INVISIBLE TIMES--></mo>
+            <mi>c</mi>
+          </mrow>
+        </mrow>
+      </msqrt>
+    </mrow>
+    <mrow>
+      <mn>2</mn>
+      <mo>&#x2062;<!--INVISIBLE TIMES--></mo>
+      <mi>a</mi>
+    </mrow>
+  </mfrac>
+</mrow></math>
+</body>
+<!--
+-->
+</html>

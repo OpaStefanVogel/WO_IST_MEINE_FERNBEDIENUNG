@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="wq" xmlns="http://www.w3.org/2000/svg" 
+  version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%" 
+  style="border:dotted; font-family:Arial;"
+  viewBox="0 0 422 100"
+  preserveAspectRatio="xMinYMin">
+<defs>
+<circle cx="30" cy="30" r="30"/>
+<path id="Ei" d="M30,0C
+45,0 60,20 60,40,
+60,55 48,70 30,70,
+12,70 0,55 0,40,
+0,20 15,0 30,0,
+Z"/>
+</defs>
+<title>Eieruhr</title>
+
+<g id="gesamt" ontouchstart="Restart(evt)"> 
+<g opacity="1" stroke="black" transform="translate(0,70)">
+<g fill="yellow">
+<use xlink:href="#Ei" x="0" y="0" width="10" height="10"/>
+<use xlink:href="#Ei" x="60" y="0" />
+<use xlink:href="#Ei" x="120" y="0" />
+<use xlink:href="#Ei" x="180" y="0" />
+<use xlink:href="#Ei" x="240" y="0" />
+<use xlink:href="#Ei" x="240" y="0" />
+</g>
+<g fill="red">
+<use xlink:href="#Ei" x="300" y="0" />
+<use xlink:href="#Ei" x="360" y="0" />
+</g>
+<rect id="Deckel" x="1000" y="-1" width="710" height="80" 
+  fill="white" stroke="white" fill-opacity="0.9"/>
+</g>
+<text x="00" y="00" transform="scale(1) translate(0,20)">
+Zum Starten der Eieruhr auf das jeweilige Ei tippen.
+<tspan x="0" dy="20">Von insgesamt 
+<tspan id="von" von="7">7</tspan> Minuten sind es jetzt noch 
+<tspan id="noch" noch="421">7:00</tspan> Minuten.</tspan></text>
+  <animate attributeName="opacity"
+    begin="0" dur="1"
+    values="0;1" fill="freeze"/>
+
+</g>
+
+<a xlink:href="UHR.xml"
+     xlink:title="Verweis zu einer HTML-Seite">
+    <rect x="900" y="300" ry="5" width="80" height="160"
+    style="fill:limegreen; stroke:black;" />
+  </a>
+<script type="application/ecmascript"> 
+<![CDATA[
+setInterval(Eieruhr,1000);
+
+var Startzeit=Date.now();
+var Istzeit=Startzeit;
+var EinAus="aus";
+
+function Eieruhr(){ if (EinAus=="ein") {
+  var n=document.getElementById("noch").getAttribute("noch");
+  n=n-1;//60
+  var von=document.getElementById("von").getAttribute("von")*60;
+  Istzeit=Date.now();
+  //alert(Istzeit-Startzeit);
+  n=Math.round(von-(Istzeit-Startzeit)/1000);
+  Minuten=(n-n%60)/60;
+  if (n<=-0) {
+    n=document.getElementById("von").getAttribute("von")*60;
+    Startzeit=Date.now();
+    };
+  document.getElementById("noch").setAttribute("noch",n);
+  if (10>n%60) {
+    document.getElementById("noch").lastChild.textContent=(n-n%60)/60+":0"+n%60;
+    } else {
+      document.getElementById("noch").lastChild.textContent=(n-n%60)/60+":"+n%60;
+      };
+  document.getElementById("Deckel").setAttribute("x",n);
+//SecFromTime(n);
+//  alert(n);
+  if (0==n%60) {
+    switch (Minuten) {
+      case 3: {
+var worte = new SpeechSynthesisUtterance("Eieruhr noch drei Minuten, denk auch an die Brötchen und den Tee"); break;} 
+      case 1: {
+var worte = new SpeechSynthesisUtterance("Eieruhr noch eine Minute, denk auch an die Brötchen"); break;} 
+      default: {
+var worte = new SpeechSynthesisUtterance("Eieruhr noch"+Minuten+" Minuten, denk auch an die Brötchen");break;}
+      }
+worte.lang = "de-DE";
+window.speechSynthesis.speak(worte);
+    //alert("sprech");
+    }
+  } };
+
+function Restart(evt){
+  EinAus="ein";
+  www=document.getElementById("gesamt").getCTM().a;
+  xxx=evt.touches.item(0).pageX/60/www;
+  yyy=xxx-xxx%1+1;
+//alert(www+" "+xxx+" "+yyy);
+Startzeit=Date.now();
+  document.getElementById("noch").setAttribute("noch",yyy*60+1);
+  document.getElementById("von").setAttribute("von",yyy);
+  document.getElementById("von").lastChild.textContent=yyy;
+//alert(evt.touches.item(0).clientX);//bez. svg.-Ausschnittsfensterrahmen
+//alert(evt.touches.item(0).screenX);//bez. html-document.
+//alert(evt.touches.item(0).pageX);//bez. svg-document
+//alert(document.getElementById("gesamt").getCTM().a);
+//  ccc=document.getElementById("gesamt").cloneNode(document.getElementById("von"));
+//alert(ccc);
+//  document.getElementById("gesamt").appendChild(ccc);
+//alert(document.getElementById("gesamt").textContent);
+  Eieruhr();
+  };
+
+//document.getElementById("gesamt").addEventListener("touchstart",Restart,false);
+worte=new SpeechSynthesisUtterance("");
+worte.lang = "de-DE";
+window.speechSynthesis.speak(worte);
+]]> </script> 
+  </svg>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+

@@ -1,0 +1,187 @@
+<HTML>
+  <HEAD>
+  <META charset="utf-8"/>
+  <TITLE>Snooker</TITLE>
+
+  <STYLE type="text/css"> 
+BODY { font-family: Courier,monospace; font-size:300%}
+PARTIE { display: flex; flex-direction:column; align-items:stretch; text-align:center}
+SPIELSTAND { display: flex; border:solid; align-items:center}
+TASTEN { display: flex; flex-direction:column; flex-basis:15% }
+TASTE { border:solid;}
+STAND { font-size:300%; flex-basis:100% }
+TEAMS { display: flex; flex-direction: row; align-items:center}
+TEAM  { display: flex; flex-direction: column; flex-basis:50%;align-items:center;}
+SPIELER { border:solid; padding:20px; margin:10px;}
+TEXT { align-item:center}
+BUTTONS { display: flex; flex-direction: column; align-items:center}
+BUTT { flex-basis:50%; border:solid}
+HISTORY {display:none;}
+
+.jetztdran:before { content:"gerade dran: "; font-size:40% }
+.danachdran:before { content:"als nächstes dran: "; font-size:40% }
+
+    </STYLE> 
+
+<script type="application/ecmascript">
+function init() {
+  websockets = new WebSocket("wss://192.168.1.107:1880/ws/snooker"); 
+  alert("Versuch gestartet, websocket zu öffnen");   
+  websockets.onopen = function() {
+    websockets.send("auch ein hallo von kodi");
+    alert("hat funktioniert");
+    }
+  }
+
+function init() {
+  websocket = new WebSocket("ws://192.168.1.107:1880/ws/snooker"); 
+  websocket.onmessage = function() {
+    var w;
+    w=event.data;
+    //alert(w);
+    if (w!="{}") anzeigen(JSON.parse(w));
+    };
+  websocket.onopen = function() {
+    //alert(77);
+    websocket.send("hallo");//aktuellen Stand holen
+    }; 
+  websocket.onclose = function() {
+    //alert(77);
+    //websocket.send("close");
+    };
+  }
+
+
+var Spielstand={dran_ist:["Team1/Spieler1"],Zwischenstand:[0,0]};
+
+function du_bist_dran() {
+  var neu_dran=0;
+  if (event.target.nodeName=="SPIELER") {
+    neu_dran=[event.target.getAttribute("id")] } else {
+      //Spielstand.dran_ist.unshift(Spielstand.dran_ist.pop());
+      neu_dran=[Spielstand.dran_ist[Spielstand.dran_ist.length-1]];
+      }
+  for (var i=0;i<Spielstand.dran_ist.length;i++) {
+    if (Spielstand.dran_ist[i]!=neu_dran[0]) {
+      neu_dran.push(Spielstand.dran_ist[i]);
+      }
+    }
+  var neuer_Spielstand=JSON.parse(JSON.stringify(Spielstand));
+  neuer_Spielstand.dran_ist=neu_dran;
+  //alert(JSON.stringify(neuer_Spielstand));
+  anzeigen(neuer_Spielstand);
+  websocket.send(JSON.stringify(neuer_Spielstand));
+  }
+
+function anzeigen(neuer_Spielstand) {
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("style","background-color:white");
+  document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:white");
+  Spielstand=neuer_Spielstand;
+  document.getElementById(Spielstand.dran_ist[0]).parentNode.setAttribute("style","background-color:yellow");
+  var Teilnehmerzahl=Spielstand.dran_ist.length;
+  for (var i=0;i<Teilnehmerzahl;i++) {
+    var derx=document.getElementById(Spielstand.dran_ist[i]);
+    derx.setAttribute("style","background:linear-gradient(to top,aquamarine, aquamarine "+((Teilnehmerzahl-1-i)/(Teilnehmerzahl-1)*100-15)+"%, white "+((Teilnehmerzahl-1-i)/(Teilnehmerzahl-1)*100+15)+"%, white)");
+    derx.setAttribute("class","");
+    }
+  document.getElementById(Spielstand.dran_ist[Spielstand.dran_ist.length-1]).setAttribute("class","danachdran");
+  document.getElementById(Spielstand.dran_ist[0]).setAttribute("class","jetztdran");
+  document.getElementById("zu").firstChild.nodeValue=Spielstand.Zwischenstand[0]+":"+Spielstand.Zwischenstand[1];
+  //alert(dran_ist);
+  }
+
+function gewonnen(t1,t2) {
+  var SZ=Spielstand.Zwischenstand;
+  Spielstand.Zwischenstand=[SZ[0]+t1,SZ[1]+t2];
+  anzeigen(Spielstand);
+  websocket.send(JSON.stringify(Spielstand));
+  }
+
+</script>
+
+  </head>
+<body onload="init()">
+<PARTIE>
+<SPIELSTAND>
+  <TASTEN>
+    <TASTE onclick="gewonnen(1,0)">+1</TASTE>
+    <TASTE onclick="gewonnen(-1,0)">-1</TASTE>
+    </TASTEN>
+  <STAND id="zu">0:0</STAND>
+  <TASTEN>
+    <TASTE onclick="gewonnen(0,1)">+1</TASTE>
+    <TASTE onclick="gewonnen(0,-1)">-1</TASTE>
+    </TASTEN>
+  </SPIELSTAND>
+<TEAMS onclick="du_bist_dran()">
+  <TEAM>Team 1
+    <SPIELER id="Team1/Spieler1">ich</SPIELER>
+    <SPIELER id="Team1/Spieler2">er</SPIELER>
+    <SPIELER id="Team1/Spieler3">I</SPIELER>
+    <SPIELER id="Team1/Spieler4">he</SPIELER>
+    <SPIELER id="Team1/Spieler5">je</SPIELER>
+    <SPIELER id="Team1/Spieler6">il</SPIELER>
+    </TEAM>
+  <TEAM>Team 2
+    <SPIELER id="Team2/Spieler1">du</SPIELER>
+    <SPIELER id="Team2/Spieler2">sie</SPIELER>
+    <SPIELER id="Team2/Spieler3">you</SPIELER>
+    <SPIELER id="Team2/Spieler4">she</SPIELER>
+    <SPIELER id="Team2/Spieler5">tu</SPIELER>
+    <SPIELER id="Team2/Spieler6">elle</SPIELER>
+  </TEAM>
+    </TEAMS>
+  <PARTIE>
+
+<HISTORY>
+<!--
+
+switch (msg.payload) {
+  case "resetIds": 
+    var ids=[]; 
+    break;
+  case "hallo": 
+    msg.payload=context.get('Spielstand')||{};
+    var ids = context.get('ids')||[];
+    ret=msg; 
+    break;
+  default:
+    context.set('Spielstand',msg.payload);
+  var ids = context.get('ids')||[];
+  var ret = [[]];
+  var ind = ids.indexOf(msg._session.id);
+  if (ind==-1) {ids.push(msg._session.id)};
+  if (msg.payload!="") {
+  for (i=0;i<ids.length;i++) {
+    if (i!=ind) {
+      var msg1={"payload":msg.payload, "_session": { "type": "websocket", "id": ids[i] }}
+      ret[0].push(msg1);
+      }
+    }
+    }
+  }
+context.set('ids',ids);
+node.status({fill:"green",shape:"dot",text:ids.length});
+return ret;
+
+
+ok bei neu hinzuschalten aktuellen Stand holen
+.. Kleingedrucktes
+ok node function mit ids.length
+ok ids auf aktuelle beschränken
+ok alle Fenster aktualisieren
+ok kompletten Spielstand als json-Objekt senden
+.. bei onclose den id aus ids entfernen
+ok Reihenfolge geeignet markieren
+ok dazu neuer_Spielstand vollständig kopiert
+ok nicht an das eigene Fenster zurückschicken
+
+merk:
+ok opera classic macht nur buttons mit onclick
+ok gh-pages jetzt vorneweg, auch mit Voreinstellung
+ok Object.create zum vollständigen Kopieren
+ok auf github https:// abwählen, sonst geht ws: nicht
+ok ist doch gut, Snooker.htm mit im gleichen Verzeichnis wegen <a/>
+xWtH8a1QzQ0 das ende der erde
+</HISTORY>
+</body></html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+  <title>Einkaufsliste Dropbox</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+</head>
+<body>
+
+        <a href="https://github.com/dropbox/dropbox-sdk-js/tree/master/examples" class="view-source">View dropbox-sdk-js Source</a>
+        sowie die <a href="https://www.dropbox.com/home/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht?d=1" class="view-source">auf Dropbox gespeicherte Einkaufsliste</a>
+
+      <!--<button onclick="downloadFile()">Download</button> nicht mehr-->
+      
+      <p><button style="font-size:200%" onclick="Versionen()">aktuelle Einkaufsliste anzeigen</button></p>
+
+    <!-- The download button is added here -->
+    <div id="results" style="margin-top: 30px"></div>
+
+<div><div class="Einkaufsliste" id="p" style="display:none"><div>Einkaufsliste vom <span id="Version" style="color:green">...</span> Uhr</div><textarea id="Einkaufsliste" cols="80" rows="15" style="fontsize:30%;">Einkaufsliste
+  </textarea><div><button button style="font-size:200%" onclick="uploadFile(event)">Upload</button><hr/></div></div></div>
+
+  <!-- Scripts to run example -->
+  <script>
+      var ACCESS_TOKEN = "MYL2yNxR7i8AAAAAAAAGYsrYANHN_a9K1SxHEOJdafQtw9Rd-smagtXxRyZR_4CB";
+      //alert(ACCESS_TOKEN);
+      //var SHARED_LINK = document.getElementById('shared-link').value;
+      var dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
+      //alert(dbx.filesDownload);
+      var myReader = new FileReader();
+      //alert("fileREADER"+myReader);
+//handler executed once reading(blob content referenced to a variable) from blob is finished. 
+myReader.addEventListener("loadend", function(e){
+    alert("Ergebnis"+e.srcElement.result);//prints a string
+    document.getElementById("Einkaufsliste").value=e.srcElement.result;
+});
+//start the reading process.
+var myBlob = new Blob(["This is my blob content"], {type : "text/plain"});
+//alert(myReader.readAsText(myBlob));
+
+
+
+
+    function downloadFile() {//alert("function downloadFile() geht los");
+      dbx.filesDownload({path: "/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/Einkaufsliste.txt", }).then(function(data){
+        //alert("then");alert(data.name);alert(data.size);alert(data.fileBlob);
+        var d=new Date(Date.parse(data.server_modified));
+        var dl=d.toLocaleString();
+        var dd=(["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Sonnabend"])[d.getDay()];
+        //alert(dl);
+        document.getElementById("Version").firstChild.nodeValue=dd+", "+dl;
+        myReader.readAsText(data.fileBlob);
+        //alert("fertig");
+        });
+      /*dbx.sharingGetSharedLinkFile({url: SHARED_LINK})
+        .then(function(data) {
+          var downloadUrl = URL.createObjectURL(data.fileBlob);
+          var downloadButton = document.createElement('a');
+          downloadButton.setAttribute('href', downloadUrl);
+          downloadButton.setAttribute('download', data.name);
+          downloadButton.setAttribute('class', 'button');
+          downloadButton.innerText = 'Download: ' + data.name;
+          document.getElementById('results').appendChild(downloadButton);
+        })
+        .catch(function(error) {
+          console.error(error);
+        });*/
+      return false;
+    }
+    
+    
+    function uploadFile(event) {//alert("Upload geht los");
+      //alert("Jetzt wird gleich zu Dropbox hochgeladen:\n\n"+event.target.parentNode.previousSibling.value);
+      dbx.filesUpload({path: "/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/Einkaufsliste.txt", contents: event.target.parentNode.previousSibling.value, mode:"overwrite"})
+        .then(function(response) {//alert("Upload ist angekommen");
+          var results = document.getElementById('results');
+          //results.appendChild(document.createTextNode("File uploaded! ("+response.name+" "+response.server_modified+")"));
+          //alert(response.name+" "+response.server_modified);
+          Versionen();
+        })
+        .catch(function(error) {alert(error);alert(error.path);
+          console.error(error);
+        });
+      //alert("Upload wurde gestartet");
+      return false;
+    }
+
+function Versionen() {//alert("Versionen() geht los");
+  var del=document.getElementsByClassName("Einkaufsliste");
+  for (var i=del.length-1;i>0;i--) del[i].parentNode.removeChild(del[i]);
+  var del=document.getElementsByClassName("Einkaufsliste");
+  dbx.filesListRevisions({path: "/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/Einkaufsliste.txt", limit:6 }).then(function(data){
+        //alert("then");alert(data.entries.length);
+        //alert(data.entries[0].name);
+        for (var i=0;i<data.entries.length;i++) {
+          //alert(data.entries[i].rev);
+          var p=document.getElementById("p");
+          var q=p.cloneNode(true);
+          q.setAttribute("id",data.entries[i].rev);
+          q.setAttribute("style","display:on");
+          //alert(p.parentNode);
+          p.parentNode.appendChild(q);
+          downloadFileVersion(data.entries[i].rev);
+          };
+        //alert("fertig");
+        })
+        .catch(function(error) {//alert(error);
+          var p=document.getElementById("p");
+          var q=p.cloneNode(true);
+          q.setAttribute("style","display:on");
+          p.parentNode.appendChild(q);        
+        });
+  
+  }
+
+function downloadFileVersion(rev) {//alert("function downloadFileVersion() geht los");
+      dbx.filesDownload({path: "/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/Einkaufsliste.txt", rev:rev }).then(function(data){
+        //alert("then");alert(data.name);alert(data.size);alert(data.fileBlob);
+        var d=new Date(Date.parse(data.server_modified));
+        var dl=d.toLocaleString();
+        var dd=(["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Sonnabend"])[d.getDay()];
+        //alert(dd+" "+dl);
+        //alert(document.getElementById(rev));
+        document.getElementById(rev).lastChild.previousSibling.previousSibling.firstChild.nextSibling.firstChild.nodeValue=dd+", "+dl;//IMEI 354400054273440
+      var myReader = new FileReader();
+//handler executed once reading(blob content referenced to a variable) from blob is finished. 
+myReader.addEventListener("loadend", function(){
+    //alert("Ergebnis"+e.srcElement.result);//prints a string
+    //alert("Ergebnis"+myReader.result);//in Firefox
+    document.getElementById(rev).lastChild.previousSibling.value=this.result;
+});
+        myReader.readAsText(data.fileBlob);
+        //alert("fertig");
+        });
+      return false;
+    }
+
+//also noch nicht gehen tut
+//.. nochmal Version drücken
+//.. 
+  </script>
+</body>
+</html>

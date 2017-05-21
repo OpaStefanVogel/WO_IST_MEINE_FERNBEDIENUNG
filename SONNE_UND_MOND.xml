@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%"
+  viewBox="150 10 510 410"
+  preserveAspectRatio="xMinYMin"
+  onload="fun1(evt)" style="border:dotted">
+<g id="gesamt"> 
+<circle id="kursor" cx="100" cy="100" r="10" fill="none" stroke="green" stroke-width="1" />
+<circle id="kreis" cx="400" cy="200" r="100" fill="white" stroke="black" stroke-width="1" />
+<g id="=Pleyaden" transform="translate(400,200) rotate(-47) translate(190)">
+<circle id="Pleyad1" cx="0" cy="0" r="2" fill="green" stroke="none"/>
+<circle id="Pleyad2" cx="11" cy="0" r="2" fill="green" stroke="none"/>
+<circle id="Pleyad3" cx="17" cy=" 4" r="2" fill="green" stroke="none"/>
+<circle id="Pleyad4" cx="19" cy="-3" r="2" fill="green" stroke="none"/>
+<circle id="Pleyad5" cx="22" cy="-5" r="2" fill="green" stroke="none"/>
+<circle id="Pleyad6" cx="23" cy=" 3" r="2" fill="green" stroke="none"/>
+<circle id="Pleyad5" cx="25" cy="-2" r="2" fill="green" stroke="none"/>
+  </g>
+<circle id="sonne" cx="350" cy="200" r="16.68" fill="yellow" stroke="black" stroke-width="1" />
+<g id="mond" stroke="black" stroke-width="1" transform="translate(400,200)">
+<circle cx="0" cy="150" r="16.68" fill="grey"/>
+<circle cx="0" cy="102" r="1" transform="rotate(-0)"/>
+<circle cx="0" cy="102" r="1" transform="rotate(-12.75)"/>
+<circle cx="0" cy="102" r="1" transform=" rotate(-25.5)"/>
+<circle cx="0" cy="102" r="1" transform=" rotate(-38.25)"/>
+<circle cx="0" cy="102" r="1" transform=" rotate(-51.00)"/>
+<circle cx="0" cy="102" r="1" transform=" rotate(-63.7)"/>
+<circle cx="0" cy="102" r="1" transform=" rotate(-76.5)"/>
+<circle cx="0" cy="102" r="1" transform=" rotate(-89.2)"/>
+ </g>
+<text x="370" y="400" align="central">Heuwetter</text>
+<text x="560" y="330" align="central">Sturm und
+<tspan x="540" dy="1em" align="central">Regenschauer</tspan></text>
+<text x="580" y="100" align="central">Frost</text>
+<text x="330" y="050" align="central">Sonne und Wolken</text>
+<text x="170" y="270" align="central">Dauerregen</text>
+</g>
+
+<a xlink:href="SCHIEBEREGLER.xml"
+     xlink:title="Verweis zu einer HTML-Seite">
+    <rect x="10" y="10" ry="5" width="80" height="160"
+    style="fill:limegreen; stroke:black;" />
+  </a>
+
+<script type="application/ecmascript"> 
+<![CDATA[ 
+function fun1(evt) {
+  var t = new Date();
+  var tn = new Date(2015,9,13);//irgendein nahegelegener Neumond
+//  var circle = evt.target;
+  var phi = (t.valueOf() % 31556952000)/31556952000*2*Math.PI+0.19191919;
+  var sonnex = Math.sin(phi)*150+400;
+  var sonney = Math.cos(phi)*150+200;
+  var mphi = ((t.valueOf()-tn.valueOf()) % 2551392000) / 2551392000*2*Math.PI+phi;
+  var mmphi = -mphi*180/Math.PI;
+  var mondx = Math.sin(mphi)*150+400;
+  var mondy = Math.cos(mphi)*150+200;
+  evt.target.getElementById("sonne").setAttribute("cx", sonnex);
+  evt.target.getElementById("sonne").setAttribute("cy", sonney);
+//  evt.target.getElementById("mond").setAttribute("cx", mondx);
+//  evt.target.getElementById("mond").setAttribute("cy", mondy);
+  evt.target.getElementById("mond").setAttribute("transform", "translate(400,200) rotate("+mmphi+")");
+//  alert(Math.PI-phi);
+//  alert(sonnex);
+  }
+setInterval(jedeStunde,1000);
+function jedeStunde() {fun1(0)};
+ ]]> </script> 
+
+  </svg>
