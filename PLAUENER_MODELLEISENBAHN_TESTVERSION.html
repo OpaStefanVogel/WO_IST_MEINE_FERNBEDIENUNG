@@ -30,7 +30,7 @@ function SprichFR(was) {
   }
 function init() {
   //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
-  websocket = new WebSocket("ws:192.168.2.100:1880/ws/gpio"); 
+  websocket = new WebSocket("ws:192.168.2.101:1880/ws/gpio"); 
   //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
   websocket.onopen = function() {
     Logfile("CONNECTED");
@@ -47,6 +47,9 @@ function init() {
     }; 
   websocket.onerror = function() { Logfile("onerror="+event.data) };
   Logfile("Websocket gestartet");
+  shutdown_websocket = new WebSocket("ws://192.168.43.220:1880/ws/shutdown");
+  shutdown_websocket.onopen = function() {
+    }; 
   }
 
 function Test() {
@@ -69,6 +72,7 @@ Waldcafe
 <button class="Licht_an" onclick='websocket.send("5");Logfile("Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("Licht aus")'>aus</button>
 <button class="Licht_an" onclick='Test()'>Test</button>
+<button class="Licht_an" onclick='shutdown_websocket.send("");Logfile("shutdown... gesendet");'>Shutdown Schaltpult</button>
 </p>
   <svg id="Grafik" width="800" height="420" viewBox="0 0 800 420" style="border:solid 1px black" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" stroke="darkgrey">
     <title>Streichholzgraph</title>
