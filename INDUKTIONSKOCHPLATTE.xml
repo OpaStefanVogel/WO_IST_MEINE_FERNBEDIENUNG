@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<INDUKTIONSKOCHPLATTE
+  onoff="off"
+  Stufe="5"
+  Temperatur="120"
+  >
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%"
+  viewBox="0 -400 2800 1400"
+  preserveAspectRatio="xMinYMin"
+  style="border:dotted">
+
+<g ontouchstart="prev(evt)">
+<rect id="backg" x="0" y="-400" width="2800" height="1200" fill="black"/>
+<rect id="Rahmen" x="50" y="50" width="2700" height="700" fill="dimgrey" stroke="white" stroke-width="20"/>
+<circle id="Zeit" cx="850" cy="450" r="80" fill="lightgrey" stroke="white" stroke-width="10" />
+<circle id="Temp" ontouchstart="Temp(evt)" cx="1850" cy="450" r="80" fill="lightgrey" stroke="white" stroke-width="10" />
+<circle id="Stufe" ontouchstart="Stufe(evt)" cx="2050" cy="450" r="80" fill="lightgrey" stroke="white" stroke-width="10" />
+<circle id="An" ontouchstart="An(evt)" cx="2490" cy="460" r="90" fill="lightgrey" stroke="white" stroke-width="10" />
+<circle id="Minus" ontouchstart="Minus(evt)" cx="1090" cy="590" r="60" fill="lightgrey" stroke="white" stroke-width="10" />
+<circle id="Plus" ontouchstart="Plus(evt)" cx="1550" cy="590" r="60" fill="lightgrey" stroke="white" stroke-width="10" />
+<circle id="Zeitlicht" cx="1000" cy="340" r="20" fill="grey" stroke="white" stroke-width="4" />
+<circle id="Stufenlicht" cx="1640" cy="340" r="20" fill="grey" stroke="white" stroke-width="4" />
+<circle id="Templicht" cx="1640" cy="450" r="20" fill="grey" stroke="white" stroke-width="4" />
+<rect id="Display" x="1070" y="310" rx="20" width="500" height="190" fill="dimgrey" stroke="white" stroke-width="6"/>
+<text id="Displaytext" x="1300" y="460" width="470" height="190" display-align="center" text-align="end" 
+  font-size="900%" font-style="italic" fill="#FF4040">-L-</text>
+<text x="1048" y="648" font-size="1200%" ontouchstart="Minus(evt)">-</text>
+<text x="1512" y="640" font-size="900%" ontouchstart="Plus(evt)">+</text>
+<text font-size="600%" fill="yellow" stroke="black"
+  transform="translate(780,550) rotate(-45)">defekt</text>
+<text x="1670" y="355" font-size="200%">Stufe</text>
+<text x="1670" y="465" font-size="200%">Temp.</text>
+</g>
+
+<a xlink:href="BAGGER.xml"
+     xlink:title="Bagger">
+    <rect id="next" x="100" y="-300" ry="4" width="300" height="150"
+    style="fill:limegreen; stroke:black;"/>
+    <text x="100" y="-160" width="300" height="150" display-align="center" text-align="end" 
+      font-size="900%" font-style="italic" fill="black">next</text>
+  </a>
+<script type="application/ecmascript"> 
+<![CDATA[
+function prev(evt) {
+//  alert(evt.target.getAttribute("id"));
+//  if (evt.target.getAttribute("id")!="next") {
+  i=evt.target;
+  evt.preventDefault();
+  }
+
+function An(evt) {
+//alert(confirm("wie","wo","was"));
+//alert(document.getElementById("z"));
+//alert(document.documentElement.attributes.item(1).nodeValue);
+  if (document.documentElement.getAttribute("onoff")=="off"){
+    document.documentElement.setAttribute("onoff","on");
+    document.documentElement.setAttribute("Stufe","5");
+    document.documentElement.setAttribute("Temperatur","120");
+    document.getElementById("Displaytext").firstChild.nodeValue=" ";
+    document.getElementById("Stufenlicht").setAttribute("fill","red");
+    document.getElementById("Templicht").setAttribute("fill","red");}
+    else{
+      document.documentElement.setAttribute("onoff","off");
+      document.getElementById("Displaytext").firstChild.nodeValue="-L-";
+      document.getElementById("Stufenlicht").setAttribute("fill","grey");
+      document.getElementById("Templicht").setAttribute("fill","grey");}
+  }
+
+function Stufe(evt) {
+//alert(document.documentElement.getAttribute("Stufe"));
+  if (document.documentElement.getAttribute("onoff")!="off"){
+    document.documentElement.setAttribute("onoff","Stufe");
+    document.getElementById("Displaytext").firstChild.nodeValue=document.documentElement.getAttribute("Stufe");
+    document.getElementById("Stufenlicht").setAttribute("fill","red");
+    document.getElementById("Templicht").setAttribute("fill","grey");
+    }
+  }
+
+function Temp(evt) {
+//alert(document.documentElement.getAttribute("Stufe"));
+  if (document.documentElement.getAttribute("onoff")!="off"){
+    document.documentElement.setAttribute("onoff","Temp");
+    document.getElementById("Displaytext").firstChild.nodeValue=document.documentElement.getAttribute("Temperatur");
+    document.getElementById("Stufenlicht").setAttribute("fill","grey");
+    document.getElementById("Templicht").setAttribute("fill","red");
+    }
+  }
+
+function Plus(evt) {
+//alert(document.documentElement.getAttribute("Stufe"));
+  if (document.documentElement.getAttribute("onoff")=="Stufe") {
+    var t=Math.min(eval(document.documentElement.getAttribute("Stufe"))+1,10);
+    document.getElementById("Displaytext").firstChild.nodeValue=t;
+    document.documentElement.setAttribute("Stufe",t);
+    }
+  if (document.documentElement.getAttribute("onoff")=="Temp") {
+    var t=Math.min(eval(document.documentElement.getAttribute("Temperatur"))+20,240);
+    document.getElementById("Displaytext").firstChild.nodeValue=t;
+    document.documentElement.setAttribute("Temperatur",t);
+    }
+  }
+
+function Minus(evt) {
+//alert(document.documentElement.getAttribute("Stufe"));
+  if (document.documentElement.getAttribute("onoff")=="Stufe") {
+    var t=Math.max(eval(document.documentElement.getAttribute("Stufe"))-1,1);
+    document.getElementById("Displaytext").firstChild.nodeValue=t;
+    document.documentElement.setAttribute("Stufe",t);
+    }
+  if (document.documentElement.getAttribute("onoff")=="Temp") {
+    var t=Math.max(eval(document.documentElement.getAttribute("Temperatur"))-20,60);
+    document.getElementById("Displaytext").firstChild.nodeValue=t;
+    document.documentElement.setAttribute("Temperatur",t);
+    }
+  }
+
+setInterval(jedeSek,400);
+
+function jedeSek(){
+  if (document.documentElement.getAttribute("onoff")=="on") {
+    document.documentElement.setAttribute("onoff","ongrey");
+    document.getElementById("Stufenlicht").setAttribute("fill","grey");
+    document.getElementById("Templicht").setAttribute("fill","grey");
+    }else{
+      if (document.documentElement.getAttribute("onoff")=="ongrey") {
+        document.documentElement.setAttribute("onoff","on");
+        document.getElementById("Stufenlicht").setAttribute("fill","red");
+        document.getElementById("Templicht").setAttribute("fill","red");
+        } }
+  };
+
+
+ ]]> </script> 
+<!--
+
+-->
+ </svg>
+</INDUKTIONSKOCHPLATTE>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%"
+  viewBox="250 50 300 300"
+  preserveAspectRatio="xMinYMin"
+  onload="fun1(evt)" 
+  style="border:dotted">
+<title>Uhr</title>
+<defs>
+<filter id="einfilter">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="out1"/>
+  <feSpecularLighting in="out1" specularExponent="10"
+    surfaceScale="3" result="out2">
+    <fePointLight x="150" y="300" z="300"/>
+    </feSpecularLighting>
+  <feComposite in="SourceGraphic" in2="out1"
+    operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+  </filter>
+<filter id="einfilter2">
+  <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+  </filter>
+</defs>
+<g id="gesamt" transform="scale(1)" > 
+<g transform="translate(400,200) scale(115,115) rotate(15)"
+fill="pink" stroke="darkblue" stroke-width="0.01">
+
+<circle id="h1" cx="0" cy="-1" r="0.26" REMfilter="url(#einfilter2)">  
+  <animate attributeName="fill" begin="click" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a1"/></circle>
+<circle id="h2" cx="0.5" cy="-0.8660254" r="0.26">  
+  <animate attributeName="fill" begin="click;a1.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a2"/></circle>
+<circle id="h3" cx="0.8660254" cy="-0.5" r="0.26">  
+  <animate attributeName="fill" begin="click;a2.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a3"/></circle>
+<circle id="h4" cx="1" cy="0" r="0.26">  
+  <animate attributeName="fill" begin="click;a3.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a4"/></circle>
+<circle id="h5" cx="0.8660254" cy="0.5" r="0.26">  
+  <animate attributeName="fill" begin="click;a4.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a5"/></circle>
+<circle id="h6" cx="0.5" cy="0.8660254" r="0.26">  
+  <animate attributeName="fill" begin="click;a5.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a6"/></circle>
+<circle id="h7" cx="0" cy="1" r="0.26">  
+  <animate attributeName="fill" begin="click;a6.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a7"/></circle>
+<circle id="h8" cx="-0.5" cy="0.8660254" r="0.26">  
+  <animate attributeName="fill" begin="click;a7.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a8"/></circle>
+<circle id="h9" cx="-0.8660254" cy="0.5" r="0.26">  
+  <animate attributeName="fill" begin="click;a8.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a9"/></circle>
+<circle id="h10" cx="-1" cy="0" r="0.26">  
+  <animate attributeName="fill" begin="click;a9.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a10"/></circle>
+<circle id="h11" cx="-0.8660254" cy="-0.5" r="0.26">  
+  <animate attributeName="fill" begin="click;a10.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a11"/></circle>
+<circle id="h12" cx="-0.5" cy="-0.8660254" r="0.26">  
+  <animate attributeName="fill" begin="click;a11.end" dur="1" repeatCount="2"
+    values="pink;green;yellow;blue;yellow;pink" id="a12"/></circle>
+
+</g>
+
+<path id="path" d="M410,200L410,60A100,100 0 0,1 200,90Z" 
+fill="white"
+opacity="0.95"
+  onclicknicht="alert(77)"></path>
+</g>
+
+<a xlink:href="BAGGER.xml"
+     xlink:title="Verweis zu einer HTML-Seite">
+    <rect x="600" y="100" ry="5" width="80" height="160"
+    style="fill:limegreen; stroke:black;" />
+  </a>
+<a xlink:href="BAGGER.xml"
+     xlink:title="Verweis zu einer HTML-Seite">
+    <rect x="300" y="400" ry="5" width="80" height="160"
+    style="fill:limegreen; stroke:black;" />
+  </a>
+
+
+<script type="application/ecmascript"> 
+<![CDATA[ 
+function fun1(evt) {
+  var t = new Date();
+//alert(t.getHours());
+//alert(document.getElementById("path").pathLength);
+//  var phi1 = t.getSeconds();
+//  var phi1 = t.getMinutes();
+  var phi1 = t.getHours();
+//  var phi = (90-(t.getSeconds()+t.getMilliseconds()/1000))/60*2*Math.PI;
+//  var phi = (90-(t.getMinutes()+t.getSeconds()/60))/60*2*Math.PI;
+  var phi = (90-(t.getHours()+t.getMinutes()/60))/12*2*Math.PI;
+//  alert((phi1 > 0 && phi1 < 30));
+  var x = Math.sin(phi)*150+400;
+  var y = Math.cos(phi)*150+200;
+//  if ((phi1 >= 0 && phi1 < 6)||(phi1 >= 12 && phi1 < 24)){
+  if (1==1){
+   document.getElementById("path").setAttribute("d","M400,200L400,50A150,150 0 1,0 "+x+","+y+"Z");
+   }else{
+   document.getElementById("path").setAttribute("d","M400,200L400,50A150,150 0 0,0 "+x+","+y+"Z");
+   }}
+
+setInterval(jedeSek,100);
+  function jedeSek(){
+  fun1(44);
+//  alert("dieses Fenster erscheint alle 130 sek");
+  };
+
+ ]]> </script> 
+  </svg>
