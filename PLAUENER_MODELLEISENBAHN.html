@@ -30,16 +30,17 @@ function SprichFR(was) {
   }
 
 function init() {
-  websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
+  //websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
+  websocket_pult = new WebSocket("ws:192.168.1.100:1880/ws/logfile"); 
   websocket_pult.onopen = function() {
-    Logfile("PULT CONNECTED");
+    Logfile("PULT Websocket /ws/logfile CONNECTED");
     }; 
   websocket_pult.onclose = function() {
-    Logfile("PULT DISCONNECTED");
+    Logfile("PULT Websocket /ws/logfile DISCONNECTED");
     }; 
   websocket_pult.onmessage = function() {
     eventnr=eventnr+1;
-    Logfile("PULT event.data="+event.data);
+    Logfile("PULT Websocket /ws/logfile event.data="+event.data);
     }; 
   websocket_pult.onerror = function() { Logfile("PULT onerror="+event.data) };
   Logfile("PULT Versuch, Websocket /ws/logfile zu starten");
@@ -48,17 +49,17 @@ function init() {
   websocket = new WebSocket("ws:192.168.2.101:1880/ws/gpio"); 
   //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
   websocket.onopen = function() {
-    Logfile("BRETT CONNECTED");
+    Logfile("BRETT Websocket /ws/gpio CONNECTED");
     }; 
   websocket.onclose = function() {
-    Logfile("BRETT DISCONNECTED");
+    Logfile("BRETT Websocket /ws/gpio DISCONNECTED");
     }; 
   websocket.onmessage = function() {
     eventnr=eventnr+1;
     Logfile("BRETT event.data="+event.data);
     SprichDE("Vorsicht am Gleis 1, es kommt ein Zug aus Chemnitz");
     //SprichFR("Attention à la voie 1, arrivée du train de Chemnitz");
-    Logfile("BRETT event.data="+event.data+" durch "+eventnr);
+    Logfile("BRETT Websocket /ws/gpio event.data="+event.data+" durch "+eventnr);
     }; 
   websocket.onerror = function() { Logfile("BRETT onerror="+event.data) };
   Logfile("BRETT Versuch, Websocket /ws/gpio zu starten");

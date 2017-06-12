@@ -31,34 +31,50 @@ function SprichFR(was) {
 
 function init() {
   websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
+  //websocket_pult = new WebSocket("ws:192.168.2.100:1880/ws/logfile"); 
   websocket_pult.onopen = function() {
-    Logfile("PULT CONNECTED");
+    Logfile("PULT Websocket /ws/logfile CONNECTED");
     }; 
   websocket_pult.onclose = function() {
-    Logfile("PULT DISCONNECTED");
+    Logfile("PULT Websocket /ws/logfile DISCONNECTED");
     }; 
   websocket_pult.onmessage = function() {
     eventnr=eventnr+1;
-    Logfile("PULT event.data="+event.data);
+    Logfile("PULT Websocket /ws/logfile event.data="+event.data);
     }; 
   websocket_pult.onerror = function() { Logfile("PULT onerror="+event.data) };
   Logfile("PULT Versuch, Websocket /ws/logfile zu starten");
+
+  websocket_pult_dash = new WebSocket("ws:192.168.43.220:1880/ws/dash"); 
+  //websocket_pult_dash = new WebSocket("ws:192.168.2.100:1880/ws/dash"); 
+  websocket_pult_dash.onopen = function() {
+    Logfile("PULT Websocket /ws/dash CONNECTED");
+    }; 
+  websocket_pult_dash.onclose = function() {
+    Logfile("PULT Websocket /ws/dash DISCONNECTED");
+    }; 
+  websocket_pult_dash.onmessage = function() {
+    eventnr=eventnr+1;
+    Logfile("PULT Websocket /ws/dash event.data="+event.data);
+    }; 
+  websocket_pult_dash.onerror = function() { Logfile("PULT /ws/dash onerror="+event.data) };
+  Logfile("PULT Versuch, Websocket /ws/dash zu starten");
 
   //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
   websocket = new WebSocket("ws:192.168.2.101:1880/ws/gpio"); 
   //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
   websocket.onopen = function() {
-    Logfile("BRETT CONNECTED");
+    Logfile("BRETT Websocket /ws/gpio CONNECTED");
     }; 
   websocket.onclose = function() {
-    Logfile("BRETT DISCONNECTED");
+    Logfile("BRETT Websocket /ws/gpio DISCONNECTED");
     }; 
   websocket.onmessage = function() {
     eventnr=eventnr+1;
     Logfile("BRETT event.data="+event.data);
     SprichDE("Vorsicht am Gleis 1, es kommt ein Zug aus Chemnitz");
     //SprichFR("Attention à la voie 1, arrivée du train de Chemnitz");
-    Logfile("BRETT event.data="+event.data+" durch "+eventnr);
+    Logfile("BRETT Websocket /ws/gpio event.data="+event.data+" durch "+eventnr);
     }; 
   websocket.onerror = function() { Logfile("BRETT onerror="+event.data) };
   Logfile("BRETT Versuch, Websocket /ws/gpio zu starten");
@@ -106,8 +122,6 @@ Licht Waldcafe
       <line id="Streichholz" x1="0" y1="0" x2="0" y2="100"/>
       <circle id="Streichholzmarkierung" cx="0" cy="0" r="3" />
       </defs>
-    <!--use id="Weiche1" xlink:href="#Weiche" x="200" y="200"/>
-    <use id="Weiche2" xlink:href="#Weiche" x="300" y="200"/-->
       <g id="Weiche0" transform="translate(100,100)">
         <!--path d="M0,0 l100,0 M0,20 l100,0 M0,0 A200,200 0,0,1 100,26.8 M0,20 A180,180 0,0,1 90,44.12" fill="none" stroke="red"/-->
         <path d="M5,0.2 A200,200 0,0,1 87.178,20 L5,18">
@@ -121,6 +135,6 @@ Licht Waldcafe
         </g>
     </svg>
 <p>  letzte Aktion: <div><textarea id="Logfile" cols="80" rows="15">Seite geladen</textarea></div></p>
-<p>
+<p><input id="Fontsize" size="20" value="ls" onkeypress="if (event.keyCode==13) websocket_pult_dash.send(event.target.value)"/>
 </body>
   </html>
