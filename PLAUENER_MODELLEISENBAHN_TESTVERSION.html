@@ -30,8 +30,8 @@ function SprichFR(was) {
   }
 
 function init() {
-  websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
-  //websocket_pult = new WebSocket("ws:192.168.2.100:1880/ws/logfile"); 
+  //websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
+  websocket_pult = new WebSocket("ws:192.168.2.101:1880/ws/logfile"); 
   websocket_pult.onopen = function() {
     Logfile("PULT Websocket /ws/logfile CONNECTED");
     }; 
@@ -40,14 +40,16 @@ function init() {
     }; 
   websocket_pult.onmessage = function() {
     eventnr=eventnr+1;
-    Logfile("PULT Websocket /ws/logfile event.data="+event.data);
+    Logfile("PULT Websocket /ws/logfile event.data="+event.data.trim());
     }; 
   websocket_pult.onerror = function() { Logfile("PULT onerror="+event.data) };
   Logfile("PULT Versuch, Websocket /ws/logfile zu starten");
 
-  websocket_pult_dash = new WebSocket("ws:192.168.43.220:1880/ws/dash"); 
-  //websocket_pult_dash = new WebSocket("ws:192.168.2.100:1880/ws/dash"); 
+  //websocket_pult_dash = new WebSocket("ws:192.168.43.220:1880/ws/dash"); 
+  websocket_pult_dash = new WebSocket("ws:192.168.2.101:1880/ws/dash"); 
   websocket_pult_dash.onopen = function() {
+    websocket_pult_dash.send("date");
+    websocket_pult_dash.send("sudo date -s @"+(Date.now()/1000));
     Logfile("PULT Websocket /ws/dash CONNECTED");
     }; 
   websocket_pult_dash.onclose = function() {
@@ -55,13 +57,13 @@ function init() {
     }; 
   websocket_pult_dash.onmessage = function() {
     eventnr=eventnr+1;
-    Logfile("PULT Websocket /ws/dash event.data="+event.data);
+    Logfile("PULT Websocket /ws/dash event.data="+event.data.trim());
     }; 
   websocket_pult_dash.onerror = function() { Logfile("PULT /ws/dash onerror="+event.data) };
   Logfile("PULT Versuch, Websocket /ws/dash zu starten");
 
   //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
-  websocket = new WebSocket("ws:192.168.2.101:1880/ws/gpio"); 
+  websocket = new WebSocket("ws:192.168.2.103:1880/ws/gpio"); 
   //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
   websocket.onopen = function() {
     Logfile("BRETT Websocket /ws/gpio CONNECTED");
@@ -100,7 +102,7 @@ function Test() {
 <body onload="init()">
 <p>auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/PLAUENER_MODELLEISENBAHN.html">PLAUENER_MODELLEISENBAHN.html</a></p>
 Licht Waldcafe 
-<button class="Licht_an" onclick='websocket.send("5");Logfile("TABLET Licht ein")'>ein</button>
+<button class="Licht_an" onclick='websocket.send("50");Logfile("TABLET Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("TABLET Licht aus")'>aus</button>
 <nix><button class="Licht_an" onclick='Test()'>Test</button>
 <button class="Licht_an" onclick='shutdown_websocket.send("");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button></nix>
@@ -134,7 +136,7 @@ Licht Waldcafe
         <circle id="gerade" cx="90" cy="55" r="5" fill="orange"/>
         </g>
     </svg>
-<p>  letzte Aktion: <div><textarea id="Logfile" cols="80" rows="15">Seite geladen</textarea></div></p>
-<p><input id="Fontsize" size="20" value="ls" onkeypress="if (event.keyCode==13) websocket_pult_dash.send(event.target.value)"/>
+<p>  letzte Aktion: <div><textarea id="Logfile" cols="100" rows="15">Seite geladen</textarea></div></p>
+<p><input id="dash" size="20" value="vcgencmd measure_temp" onkeypress="if (event.keyCode==13) websocket_pult_dash.send(event.target.value)"/>
 </body>
   </html>

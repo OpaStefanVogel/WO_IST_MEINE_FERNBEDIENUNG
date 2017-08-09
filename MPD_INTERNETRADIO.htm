@@ -1,0 +1,60 @@
+<html>
+<head>
+  <title>MPD-Internetradio</title>
+  <meta charset="utf-8"/>
+  <style type="text/css"> 
+    .but {font-size:200%}
+    </style>
+<script type="application/ecmascript">
+  var myReader = new FileReader();
+  myReader.addEventListener("loadend", function(){
+    alert(this.result);
+});
+  websocket = new WebSocket("ws:192.168.1.100:1880/ws/mpd"); 
+  websocket.onopen = function() {
+    //alert("CONNECTED");
+    }; 
+  websocket.onclose = function() {
+    writeToPage("DISCONNECTED")
+    }; 
+  websocket.onmessage = function() {
+    var w=event.data;
+    //alert(w);
+    //alert(w.size);
+    //alert(w.type);
+    myReader.readAsText(w);
+    //alert(myReader.result);
+    }; 
+  websocket.onerror = function() { writeToScreen(event.data) };
+
+function writeToScreen(message) { 
+//  document.getElementById('output').firstChild.nodeValue=message;
+  d=(new Date());
+  document.getElementById('logarea').value=
+  "IN  "+(new Date()).toLocaleTimeString()+" "+message+"\n"+
+  document.getElementById('logarea').value;
+  } 
+function writeToLogArea(message) {
+  d=(new Date());
+//alert((new Date()).toLocaleTimeString()); 
+  document.getElementById('logarea').value=
+  "OUT "+(new Date()).toLocaleTimeString()+" "+message+"\n"+
+  document.getElementById('logarea').value;
+  } 
+
+function alert(text) {
+  document.getElementById("Logfile").firstChild.nodeValue=text;
+  }
+    </script>
+  </head>
+<body onload="init()">
+<button class="but" onclick='websocket.send("play")'>Play</button>
+<button class="but" onclick='websocket.send("pause")'>Pause</button>
+<button class="but" onclick='websocket.send("stop")'>Stop</button>
+<button class="but" onclick='websocket.send("volume -10")'>leiser</button>
+<button class="but" onclick='websocket.send("volume +10")'>lauter</button>
+<button class="but" onclick='websocket.send("next")'>nächster</button>
+<button class="but" onclick='websocket.send("previous")'>vorheriger</button>
+<button class="but" onclick='websocket.send("sticker list")'>sticker</button>
+<div id="Logfile" style="white-space:pre"> </div>
+</html>
