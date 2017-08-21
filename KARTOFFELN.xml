@@ -36,11 +36,15 @@ v 3 -6 3 H 800"/>
 <path id="Kartoffeln2016zweitinnen" stroke="red" d="M50 0 l
 23 6 23 6 29 6 23 6 23 6 22 6 18 6 22 6 23 6 24 6 23 6 23 6 23 6 19 6 23 6 25 6 24 5
 v 3 -6 3 H 800">
-  <animate attributeName="stroke" begin="0s" dur="1s" values="red;yellow;red" repeatCount="10000"/>
+  <animate attributeName="stroke" begin="0s" dur="1s" values="green;green;green" repeatCount="10000"/>
   </path>
 <path id="Kartoffeln2016innen" stroke="red" d="M50 0 l
 19 6 19 6 23 6 20 6 20 6 20 6 21 6 18 6 18 6 35 12 60 18 20 6 17 6 17 6 23 8 20 2 11 3
 v 3 -6 3 H 800">
+  <animate attributeName="stroke" begin="0s" dur="1s" values="green;green;green" repeatCount="10000"/>
+  </path>
+<path id="Kartoffeln2017zweitinnen" stroke="red" d="M50 0 l
+24 6 29 6 25 6 28 6 24 6 26 6 25 6 21 6 22 6 22 6 26 6 27 6 27 6 23 6 20 5 H 800">
   <animate attributeName="stroke" begin="0s" dur="1s" values="red;yellow;red" repeatCount="10000"/>
   </path>
 </g>
