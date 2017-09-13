@@ -30,23 +30,8 @@ function SprichFR(was) {
   }
 
 function init() {
-  //websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
-  websocket_pult = new WebSocket("ws:192.168.2.101:1880/ws/logfile"); 
-  websocket_pult.onopen = function() {
-    Logfile("PULT Websocket /ws/logfile CONNECTED");
-    }; 
-  websocket_pult.onclose = function() {
-    Logfile("PULT Websocket /ws/logfile DISCONNECTED");
-    }; 
-  websocket_pult.onmessage = function() {
-    eventnr=eventnr+1;
-    Logfile("PULT Websocket /ws/logfile event.data="+event.data.trim());
-    }; 
-  websocket_pult.onerror = function() { Logfile("PULT onerror="+event.data) };
-  Logfile("PULT Versuch, Websocket /ws/logfile zu starten");
 
-  //websocket_pult_dash = new WebSocket("ws:192.168.43.220:1880/ws/dash"); 
-  websocket_pult_dash = new WebSocket("ws:192.168.2.101:1880/ws/dash"); 
+  websocket_pult_dash = new WebSocket("ws://Modellbahnpult:1880/ws/dash"); 
   websocket_pult_dash.onopen = function() {
     websocket_pult_dash.send("date");
     websocket_pult_dash.send("sudo date -s @"+(Date.now()/1000));
@@ -62,9 +47,30 @@ function init() {
   websocket_pult_dash.onerror = function() { Logfile("PULT /ws/dash onerror="+event.data) };
   Logfile("PULT Versuch, Websocket /ws/dash zu starten");
 
-  //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
-  websocket = new WebSocket("ws:192.168.2.103:1880/ws/gpio"); 
-  //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
+
+  websocket_pult_logfile = new WebSocket("ws://Modellbahnpult:1880/ws/logfile"); 
+  websocket_pult_logfile.onopen = function() {
+    Logfile("PULT Websocket /ws/logfile CONNECTED");
+    }; 
+  websocket_pult_logfile.onclose = function() {
+    Logfile("PULT Websocket /ws/logfile DISCONNECTED");
+    }; 
+  websocket_pult_logfile.onmessage = function() {
+    eventnr=eventnr+1;
+    Logfile("PULT Websocket /ws/logfile event.data="+event.data.trim());
+    }; 
+  websocket_pult_logfile.onerror = function() { Logfile("PULT onerror="+event.data) };
+  Logfile("PULT Versuch, Websocket /ws/logfile zu starten");
+
+
+  shutdown_pult_websocket = new WebSocket("ws://Modellbahnpult:1880/ws/shutdown");
+  shutdown_pult_websocket.onopen = function() { 
+    Logfile("PULT Websocket /ws/shutdown CONNECTED");
+    }; 
+  Logfile("PULT Versuch, Websocket /ws/shutdown zu starten");
+
+
+  websocket = new WebSocket("ws://Modellbahnbrett:1880/ws/gpio"); 
   websocket.onopen = function() {
     Logfile("BRETT Websocket /ws/gpio CONNECTED");
     }; 
@@ -80,10 +86,6 @@ function init() {
     }; 
   websocket.onerror = function() { Logfile("BRETT onerror="+event.data) };
   Logfile("BRETT Versuch, Websocket /ws/gpio zu starten");
-
-  shutdown_websocket = new WebSocket("ws://192.168.43.220:1880/ws/shutdown");
-  shutdown_websocket.onopen = function() { }; 
-  Logfile("PULT Versuch SHUTDOWN Websocket /ws/shutdown zu starten");
 
   }
 
@@ -102,10 +104,10 @@ function Test() {
 <body onload="init()">
 <p>auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/PLAUENER_MODELLEISENBAHN.html">PLAUENER_MODELLEISENBAHN.html</a> <a href="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/blob/gh-pages/PLAUENER_MODELLEISENBAHN.html">Quelltext</a></p>
 Licht Waldcafe 
-<button class="Licht_an" onclick='websocket.send("50");Logfile("TABLET Licht ein")'>ein</button>
+<button class="Licht_an" onclick='websocket.send("20");Logfile("TABLET Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("TABLET Licht aus")'>aus</button>
-<nix><button class="Licht_an" onclick='Test()'>Test</button>
-<button class="Licht_an" onclick='shutdown_websocket.send("");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button></nix>
+<button class="Licht_an" onclick='Test()'>Test</button>
+<button class="Licht_an" onclick='shutdown_pult_websocket.send("");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button>
 </p>
   <svg id="Grafik" width="800" height="420" viewBox="0 0 800 420" style="border:solid 1px black" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" stroke="darkgrey">
     <title>Streichholzgraph</title>

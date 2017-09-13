@@ -12,7 +12,7 @@
     alert(this.result+vorher);
     vorher=vorher.slice(0,1000);
 });
-  websocket = new WebSocket("ws:192.168.1.100:1880/ws/mpd"); 
+  websocket = new WebSocket("ws:radio:1880/ws/mpd"); 
   websocket.onopen = function() {
     alert("CONNECTED");
     setTimeout(starter,1000);
