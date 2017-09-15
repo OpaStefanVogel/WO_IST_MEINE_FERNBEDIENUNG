@@ -37,7 +37,7 @@ function SprichFR(was) {
 
 function init() {
 
-  websocket_pult_ssh = new WebSocket("ws://Modellbahnpult:1880/ws/ssh"); 
+  websocket_pult_ssh = new WebSocket("ws://192.168.2.101:1880/ws/ssh"); 
   websocket_pult_ssh.onopen = function() {
     websocket_pult_ssh.send("date");
     websocket_pult_ssh.send("sudo date -s @"+(Date.now()/1000));
@@ -56,7 +56,7 @@ function init() {
   Logfile("PULT Versuch, Websocket /ws/ssh zu starten");
 
 
-  websocket_pult_logfile = new WebSocket("ws://Modellbahnpult:1880/ws/logfile"); 
+  websocket_pult_logfile = new WebSocket("ws://192.168.2.101:1880/ws/logfile"); 
   websocket_pult_logfile.onopen = function() {
     Logfile("PULT Websocket /ws/logfile CONNECTED");
     }; 
