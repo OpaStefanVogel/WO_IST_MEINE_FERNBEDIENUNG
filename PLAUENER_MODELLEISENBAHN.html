@@ -10,7 +10,13 @@
     .Licht_aus {
       font-size: 200%
       }
-    nix {display:none}
+    .Test {
+      background-color: red;
+      font-size: 150%
+      }
+    Test {
+      #display:none
+      }
     </style> 
 <script type="application/ecmascript">
 var eventnr=0;
@@ -30,41 +36,42 @@ function SprichFR(was) {
   }
 
 function init() {
-  //websocket_pult = new WebSocket("ws:192.168.43.220:1880/ws/logfile"); 
-  websocket_pult = new WebSocket("ws:192.168.2.101:1880/ws/logfile"); 
-  websocket_pult.onopen = function() {
+
+  websocket_pult_ssh = new WebSocket("ws://192.168.2.101:1880/ws/ssh"); 
+  websocket_pult_ssh.onopen = function() {
+    websocket_pult_ssh.send("date");
+    websocket_pult_ssh.send("sudo date -s @"+(Date.now()/1000));
+    //websocket_pult_ssh.send("ls");
+    //websocket_pult_ssh.send("df");
+    Logfile("PULT Websocket /ws/ssh CONNECTED");
+    }; 
+  websocket_pult_ssh.onclose = function() {
+    Logfile("PULT Websocket /ws/ssh DISCONNECTED");
+    }; 
+  websocket_pult_ssh.onmessage = function() {
+    eventnr=eventnr+1;
+    Logfile("PULT Websocket /ws/ssh event.data="+event.data.trim());
+    }; 
+  websocket_pult_ssh.onerror = function() { Logfile("PULT /ws/ssh onerror="+event.data) };
+  Logfile("PULT Versuch, Websocket /ws/ssh zu starten");
+
+
+  websocket_pult_logfile = new WebSocket("ws://192.168.2.101:1880/ws/logfile"); 
+  websocket_pult_logfile.onopen = function() {
     Logfile("PULT Websocket /ws/logfile CONNECTED");
     }; 
-  websocket_pult.onclose = function() {
+  websocket_pult_logfile.onclose = function() {
     Logfile("PULT Websocket /ws/logfile DISCONNECTED");
     }; 
-  websocket_pult.onmessage = function() {
+  websocket_pult_logfile.onmessage = function() {
     eventnr=eventnr+1;
     Logfile("PULT Websocket /ws/logfile event.data="+event.data.trim());
     }; 
-  websocket_pult.onerror = function() { Logfile("PULT onerror="+event.data) };
+  websocket_pult_logfile.onerror = function() { Logfile("PULT onerror="+event.data) };
   Logfile("PULT Versuch, Websocket /ws/logfile zu starten");
 
-  //websocket_pult_dash = new WebSocket("ws:192.168.43.220:1880/ws/dash"); 
-  websocket_pult_dash = new WebSocket("ws:192.168.2.101:1880/ws/dash"); 
-  websocket_pult_dash.onopen = function() {
-    websocket_pult_dash.send("date");
-    websocket_pult_dash.send("sudo date -s @"+(Date.now()/1000));
-    Logfile("PULT Websocket /ws/dash CONNECTED");
-    }; 
-  websocket_pult_dash.onclose = function() {
-    Logfile("PULT Websocket /ws/dash DISCONNECTED");
-    }; 
-  websocket_pult_dash.onmessage = function() {
-    eventnr=eventnr+1;
-    Logfile("PULT Websocket /ws/dash event.data="+event.data.trim());
-    }; 
-  websocket_pult_dash.onerror = function() { Logfile("PULT /ws/dash onerror="+event.data) };
-  Logfile("PULT Versuch, Websocket /ws/dash zu starten");
 
-  //websocket = new WebSocket("ws:192.168.1.123:1880/ws/gpio"); 
-  websocket = new WebSocket("ws:192.168.2.103:1880/ws/gpio"); 
-  //websocket = new WebSocket("ws:192.168.43.243:1880/ws/gpio"); 
+  websocket = new WebSocket("ws://192.168.2.103:1880/ws/gpio"); 
   websocket.onopen = function() {
     Logfile("BRETT Websocket /ws/gpio CONNECTED");
     }; 
@@ -81,31 +88,32 @@ function init() {
   websocket.onerror = function() { Logfile("BRETT onerror="+event.data) };
   Logfile("BRETT Versuch, Websocket /ws/gpio zu starten");
 
-  shutdown_websocket = new WebSocket("ws://192.168.43.220:1880/ws/shutdown");
-  shutdown_websocket.onopen = function() { }; 
-  Logfile("PULT Versuch SHUTDOWN Websocket /ws/shutdown zu starten");
-
   }
 
 function Test() {
-  Logfile("Test gestartet");
-  Logfile(document.getElementById("hä"));
+  var t=document.getElementById("Test");
+  if (t.hasAttribute("style")) {t.removeAttribute("style")} else {t.setAttribute("style","display:none")}
+  //Logfile("Test gestartet");
+  //Logfile(document.getElementById("hä"));
   //document.getElementById("Weiche").lastElementChild.tagName.setAttribute("fill","red");
   //alert(document.getElementById("Weiche2").instanceRoot);
-  alert(document.getElementById("Weiche2").shadowRoot);
+  //alert(document.getElementById("Weiche2").shadowRoot);
   //alert(document.getElementById("Grafik").pauseAnimations());
   //alert(document.getElementById("Grafik").animationsPaused());
-  Logfile("Test beendet");
+  //Logfile("Test beendet");
   }
 
   </script>
 <body onload="init()">
 <p>auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/PLAUENER_MODELLEISENBAHN.html">PLAUENER_MODELLEISENBAHN.html</a> <a href="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/blob/gh-pages/PLAUENER_MODELLEISENBAHN.html">Quelltext</a></p>
 Licht Waldcafe 
-<button class="Licht_an" onclick='websocket.send("50");Logfile("TABLET Licht ein")'>ein</button>
+<button class="Licht_an" onclick='websocket.send("20");Logfile("TABLET Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("TABLET Licht aus")'>aus</button>
-<nix><button class="Licht_an" onclick='Test()'>Test</button>
-<button class="Licht_an" onclick='shutdown_websocket.send("");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button></nix>
+<button class="Test" onclick='Test()'>Test</button>
+<span id="Test" style="display:none">
+  <button class="Test" onclick='websocket_pult_ssh.send("sudo shutdown -Ph 0");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button>
+  <button class="Test" onclick='websocket_pult_ssh.send("sudo reboot");Logfile("PULT reboot gesendet");'>Reboot Schaltpult</button>
+  </span>
 </p>
   <svg id="Grafik" width="800" height="420" viewBox="0 0 800 420" style="border:solid 1px black" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" stroke="darkgrey">
     <title>Streichholzgraph</title>
@@ -137,6 +145,9 @@ Licht Waldcafe
         </g>
     </svg>
 <p>  letzte Aktion: <div><textarea id="Logfile" cols="100" rows="15">Seite geladen</textarea></div></p>
-<p><input id="dash" size="20" value="vcgencmd measure_temp" onkeypress="if (event.keyCode==13) websocket_pult_dash.send(event.target.value)"/>
+<p><input id="ssh" size="20" value="vcgencmd measure_temp" onkeypress="if (event.keyCode==13) {websocket_pult_ssh.send(event.target.value)}"/>
+  <button class="Test" onclick='var Code=document.getElementById("ssh").value;Logfile(Code); websocket_pult_ssh.send(Code);'>Enter</button>
+
+  </p>
 </body>
   </html>
