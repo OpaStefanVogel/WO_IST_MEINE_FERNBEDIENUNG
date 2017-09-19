@@ -37,7 +37,8 @@ function SprichFR(was) {
 
 function init() {
 
-  websocket_pult_ssh = new WebSocket("ws://192.168.2.101:1880/ws/ssh"); 
+  websocket_pult_ssh = new WebSocket("ws://Modellbahnpult:1880/ws/ssh");
+  //websocket_pult_ssh = new WebSocket("ws://192.168.2.101:1880/ws/ssh");
   websocket_pult_ssh.onopen = function() {
     websocket_pult_ssh.send("date");
     websocket_pult_ssh.send("sudo date -s @"+(Date.now()/1000));
@@ -56,7 +57,8 @@ function init() {
   Logfile("PULT Versuch, Websocket /ws/ssh zu starten");
 
 
-  websocket_pult_logfile = new WebSocket("ws://192.168.2.101:1880/ws/logfile"); 
+  websocket_pult_logfile = new WebSocket("ws://Modellbahnpult:1880/ws/logfile"); 
+  //websocket_pult_logfile = new WebSocket("ws://192.168.2.101:1880/ws/logfile"); 
   websocket_pult_logfile.onopen = function() {
     Logfile("PULT Websocket /ws/logfile CONNECTED");
     }; 
@@ -90,7 +92,7 @@ function init() {
 
   }
 
-function Test() {
+function Testbuttons() {
   var t=document.getElementById("Test");
   if (t.hasAttribute("style")) {t.removeAttribute("style")} else {t.setAttribute("style","display:none")}
   //Logfile("Test gestartet");
@@ -105,15 +107,10 @@ function Test() {
 
   </script>
 <body onload="init()">
-<p>auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/PLAUENER_MODELLEISENBAHN.html">PLAUENER_MODELLEISENBAHN.html</a> <a href="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/blob/gh-pages/PLAUENER_MODELLEISENBAHN.html">Quelltext</a></p>
+<p>auf GitHub <a href="http://OpaStefanVogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/PLAUENER_MODELLEISENBAHN.html">PLAUENER_MODELLEISENBAHN.html</a> <a href="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/blob/gh-pages/PLAUENER_MODELLEISENBAHN.html">Quelltext</a> sowie <code>node-red http://192.168.<a href="http://192.168.2.101:1880">2.101</a>:1880, <a href="http://192.168.2.103:1880">2.103</a>, <a href="http://192.168.50.1:1880">50.1</a></code></p>
 Licht Waldcafe 
 <button class="Licht_an" onclick='websocket.send("20");Logfile("TABLET Licht ein")'>ein</button>
 <button class="Licht_aus" onclick='websocket.send("0");Logfile("TABLET Licht aus")'>aus</button>
-<button class="Test" onclick='Test()'>Test</button>
-<span id="Test" style="display:none">
-  <button class="Test" onclick='websocket_pult_ssh.send("sudo shutdown -Ph 0");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button>
-  <button class="Test" onclick='websocket_pult_ssh.send("sudo reboot");Logfile("PULT reboot gesendet");'>Reboot Schaltpult</button>
-  </span>
 </p>
   <svg id="Grafik" width="800" height="420" viewBox="0 0 800 420" style="border:solid 1px black" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" stroke="darkgrey">
     <title>Streichholzgraph</title>
@@ -145,8 +142,13 @@ Licht Waldcafe
         </g>
     </svg>
 <p>  letzte Aktion: <div><textarea id="Logfile" cols="100" rows="15">Seite geladen</textarea></div></p>
-<p><input id="ssh" size="20" value="vcgencmd measure_temp" onkeypress="if (event.keyCode==13) {websocket_pult_ssh.send(event.target.value)}"/>
+<p><button class="Test" onclick='Testbuttons()'>Testbuttons</button>
+<span id="Test" style="display:none">
+  <button class="Test" onclick='websocket_pult_ssh.send("sudo shutdown -Ph 0");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button>
+  <button class="Test" onclick='websocket_pult_ssh.send("sudo reboot");Logfile("PULT reboot gesendet");'>Reboot Schaltpult</button>
+<input id="ssh" size="20" value="vcgencmd measure_temp" onkeypress="if (event.keyCode==13) {websocket_pult_ssh.send(event.target.value)}"/>
   <button class="Test" onclick='var Code=document.getElementById("ssh").value;Logfile(Code); websocket_pult_ssh.send(Code);'>Enter</button>
+  </span>
 
   </p>
 </body>
