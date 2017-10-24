@@ -15,6 +15,7 @@
   }
 .FREQMESS {
   display:inline-block;
+  font-family:Courier,monospace;
   font-size:300%;
   outline: dashed;
   background: yellow ;
