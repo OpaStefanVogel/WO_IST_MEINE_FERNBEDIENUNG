@@ -176,6 +176,53 @@ Lok:
         </g>
     </svg>
 <p>  letzte Aktion: <div><textarea id="Logfile" cols="100" rows="15">Seite geladen</textarea></div></p>
+
+<div>Trafo:</div>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="100%" height="100%"
+  viewBox="000 0 800 200"
+  preserveAspectRatio="xMinYMin"
+  style="border:dotted"
+  ontouchstart="">
+<g> 
+<rect id="backg" x="0" y="0" r="10" width="800" height="100" fill="white" stroke="green" stroke-width="1" />
+<rect id="kursor" x="5" y="5" ry="10" width="100" height="90" distanz="0" fill="red" stroke="green" stroke-width="1" 
+ ontouchstart="schiebstart(evt)" ontouchmove="schiebweiter(evt)" ontouchend="schiebweiter(evt)"/>
+<text id="showx" x="10" y="160" align="central" font-size="200%">0</text>
+<text id="showy" x="10" y="380" align="central" font-size="100%">0</text>
+</g>
+
+<script type="application/ecmascript"> 
+function schiebstart(evt) { 
+  var distanz = 0;
+  var circle = evt.target;
+  var xpos = circle.getAttribute("x");
+  distanz = xpos-evt.touches.item(0).screenX;
+  circle.setAttribute("distanz",distanz);
+  document.getElementById("showy").childNodes[0].nodeValue=max(xpos,0);
+  evt.preventDefault();
+  }
+ 
+function schiebweiter(evt) { 
+  var circle = evt.target;
+//alert(evt.touches.length);
+//alert(eval(80+circle.getAttribute("distanz")));
+//alert(distanz);
+  var xpos = Math.min(690,Math.max(eval(evt.touches.item(0).screenX+circle.getAttribute("distanz")),5));
+  var ypos = Math.max(evt.touches.item(0).screenY-70,0);
+  circle.setAttribute("x",xpos);
+  var Zahl=Math.floor(((xpos/10-xpos/10%1)*10-0+(ypos/20-ypos/20%1))*100/700);
+  document.getElementById("showx").childNodes[0].nodeValue=Zahl;
+  document.getElementById("showy").childNodes[0].nodeValue=evt.touches.length;
+  Logfile("0:"+Zahl);
+  websocket.send("0:"+Zahl);
+  evt.preventDefault();
+  }
+
+ </script>
+  </svg>
+
 <p><button class="Test" onclick='Testbuttons()'>Testbuttons</button>
 <span id="Test" style="display:none">
   <button class="Test" onclick='websocket_pult_ssh.send("sudo shutdown -Ph 0");Logfile("PULT shutdown... gesendet");'>Shutdown Schaltpult</button>
@@ -185,5 +232,8 @@ Lok:
   </span>
 
   </p>
+
+
+
 </body>
   </html>
