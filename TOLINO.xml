@@ -9,8 +9,8 @@
   </script>
 <body style="font-size:300%;" onload="//alert(x)">
 <a href="#Internet">Internet</a>
-/ <a href="file://localhost/storage/emulated/0/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/REZEPTE/REZEPTE.xml" target="_blank">Rezepte</a>
-/ <a href="../">SD-Card</a>/<a href="file://localhost/storage/emulated/0/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/los2017.xml#letztes_ok" target="_blank">los.xml</a>
+/ <a href="file://localhost/storage/emulated/0/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/REZEPTE/REZEPTE.xml" target="_blank">Rezepte</a> 
+/ <a href="../">SD-Card</a>/<a href="file://localhost/storage/emulated/0/Stefan/BackUpToDropBoxSyn/SVG_selbst_ausgedacht/los2017.xml#letztes_ok" target="_blank">los.xml</a> 
 / <a href="INHALT_GREP.xml" target="_blank">gespeicherte Opera Seiten</a>
 <ul>
 <li><tspan style="font-size:150%; color:red">Spartan3E:</tspan>
@@ -31,8 +31,8 @@
   <a href="SCHIEBEREGLER.xml">Schieberegler</a></li>
 <li><iframe src="INDUKTIONSKOCHPLATTE.xml" type="text/xml" width="120" height="120"/>
   <a href="INDUKTIONSKOCHPLATTE.xml">Induktionskochplatte</a></li>
-<li><iframe src="KARTOFFELN.xml" type="text/xml" width="120" height="120"/>
-  <a href="KARTOFFELN.xml">Kartoffeln</a></li>
+<li><iframe src="../../BackUpToDropBoxSyn/SVG_selbst_ausgedacht/KARTOFFELN.xml" type="text/xml" width="120" height="120"/>
+  <a href="../../BackUpToDropBoxSyn/SVG_selbst_ausgedacht/KARTOFFELN.xml">Kartoffeln</a></li>
 <li><iframe src="TESTBILD.xml" type="text/xml" width="120" height="120"/>
   <a href="TESTBILD.xml">Testbild</a></li>
 <li><iframe2 src="EINKAUFSLISTE" type="text/xml" width="120" height="120"/>
