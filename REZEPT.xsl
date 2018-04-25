@@ -2,12 +2,12 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/REZEPT">
 <html>
-<link rel="stylesheet" type="text/css" href="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/edit/gh-pages/REZEPT.css" />
+<link rel="stylesheet" type="text/css" href="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT.css" />
 
  <head></head>
  <body class="REZEPT">Test
 <xsl:apply-templates />
-<script src="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/edit/gh-pages/REZEPT_UHR.js" type="text/javascript"/>
+<script src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.js" type="text/javascript"/>
  </body></html>
 </xsl:template>
 
@@ -15,7 +15,7 @@
 <span class="UHR" ontouchstart="CLICKI(event)"
   ontouchmove="DRAGGI(event)"
   angehalten="ja"><xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute>
-  <img src="https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/edit/gh-pages/REZEPT_UHR.svg"/>
+  <img src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.svg"/>
   <xsl:value-of select="." />
   </span>
 </xsl:template>
