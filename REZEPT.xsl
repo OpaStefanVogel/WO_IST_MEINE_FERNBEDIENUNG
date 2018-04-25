@@ -2,9 +2,9 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/REZEPT">
 <html>
-<link rel="stylesheet" type="text/css" href="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT.css" />
-
- <head></head>
+ <head>
+   <link rel="stylesheet" type="text/css" href="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT.css" />
+   </head>
  <body class="REZEPT">Test
 <xsl:apply-templates />
 <script src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.js" type="text/javascript"/>
