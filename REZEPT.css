@@ -3,11 +3,11 @@
   }
 
 .REZEPT:after {
-#  content:url("/mnt/sdcard/DCIM/Camera/IMG_20141007_204238.JPG");
+/*  content:url("/mnt/sdcard/DCIM/Camera/IMG_20141007_204238.JPG");*/
   }
 
 .REZEPT {
-//  white-space: pre-wrap;
+/*  white-space: pre-wrap;*/
   font-size:120%;
   }  
 
@@ -21,13 +21,13 @@
 .ZUTATEN { 
   white-space: pre-wrap;
   display:inline-block;
-//  top:400px;
-//  left:140px;
+/*  top:400px;
+    left:140px;*/
   font-family:Courier,monospace;
   font-size:100%;
   outline: solid;
   background: yellow;
-//  marging: 777px;
+/*  marging: 777px;*/
   padding: 8px;
   }
 
@@ -57,12 +57,12 @@
   }
 
 .UHR:aftergehtgarnichgutdaflackertkurzdasgroßebildauf {
-#  content:"Stoppuhr:";
+/*  content:"Stoppuhr:";*/
   border: groove;
   display: inline;
   background: green;
   content:url("REZEPT_UHR.svg");
-//  content:url("data:image/svg+xml;utf8,<?xml?><svg><text y='10'>UHR</text</svg>")
+/*  content:url("data:image/svg+xml;utf8,<?xml?><svg><text y='10'>UHR</text</svg>")*/
   }
 
 .UHR,a {
