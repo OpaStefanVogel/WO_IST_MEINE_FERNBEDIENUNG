@@ -7,7 +7,7 @@
    </head>
  <body class="REZEPT">Test
 <xsl:apply-templates />
-<script src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.js" type="text/javascript"/>
+<!--script src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.js" type="text/javascript"/-->
  </body></html>
 </xsl:template>
 
