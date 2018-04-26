@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<?xml-stylesheet type="text/xsl" href="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT.xsl" ?>
-<REZEPT><ZUTATEN>yyy</ZUTATEN>
+<?xml-stylesheet type="text/xsl" href="REZEPT.xsl" ?>
+<REZEPT><TITEL>hihihihihijkjkjkjk</TITEL>
+
+<ZUTATEN>
+ 2 kg ggg
+    3 fff
+200 g eee
+    2 ddd
+      ccc
+      bbb
+      aaa
+      zzz
+      yyy
+      xxx
+</ZUTATEN>
+
+<ZUBEREITUNG>
+fufufu <UHR>10:00</UHR> Minuten 
+kukuku <UHR>10:00</UHR> Minuten 
+
+</ZUBEREITUNG>
 </REZEPT>
