@@ -63,7 +63,7 @@
 <xsl:template match="a">
  <a><xsl:attribute name="href"><xsl:value-of select="." />.xml</xsl:attribute>
   <u><xsl:value-of select="." /></u></a>
- <xsl:template>
+ </xsl:template>
 
 
 </xsl:stylesheet>
