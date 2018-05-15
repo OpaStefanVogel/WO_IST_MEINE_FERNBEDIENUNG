@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:template match="/REZEPT">
 <html>
  <head>
-   <link rel="stylesheet" type="text/css" href="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT.css" />
+   <link rel="stylesheet" type="text/css" href="REZEPT.css"/>
    </head>
- <body class="REZEPT">Test
+ <body class="REZEPT">
 <xsl:apply-templates />
-<!--script src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.js" type="text/javascript"/-->
+<script src="REZEPT_UHR.js" type="text/javascript"/>
  </body></html>
 </xsl:template>
 
@@ -15,7 +15,7 @@
 <span class="UHR" ontouchstart="CLICKI(event)"
   ontouchmove="DRAGGI(event)"
   angehalten="ja"><xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute>
-  <img src="http://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/REZEPT_UHR.svg"/>
+  <img src="REZEPT_UHR.svg"/>
   <xsl:value-of select="." />
   </span>
 </xsl:template>
@@ -24,7 +24,7 @@
 <div><span style="vertical-align:top">Rezept </span>
 <svg style="border:solid" width="100%" height="110px" font-family="Helvicta">
 <text transform="scale(6,4) rotate(0) translate(0,16)" stroke="red" fill="green">
-  * *    * <xsl:value-of select="." /> * * *
+  * * * <xsl:value-of select="." /> * * *
    <xsl:value-of select="." /> * * *
     <xsl:value-of select="." /> * * *
      <xsl:value-of select="." /> * * *
@@ -62,7 +62,8 @@
 
 <xsl:template match="a">
  <a><xsl:attribute name="href"><xsl:value-of select="." />.xml</xsl:attribute>
-  <u><xsl:value-of select="." /></u></a>;
- </xsl:template>
+  <u><xsl:value-of select="." /></u></a>
+ <xsl:template>
+
 
 </xsl:stylesheet>
