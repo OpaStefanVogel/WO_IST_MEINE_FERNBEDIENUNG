@@ -1,13 +1,58 @@
 <html>
 <head>
   <title>Plauener Modelleisenbahn</title>
+  <style>
+    body {font-family:Courier,monospace} 
+    </style>
+  <script>
+function rechne() {
+  var d=[];
+  var qsum=0;
+  for (var i=0;i<3;i++) {
+	d[i]=eval(document.getElementById("d"+i).value);
+    qsum=qsum+d[i]*d[i];
+    }
+  qsum=Math.sqrt(qsum);
+  var a=eval(document.getElementById("alpha").value)*Math.PI/180;
+  //alert("d=["+d+"] n="+qsum+" alpha="+a);
+  for (var i=0;i<3;i++) {
+    d[i]=d[i]/qsum;
+	document.getElementById("dn"+i).firstChild.nodeValue=d[i];
+    }
+  var R=[];
+  for (var i=0;i<3;i++) {R[i]=[];
+    for (var j=0;j<3;j++) {//alert(i+" "+j+" "+((3-i-j)));
+      if (i==j) R[i][j]=d[i]*d[j]*(1-Math.cos(a))+Math.cos(a); 
+        else R[i][j]=d[i]*d[j]*(1-Math.cos(a))+d[3-i-j]*Math.sin(a);
+      document.getElementById("r"+i+j).firstChild.nodeValue=R[i][j];
+      }
+    }
+  var Nick=Math.atan2(R[2][0],Math.sqrt(R[1][0]*R[1][0]+R[0][0]*R[0][0]));
+  var Gier=Math.atan2(R[1][0]/Math.cos(Nick),R[1][0]/Math.cos(Nick));
+  var Roll=Math.atan2(R[2][1]/Math.cos(Nick),R[2][2]/Math.cos(Nick));
+  document.getElementById("Roll").firstChild.nodeValue=Roll*180/Math.PI;
+  document.getElementById("Nick").firstChild.nodeValue=Nick*180/Math.PI;
+  document.getElementById("Gier").firstChild.nodeValue=Gier*180/Math.PI;
+  }
+    </script>
   <meta charset="utf-8"/>
-<body onload="init()">
-<p>
+<body onload="rechne()" onkeyup="rechne()">
 Drehachse d=
+<div><input id="d0" value="1/2"/></div>
 <div><input id="d1" value="1/2"/></div>
-<div><input id="d2" value="1/2"/></div>
-<div><input id="d3" value="1-sqrt(2)/2"/></div>
-
+<div><input id="d2" value="1-Math.sqrt(2)/2"/></div>
+Drehwinkel α=
+<div><input id="alpha" value="180"/>°</div>
+Drehachse normiert dn=
+<div id="dn0"/>.</div>
+<div id="dn1"/>.</div>
+<div id="dn2"/>.</div>
+Rotationsmatrix R=
+<div><span id="r00">.</span> <span id="r01">.</span> <span id="r02">.</span></div>
+<div><span id="r10">.</span> <span id="r11">.</span> <span id="r12">.</span></div>
+<div><span id="r20">.</span> <span id="r21">.</span> <span id="r22">.</span></div>
+<div>Roll=<span id="Roll">.</span></div>
+<div>Nick=<span id="Nick">.</span></div>
+<div>Gier=<span id="Gier">.</span></div>
 </body>
   </html>
