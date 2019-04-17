@@ -60,18 +60,28 @@ function rechne() {
   document.getElementById("Roll").firstChild.nodeValue=Roll*180/Math.PI;
   document.getElementById("Nick").firstChild.nodeValue=Nick*180/Math.PI;
   document.getElementById("Gier").firstChild.nodeValue=Gier*180/Math.PI;
+  var P=[[],[],[]];
   var ca=Math.cos(Gier); var sa=Math.sin(Gier);
   var cb=Math.cos(Nick); var sb=Math.sin(Nick);
   var cc=Math.cos(Roll); var sc=Math.sin(Roll);
-  document.getElementById("p00").firstChild.nodeValue=ca*cb;
-  document.getElementById("p01").firstChild.nodeValue=ca*sb*sc-sa*cc;
-  document.getElementById("p02").firstChild.nodeValue=ca*sb*cc+sa*sc;
-  document.getElementById("p10").firstChild.nodeValue=sa*cb;
-  document.getElementById("p11").firstChild.nodeValue=sa*sb*sc+ca*cc;
-  document.getElementById("p12").firstChild.nodeValue=sa*sb*cc-ca*sc;
-  document.getElementById("p20").firstChild.nodeValue=-sb;
-  document.getElementById("p21").firstChild.nodeValue=cb*sc;
-  document.getElementById("p22").firstChild.nodeValue=cb*cc;
+  P[0][0]=ca*cb;
+  P[0][1]=ca*sb*sc-sa*cc;
+  P[0][2]=ca*sb*cc+sa*sc;
+  P[1][0]=sa*cb;
+  P[1][1]=sa*sb*sc+ca*cc;
+  P[1][2]=sa*sb*cc-ca*sc;
+  P[2][0]=-sb;
+  P[2][1]=cb*sc;
+  P[2][2]=cb*cc;
+  pn=[];
+  for (var i=0;i<3;i++) {pn[i]=0;
+    for (var j=0;j<3;j++) {
+      document.getElementById("p"+i+j).firstChild.nodeValue=P[i][j];
+      pn[i]=P[i][j]*m[j];
+      }
+    document.getElementById("pn"+i).firstChild.nodeValue=pn[i];
+    }
+  //alert("pn=["+pn+"]");
   }
     </script>
   </head>
@@ -84,12 +94,13 @@ in Richtung Vektor n=
 <div><input id="n0" value="1/2"/> = <span id="ne0">.</span></div>
 <div><input id="n1" value="1/2"/> = <span id="ne1">.</span></div>
 <div><input id="n2" value="-Math.sqrt(2)/2"/> = <span id="ne2">.</span></div>
+<hr/>
 Lösung: Drehachse d=m+n ist normiert gleich
 <div id="dn0"/>.</div>
 <div id="dn1"/>.</div>
 <div id="dn2"/>.</div>
 <div>Drehwinkel eingestellt auf α=<input id="alpha" value="180"/>°</div>
-Das ergibt Drehmatrix R= (<a href="https://de.wikipedia.org/wiki/Drehmatrix">Drehmatrix</a> "Drehung um eine Ursprungsgerade")
+Drehmatrix R= (<a href="https://de.wikipedia.org/wiki/Drehmatrix">Drehmatrix</a> "Drehung um eine Ursprungsgerade")
 <table border="1">
 <tr><td id="r00">.</td><td id="r01">.</td><td id="r02">.</td></tr>
 <tr><td id="r10">.</td><td id="r11">.</td><td id="r12">.</td></tr>
@@ -99,13 +110,18 @@ Roll-, Nick-, Gierwinkel (<a href="https://de.wikipedia.org/wiki/Roll-Nick-Gier-
 <div>Roll=<span id="Roll">.</span></div>
 <div>Nick=<span id="Nick">.</span></div>
 <div>Gier=<span id="Gier">.</span></div>
-Probe: 
-R aus Roll-, Nick-, Gierwinkel:
+<hr/>
+Probe R aus Roll-, Nick-, Gierwinkel:
 <table border="1">
 <tr><td id="p00">.</td><td id="p01">.</td><td id="p02">.</td></tr>
 <tr><td id="p10">.</td><td id="p11">.</td><td id="p12">.</td></tr>
 <tr><td id="p20">.</td><td id="p21">.</td><td id="p22">.</td></tr>
 </table>
-n aus R*m:
+stimmts? <input type="checkbox"/>
+<div>Probe n aus R*m:
+<div id="pn0">.</div>
+<div id="pn1">.</div>
+<div id="pn2">.</div>
+stimmts? <input type="checkbox"/></div>
 </body>
   </html>
