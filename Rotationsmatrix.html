@@ -20,19 +20,32 @@ function rechne() {
 	document.getElementById("dn"+i).firstChild.nodeValue=d[i];
     }
   var R=[];
+  var EPS=[[0,-1,1],[1,0,-1],[-1,1,0]];
   for (var i=0;i<3;i++) {R[i]=[];
     for (var j=0;j<3;j++) {//alert(i+" "+j+" "+((3-i-j)));
       if (i==j) R[i][j]=d[i]*d[j]*(1-Math.cos(a))+Math.cos(a); 
-        else R[i][j]=d[i]*d[j]*(1-Math.cos(a))+d[3-i-j]*Math.sin(a);
+        else R[i][j]=d[i]*d[j]*(1-Math.cos(a))+EPS[i][j]*d[3-i-j]*Math.sin(a);
       document.getElementById("r"+i+j).firstChild.nodeValue=R[i][j];
       }
     }
-  var Nick=Math.atan2(R[2][0],Math.sqrt(R[1][0]*R[1][0]+R[0][0]*R[0][0]));
-  var Gier=Math.atan2(R[1][0]/Math.cos(Nick),R[1][0]/Math.cos(Nick));
+  var Nick=Math.atan2(-R[2][0],Math.sqrt(R[1][0]*R[1][0]+R[0][0]*R[0][0]));
+  var Gier=Math.atan2(R[1][0]/Math.cos(Nick),R[0][0]/Math.cos(Nick));
   var Roll=Math.atan2(R[2][1]/Math.cos(Nick),R[2][2]/Math.cos(Nick));
   document.getElementById("Roll").firstChild.nodeValue=Roll*180/Math.PI;
   document.getElementById("Nick").firstChild.nodeValue=Nick*180/Math.PI;
   document.getElementById("Gier").firstChild.nodeValue=Gier*180/Math.PI;
+  var ca=Math.cos(Gier); var sa=Math.sin(Gier);
+  var cb=Math.cos(Nick); var sb=Math.sin(Nick);
+  var cc=Math.cos(Roll); var sc=Math.sin(Roll);
+  document.getElementById("p00").firstChild.nodeValue=ca*cb;
+  document.getElementById("p01").firstChild.nodeValue=ca*sb*sc-sa*cc;
+  document.getElementById("p02").firstChild.nodeValue=ca*sb*cc+sa*sc;
+  document.getElementById("p10").firstChild.nodeValue=sa*cb;
+  document.getElementById("p11").firstChild.nodeValue=sa*sb*sc+ca*cc;
+  document.getElementById("p12").firstChild.nodeValue=sa*sb*cc-ca*sc;
+  document.getElementById("p20").firstChild.nodeValue=-sb;
+  document.getElementById("p21").firstChild.nodeValue=cb*sc;
+  document.getElementById("p22").firstChild.nodeValue=cb*cc;
   }
     </script>
   <meta charset="utf-8"/>
@@ -54,5 +67,9 @@ Rotationsmatrix R=
 <div>Roll=<span id="Roll">.</span></div>
 <div>Nick=<span id="Nick">.</span></div>
 <div>Gier=<span id="Gier">.</span></div>
+Probe auf cos*cos:
+<div><span id="p00">.</span> <span id="p01">.</span> <span id="p02">.</span></div>
+<div><span id="p10">.</span> <span id="p11">.</span> <span id="p12">.</span></div>
+<div><span id="p20">.</span> <span id="p21">.</span> <span id="p22">.</span></div>
 </body>
   </html>
