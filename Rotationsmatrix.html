@@ -1,25 +1,50 @@
 <html>
 <head>
   <title>Rotationsmatrix</title>
-  <style>
-    body {font-family:Courier,monospace} 
-    </style>
+  <meta charset="utf-8"/>
+  <style> body {font-family:Courier,monospace} </style>
   <script>
 function rechne() {
+  var m=[];
+  var qsum=0;
+  for (var i=0;i<3;i++) {
+	m[i]=eval(document.getElementById("m"+i).value);
+	document.getElementById("me"+i).firstChild.nodeValue=m[i];
+    qsum=qsum+m[i]*m[i];
+    }
+  qsum=Math.sqrt(qsum);
+  for (var i=0;i<3;i++) {
+    m[i]=m[i]/qsum;
+	//document.getElementById("dn"+i).firstChild.nodeValue=m[i];
+    }
+  //alert("m=["+m+"]");
+  var n=[];
+  var qsum=0;
+  for (var i=0;i<3;i++) {
+	n[i]=eval(document.getElementById("n"+i).value);
+	document.getElementById("ne"+i).firstChild.nodeValue=n[i];
+    qsum=qsum+n[i]*n[i];
+    }
+  qsum=Math.sqrt(qsum);
+  for (var i=0;i<3;i++) {
+    n[i]=n[i]/qsum;
+	//document.getElementById("nn"+i).firstChild.nodeValue=m[i];
+    }
+  //alert("n=["+n+"]");
   var d=[];
   var qsum=0;
   for (var i=0;i<3;i++) {
-	d[i]=eval(document.getElementById("d"+i).value);
-	document.getElementById("eval"+i).firstChild.nodeValue=d[i];
+	d[i]=m[i]+n[i];
+    //document.getElementById("eval"+i).firstChild.nodeValue=d[i];
     qsum=qsum+d[i]*d[i];
     }
   qsum=Math.sqrt(qsum);
-  var a=eval(document.getElementById("alpha").value)*Math.PI/180;
-  //alert("d=["+d+"] n="+qsum+" alpha="+a);
+  //alert("d=["+d+"]");
   for (var i=0;i<3;i++) {
     d[i]=d[i]/qsum;
 	document.getElementById("dn"+i).firstChild.nodeValue=d[i];
     }
+  var a=eval(document.getElementById("alpha").value)*Math.PI/180;
   var R=[];
   var EPS=[[0,-1,1],[1,0,-1],[-1,1,0]];
   for (var i=0;i<3;i++) {R[i]=[];
@@ -49,19 +74,22 @@ function rechne() {
   document.getElementById("p22").firstChild.nodeValue=cb*cc;
   }
     </script>
-  <meta charset="utf-8"/>
+  </head>
 <body onload="rechne()" onkeyup="rechne()">
-Drehachse d=
-<div><input id="d0" value="1/2"/> = <span id="eval0">.</span></div>
-<div><input id="d1" value="1/2"/> = <span id="eval1">.</span></div>
-<div><input id="d2" value="1-Math.sqrt(2)/2"/> = <span id="eval2">.</span></div>
-Drehwinkel α=
-<div><input id="alpha" value="180"/>°</div>
-Drehachse normiert dn=
+Aufgabe: Drehe Vektor m=
+<div><input id="m0" value="0"/> = <span id="me0">.</span></div>
+<div><input id="m1" value="0"/> = <span id="me1">.</span></div>
+<div><input id="m2" value="1"/> = <span id="me2">.</span></div>
+in Richtung Vektor n=
+<div><input id="n0" value="1/2"/> = <span id="ne0">.</span></div>
+<div><input id="n1" value="1/2"/> = <span id="ne1">.</span></div>
+<div><input id="n2" value="-Math.sqrt(2)/2"/> = <span id="ne2">.</span></div>
+Lösung: Drehachse d=m+n ist normiert gleich
 <div id="dn0"/>.</div>
 <div id="dn1"/>.</div>
 <div id="dn2"/>.</div>
-Drehmatrix R= (<a href="https://de.wikipedia.org/wiki/Drehmatrix">https://de.wikipedia.org/wiki/Drehmatrix</a> "Drehung um eine Ursprungsgerade")
+<div>Drehwinkel eingestellt auf α=<input id="alpha" value="180"/>°</div>
+Das ergibt Drehmatrix R= (<a href="https://de.wikipedia.org/wiki/Drehmatrix">Drehmatrix</a> "Drehung um eine Ursprungsgerade")
 <table border="1">
 <tr><td id="r00">.</td><td id="r01">.</td><td id="r02">.</td></tr>
 <tr><td id="r10">.</td><td id="r11">.</td><td id="r12">.</td></tr>
@@ -71,9 +99,13 @@ Roll-, Nick-, Gierwinkel (<a href="https://de.wikipedia.org/wiki/Roll-Nick-Gier-
 <div>Roll=<span id="Roll">.</span></div>
 <div>Nick=<span id="Nick">.</span></div>
 <div>Gier=<span id="Gier">.</span></div>
-Probe auf cos*cos:
-<div><span id="p00">.</span> <span id="p01">.</span> <span id="p02">.</span></div>
-<div><span id="p10">.</span> <span id="p11">.</span> <span id="p12">.</span></div>
-<div><span id="p20">.</span> <span id="p21">.</span> <span id="p22">.</span></div>
+Probe: 
+R aus Roll-, Nick-, Gierwinkel:
+<table border="1">
+<tr><td id="p00">.</td><td id="p01">.</td><td id="p02">.</td></tr>
+<tr><td id="p10">.</td><td id="p11">.</td><td id="p12">.</td></tr>
+<tr><td id="p20">.</td><td id="p21">.</td><td id="p22">.</td></tr>
+</table>
+n aus R*m:
 </body>
   </html>
