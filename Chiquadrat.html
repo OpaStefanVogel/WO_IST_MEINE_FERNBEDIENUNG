@@ -1,0 +1,55 @@
+<html>
+<head>
+  <title>Chiquadrat</title>
+  <meta charset="utf-8"/>
+<script type="application/ecmascript">
+function ausrechnen() {
+  //alert(8);
+  var n11=document.getElementById("n11").value*1.0;
+  var n12=document.getElementById("n12").value*1.0;
+  var n21=document.getElementById("n21").value*1.0;
+  var n22=document.getElementById("n22").value*1.0;
+  var n1x=n11+n12;
+  var n2x=n21+n22;
+  var nx1=n11+n21;
+  var nx2=n12+n22;
+  var n=nx1+nx2;
+  document.getElementById("n1.").firstChild.nodeValue=n1x;
+  document.getElementById("n2.").firstChild.nodeValue=n2x;
+  document.getElementById("n.1").firstChild.nodeValue=nx1;
+  document.getElementById("n.2").firstChild.nodeValue=nx2;
+  document.getElementById("n").firstChild.nodeValue=n;
+  //alert(9);
+  var E11=n1x*nx1/n;
+  var E12=n1x*nx2/n;
+  var E21=n2x*nx1/n;
+  var E22=n2x*nx2/n;
+  var chiquadrat=(n11-E11)*(n11-E11)/E11+(n12-E12)*(n12-E12)/E12+(n21-E21)*(n21-E21)/E21+(n22-E22)*(n22-E22)/E22;
+  //var chiquadrat=n*(n11*n22-n12*n21)*(n11*n22-n12*n21)/n1x/n2x/nx1/nx2;
+  document.getElementById("chiquadrat").firstChild.nodeValue=chiquadrat;
+  }
+  </script>
+  </head>
+<body onload="ausrechnen()" onkeyup="ausrechnen()">
+<p>Berechne <i>χ</i><sup>2</sup> nach <a href="https://de.wikipedia.org/wiki/Chi-Quadrat-Test#Homogenit%C3%A4tstest"><u>Chi-Quadrat-Test#Homogenitätstest</u></a>:</p>
+<table>
+<tbody>
+  <tr>
+    <td><input id="n11" size="10" value="10"/></td>
+    <td><input id="n12" size="10" value="3"/></td>
+    <td id="n1.">23</td>
+    </tr>
+  <tr>
+    <td><input id="n21" size="10" value="13"/></td>
+    <td><input id="n22" size="10" value="23"/></td>
+    <td id="n2.">26</td>
+    </tr>
+  <tr>
+    <td id="n.1">13</td>
+    <td id="n.2">36</td>
+    <td id="n">49</td>
+    </tr>
+  </tbody></table>
+<p>Ergebnis: <i>χ<sup>2</sup></i>=<span id="chiquadrat"> </span></p>
+  </body>
+  </html>
