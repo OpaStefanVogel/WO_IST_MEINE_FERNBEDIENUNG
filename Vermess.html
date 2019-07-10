@@ -1,0 +1,96 @@
+<html>
+<head>
+  <title>Chiquadrat</title>
+  <meta charset="utf-8"/>
+<script type="application/ecmascript">
+function ausrechnen() {
+  //alert(8);
+  var n11=document.getElementById("n11").value*1.0;
+  var n12=document.getElementById("n12").value*1.0;
+  var n21=document.getElementById("n21").value*1.0;
+  var n22=document.getElementById("n22").value*1.0;
+  var n1x=n11+n12;
+  var n2x=n21+n22;
+  var nx1=n11+n21;
+  var nx2=n12+n22;
+  var n=nx1+nx2;
+  document.getElementById("n1.").firstChild.nodeValue=n1x;
+  document.getElementById("n2.").firstChild.nodeValue=n2x;
+  document.getElementById("n.1").firstChild.nodeValue=nx1;
+  document.getElementById("n.2").firstChild.nodeValue=nx2;
+  document.getElementById("n").firstChild.nodeValue=n;
+  //alert(9);
+  var E11=n1x*nx1/n;
+  var E12=n1x*nx2/n;
+  var E21=n2x*nx1/n;
+  var E22=n2x*nx2/n;
+  var chiquadrat=(n11-E11)*(n11-E11)/E11+(n12-E12)*(n12-E12)/E12+(n21-E21)*(n21-E21)/E21+(n22-E22)*(n22-E22)/E22;
+  //var chiquadrat=n*(n11*n22-n12*n21)*(n11*n22-n12*n21)/n1x/n2x/nx1/nx2;
+  document.getElementById("chiquadrat").firstChild.nodeValue=chiquadrat;
+  }
+  </script>
+  </head>
+<body onload="ausrechnen()" onkeyup="ausrechnen()">
+<p>
+</p>
+<table>
+<tbody>
+  <tr>
+    <td id="P1">P1=[</td>
+    <td><input id="P1x" size="10" value="10"/></td>
+    <td>,</td>
+    <td><input id="P1y" size="10" value="3"/></td>
+    <td>,</td>
+    <td><input id="P1z" size="10" value="8"/></td>
+    <td>]</td>
+    </tr>
+  <tr>
+    <td id="P2">P2=[</td>
+    <td><input id="P2x" size="10" value="20"/></td>
+    <td>,</td>
+    <td><input id="P2y" size="10" value="4"/></td>
+    <td>,</td>
+    <td><input id="P2z" size="10" value="7"/></td>
+    <td>]</td>
+    </tr>
+  <tr>
+    <td id="P3">P3=[</td>
+    <td><input id="P3x" size="10" value="30"/></td>
+    <td>,</td>
+    <td><input id="P3y" size="10" value="5"/></td>
+    <td>,</td>
+    <td><input id="P3z" size="10" value="6"/></td>
+    <td>]</td>
+    </tr>
+  <tr>
+    <td id="P4">P4=[</td>
+    <td><input id="P4x" size="10" value="40"/></td>
+    <td>,</td>
+    <td><input id="P4y" size="10" value="6"/></td>
+    <td>,</td>
+    <td><input id="P4z" size="10" value="5"/></td>
+    <td>]</td>
+    </tr>
+  <tr>
+    <td id="P5">P5=[</td>
+    <td><input id="P5x" size="10" value="50"/></td>
+    <td>,</td>
+    <td><input id="P5y" size="10" value="7"/></td>
+    <td>,</td>
+    <td><input id="P5z" size="10" value="4"/></td>
+    <td>]</td>
+    </tr>
+  </tbody></table>
+<ul>
+  <ul>P6:
+    <li>ausgehend von P<input id="P6i" size="1" value="1"/></li>
+    <li>in Richtung P<input id="P6j" size="1" value="2"/></li>
+    <li>gedreht um<input id="P6w" size="2" value="90"/>°</li>
+    <li>dann weiter horizontal um<input id="P6m" size="2" value="1"/>m</li>
+    <li>und hoch(+) oder tief(-) um<input id="P6m" size="2" value="0"/>m</li>
+    <li>ergibt P6=[<span id="P6x"> </span>,<span id="P6x"> </span>,<span id="P6x"> </span>].</li>
+    </ul>
+  </ul>
+<p></p>
+  </body>
+  </html>
