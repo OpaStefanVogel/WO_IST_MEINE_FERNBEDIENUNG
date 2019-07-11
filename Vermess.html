@@ -4,29 +4,33 @@
   <meta charset="utf-8"/>
 <script type="application/ecmascript">
 function ausrechnen() {
-  //alert(8);
-  var n11=document.getElementById("n11").value*1.0;
-  var n12=document.getElementById("n12").value*1.0;
-  var n21=document.getElementById("n21").value*1.0;
-  var n22=document.getElementById("n22").value*1.0;
-  var n1x=n11+n12;
-  var n2x=n21+n22;
-  var nx1=n11+n21;
-  var nx2=n12+n22;
-  var n=nx1+nx2;
-  document.getElementById("n1.").firstChild.nodeValue=n1x;
-  document.getElementById("n2.").firstChild.nodeValue=n2x;
-  document.getElementById("n.1").firstChild.nodeValue=nx1;
-  document.getElementById("n.2").firstChild.nodeValue=nx2;
-  document.getElementById("n").firstChild.nodeValue=n;
-  //alert(9);
-  var E11=n1x*nx1/n;
-  var E12=n1x*nx2/n;
-  var E21=n2x*nx1/n;
-  var E22=n2x*nx2/n;
-  var chiquadrat=(n11-E11)*(n11-E11)/E11+(n12-E12)*(n12-E12)/E12+(n21-E21)*(n21-E21)/E21+(n22-E22)*(n22-E22)/E22;
-  //var chiquadrat=n*(n11*n22-n12*n21)*(n11*n22-n12*n21)/n1x/n2x/nx1/nx2;
-  document.getElementById("chiquadrat").firstChild.nodeValue=chiquadrat;
+  var P=[];
+  for (var i=1;i<6;i++) {
+    P[i]=[
+      document.getElementById("P"+i+"x").value*1.0,
+      document.getElementById("P"+i+"y").value*1.0,
+      document.getElementById("P"+i+"z").value*1.0
+      ];
+    }
+  //alert(P.join("\n"));
+  var P6i=document.getElementById("P6i").value*1.0;
+  var P6j=document.getElementById("P6j").value*1.0;
+  var P6w=document.getElementById("P6w").value*1.0;
+  var P6m=document.getElementById("P6m").value*1.0;
+  var P6h=document.getElementById("P6h").value*1.0;
+  //alert(P6i+" "+P6j+" "+P6w+" "+P6m);
+  var Richtung=Math.atan2(P[P6j][1]-P[P6i][1],P[P6j][0]-P[P6i][0]);
+  //alert(Richtung*180/Math.PI);
+  var neueRichtung=Richtung+P6w*Math.PI/180;
+  var P6=[
+    P[P6i][0]+P6m*Math.cos(neueRichtung),
+    P[P6i][1]+P6m*Math.sin(neueRichtung),
+    P[P6i][2]+P6h
+    ];
+  //alert(P6);
+  document.getElementById("P6x").firstChild.nodeValue=P6[0];
+  document.getElementById("P6y").firstChild.nodeValue=P6[1];
+  document.getElementById("P6z").firstChild.nodeValue=P6[2];
   }
   </script>
   </head>
@@ -83,12 +87,12 @@ function ausrechnen() {
   </tbody></table>
 <ul>
   <ul>P6:
-    <li>ausgehend von P<input id="P6i" size="1" value="1"/></li>
-    <li>in Richtung P<input id="P6j" size="1" value="2"/></li>
-    <li>gedreht um<input id="P6w" size="2" value="90"/>°</li>
-    <li>dann weiter horizontal um<input id="P6m" size="2" value="1"/>m</li>
-    <li>und hoch(+) oder tief(-) um<input id="P6m" size="2" value="0"/>m</li>
-    <li>ergibt P6=[<span id="P6x"> </span>,<span id="P6x"> </span>,<span id="P6x"> </span>].</li>
+    <li>in P<input id="P6i" size="1" value="1"/> hinstellen</li>
+    <li>und in Richtung P<input id="P6j" size="1" value="2"/> schauen,</li> 
+    <li>dann um<input id="P6w" size="2" value="90"/>° gegen Uhrzeigersinn drehen</li>
+    <li>und horizontal um<input id="P6m" size="2" value="1"/>m weitergehen</li>
+    <li>und hoch(+) oder tief(-) um<input id="P6h" size="2" value="0"/>m</li>
+    <li>ergibt P6=[<span id="P6x"> </span>,<span id="P6y"> </span>,<span id="P6z"> </span>].</li>
     </ul>
   </ul>
 <p></p>
