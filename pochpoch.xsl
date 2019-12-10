@@ -74,7 +74,7 @@ function CLICKFREQMESS() {
   <span class="FREQMESSRAHMEN">
   im Durchschnitt <span class="FREQMESS">00.0</span> je Minute 
   bei <span class="FREQMESS">--</span> Pochern 
-  <span class="FREQMESS" ontouchstart="CLICKFREQMESS()">hier poch</span>
+  <span class="FREQMESS" ontouchstart="event.preventDefault();" ontouchend="CLICKFREQMESS()">hier poch</span>
   </span>
   </xsl:template>
 
