@@ -7,7 +7,7 @@
 <script>
 var Ladebreite=3.5;
 var LM=1;
-var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 
 var Resultat=[//x,y
   [0.5,0.5],
@@ -53,10 +53,30 @@ function Lademeter() {
     LM=xmin+d/2;
     //alert(LM+"\n"+Resultat.join("\n"));
     }  
-  alert(LM+"\n"+Resultat.join("\n"));
+  //alert(LM+"\n"+Resultat.join("\n"));
   return LM;
   }
+
+function Ausgabe_SVG() {
+  alert(LM+"\n"+Resultat.join("\n"));
+  var dc=document.getElementById("Ladeflaeche");
+  for (var i=0;i<Resultat.length;i++) {
+    var c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx",Resultat[i][0]);
+    c.setAttribute("cy",Resultat[i][1]);
+    c.setAttribute("r",Ladung[i]/2);
+    dc.appendChild(document.createTextNode("\n      "));
+    dc.appendChild(c);
+    }
+  alert("durch");4
+  }
+
   </script>
-<body onload="Lademeter()">hallo
+<body onload="Lademeter();Ausgabe_SVG()">hallo
+<svg width="800" height="200">
+<g id="Ladeflaeche" transform="scale(10)" fill="blue">
+  <circle cx="1" cy="1" r="1" fill="red"/>
+  </g>
+  </svg>
   </body>
   </html>
