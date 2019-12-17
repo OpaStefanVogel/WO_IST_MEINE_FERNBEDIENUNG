@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Lademeter</title>
+<meta charset="utf-8"/>
+<style>
+  </style>
+<script>
+var Ladebreite=3.5;
+var LM=1;
+var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+
+var Resultat=[//x,y
+  [0.5,0.5],
+  [0.5,1.5],
+  [0.5,3.0],
+  ];
+
+function Abstand(P,Q) {return Math.sqrt((P[0]-Q[0])*(P[0]-Q[0])+(P[1]-Q[1])*(P[1]-Q[1]))}
+
+function Dreieck(P,Pr,Q,Qr,Rr) {
+  var ww=Math.acos((Abstand(P,Q)*Abstand(P,Q)+(Pr+Rr)*(Pr+Rr)/4-(Qr+Rr)*(Qr+Rr)/4)/(2*Abstand(P,Q)*(Pr+Rr)/2));
+  var xk=P[0]+(Pr+Rr)/2*(Math.cos(ww)*(Q[0]-P[0])-Math.sin(ww)*(Q[1]-P[1]))/(Abstand(P,Q));
+  var yk=P[1]+(Pr+Rr)/2*(Math.sin(ww)*(Q[0]-P[0])+Math.cos(ww)*(Q[1]-P[1]))/(Abstand(P,Q));
+  return [xk,yk];
+  }
+
+function Lademeter() {
+  var LM=1;
+  for(i=3;i<Ladung.length;i++) {alert(i);
+    var d=Ladung[i];
+    var xmin=LM+d+d;
+    var y=d/2;
+    
+    for (var j=0;j<Resultat.length;j++) {
+      for (var k=0;k<Resultat.length;k++) if (j!=k) {
+        var a=Abstand(Resultat[j],Resultat[k]);
+        alert(Resultat[j]+" "+Resultat[k]+" "+a);
+        if (a<Ladung[j]/2+Ladung[k]/2+Ladung[i]) {
+          var R=Dreieck(Resultat[j],Ladung[j],Resultat[k],Ladung[k],Ladung[i]);
+          alert(R);
+          }
+        }
+      }
+    LM=LM+1;
+    }  
+  alert(LM);
+  return LM;
+  }
+  </script>
+<body onload="Lademeter()">hallo
+  </body>
+  </html>
