@@ -5,9 +5,17 @@
 <style>
   </style>
 <script>
-var Ladebreite=3.5;
+var Ladebreite=1;
 var LM=1;
 var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1.5,1.8,0.8,0.9,1,1.1,1.2,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3];
+
+var Ladung=[
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+];
 
 var Resultat=[//x,y
   [0.5,0.5],
@@ -25,13 +33,12 @@ function Dreieck(P,Pr,Q,Qr,Rr) {
   }
 
 function Lademeter() {
-  var LM=1;
   for(i=3;i<Ladung.length;i++) {//alert(i);
     var d=Ladung[i];
     var xmin=LM+d+d;
     var y=d/2;
     
-    for (var j=0;j<Resultat.length;j++) {
+    for (var j=Math.max(0,Resultat.length-20);j<Resultat.length;j++) {
       for (var k=0;k<Resultat.length;k++) if (j!=k) {
         var a=Abstand(Resultat[j],Resultat[k]);
         //alert(Resultat[j]+" "+Resultat[k]+" "+a);
@@ -70,7 +77,10 @@ function Lademeter() {
     Resultat.push([xmin,y]);
     if (LM<xmin+d/2) LM=xmin+d/2;
     }  
-  document.getElementById("Logfile").firstChild.nodeValue=LM+"\n"+Resultat.join("\n");
+  document.getElementById("Logfile").firstChild.nodeValue=
+    (Resultat[110][0]-Resultat[010][0])+"\n"+
+    (Resultat[210][0]-Resultat[110][0])+"\n"+
+    LM+"\n"+Resultat.join("\n");
   return LM;
   }
 
@@ -91,11 +101,27 @@ function Ausgabe_SVG() {
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
     }
+  document.getElementById("Ladebreite").firstChild.nodeValue=Math.round(Ladebreite*100)/100;
+  document.getElementById("Lademeter").firstChild.nodeValue=Math.round(LM*100)/100;
+  document.getElementById("Ladungszahl").firstChild.nodeValue=Ladung.length;
+  }
+
+function Zurueck_zum_Anfang() {
+  Resultat=[[0.5,0.5],[0.5,1.5],[0.5,Ladebreite-0.5]];
+  LM=1;
+  var LF=document.getElementById('Ladeflaeche');
+  while (LF.hasChildNodes()) LF.removeChild(LF.firstChild);
   }
 
   </script>
 <body onload="Lademeter();Ausgabe_SVG()">hallo
-<p><button onclick="Ladebreite=Ladebreite+0.1;Resultat=[[0.5,0.5],[0.5,1.5],[0.5,Ladebreite-0.5]];LM=1;var LF=document.getElementById('Ladeflaeche');while (LF.hasChildNodes()) LF.removeChild(LF.firstChild);Lademeter();Ausgabe_SVG()">+0.1</button>
+<p>
+Ladebreite=<span id="Ladebreite"> </span> m.
+<button onclick="Ladebreite=Ladebreite+0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.1</button>
+<button onclick="Ladebreite=Ladebreite+0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.01</button>
+<button onclick="Ladebreite=Ladebreite-0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.01</button>
+<button onclick="Ladebreite=Ladebreite-0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.1</button>
+Lademeter=<span id="Lademeter"> </span> m für <span id="Ladungszahl"> </span> Fässer.
   </p>
 <svg width="800" height="200">
 <g id="Ladeflaeche" transform="scale(20)" fill="blue" stroke="black" stroke-width="0.01" font-size="2%">
