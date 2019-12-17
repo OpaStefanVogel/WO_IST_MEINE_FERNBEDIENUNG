@@ -7,7 +7,7 @@
 <script>
 var Ladebreite=3.5;
 var LM=1;
-var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1.5];
+var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1.5,1.8,0.8,0.9,1,1.1,1.2,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3];
 
 var Resultat=[//x,y
   [0.5,0.5],
@@ -50,7 +50,7 @@ function Lademeter() {
         }
       //linker Rand
       if (Resultat[j][1]-Ladung[j]/2<d) {
-        //alert(i+" "+j+" "+Resultat[j]);
+        //if (i==55&&j==15) alert(i+" "+j+" "+Resultat[j]);
         R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)<Ladung[l]/2+d/2) gueltig=false;
@@ -68,8 +68,7 @@ function Lademeter() {
         }
       }
     Resultat.push([xmin,y]);
-    LM=xmin+d/2;
-    //alert(LM+"\n"+Resultat.join("\n"));
+    if (LM<xmin+d/2) LM=xmin+d/2;
     }  
   document.getElementById("Logfile").firstChild.nodeValue=LM+"\n"+Resultat.join("\n");
   return LM;
@@ -86,9 +85,8 @@ function Ausgabe_SVG() {
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
     var c=document.createElementNS("http://www.w3.org/2000/svg","text");
-    c.setAttribute("x",Resultat[i][0]);
-    c.setAttribute("y",Resultat[i][1]);
-    c.setAttribute("font-size","3%");
+    c.setAttribute("x",Resultat[i][0]-0.2);
+    c.setAttribute("y",Resultat[i][1]+0.1);
     c.appendChild(document.createTextNode(i));
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
@@ -98,7 +96,7 @@ function Ausgabe_SVG() {
   </script>
 <body onload="Lademeter();Ausgabe_SVG()">hallo
 <svg width="800" height="200">
-<g id="Ladeflaeche" transform="scale(10)" fill="blue" stroke="black" stroke-width="0.01">
+<g id="Ladeflaeche" transform="scale(20)" fill="blue" stroke="black" stroke-width="0.01" font-size="2%">
   <line x1="0" y1="0" x2="30" y2="0"/>
   <line x1="0" y1="3.5" x2="30" y2="3.5"/>
   <circle cx="1" cy="1" r="1" fill="red"/>
