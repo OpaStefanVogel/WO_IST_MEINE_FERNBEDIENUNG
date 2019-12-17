@@ -49,7 +49,13 @@ function Lademeter() {
           }
         }
       //linker Rand
-      if (Resultat[j][1]-Ladung[j]/2<d); //alert(i+" "+j+" "+Resultat[j]);
+      if (Resultat[j][1]-Ladung[j]/2<d); {
+        //alert(i+" "+j+" "+Resultat[j]);
+        R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
+          var gueltig=true;
+          for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)<Ladung[l]/2+d/2) gueltig=false;
+          if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
+        }
       //rechter Rand
       }
     Resultat.push([xmin,y]);
@@ -73,7 +79,7 @@ function Ausgabe_SVG() {
     var c=document.createElementNS("http://www.w3.org/2000/svg","text");
     c.setAttribute("x",Resultat[i][0]);
     c.setAttribute("y",Resultat[i][1]);
-    c.setAttribute("font-size","2%");
+    c.setAttribute("font-size","3%");
     c.appendChild(document.createTextNode(i));
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
