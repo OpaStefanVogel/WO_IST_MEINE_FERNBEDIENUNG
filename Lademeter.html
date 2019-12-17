@@ -5,9 +5,8 @@
 <style>
   </style>
 <script>
-var Ladebreite=1;
+var Ladebreite=3.5;
 var LM=1;
-var Ladung=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1.5,1.8,0.8,0.9,1,1.1,1.2,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3];
 
 var Ladung=[
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -17,11 +16,7 @@ var Ladung=[
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 ];
 
-var Resultat=[//x,y
-  [0.5,0.5],
-  [0.5,1.5],
-  [0.5,3.0],
-  ];
+var Resultat=[];
 
 function Abstand(P,Q) {return Math.sqrt((P[0]-Q[0])*(P[0]-Q[0])+(P[1]-Q[1])*(P[1]-Q[1]))}
 
@@ -33,9 +28,22 @@ function Dreieck(P,Pr,Q,Qr,Rr) {
   }
 
 function Lademeter() {
-  for(i=3;i<Ladung.length;i++) {//alert(i);
+  LM=0;
+  var R=[Ladung[0]/2,Ladung[0]/2];
+  var Anfangsindex=0;
+  do {
+    Resultat.push(R);
+    Anfangsindex=Anfangsindex+1;
+    R=[Ladung[Anfangsindex]/2,R[1]+Ladung[Anfangsindex]];
+    } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite-Ladung[Anfangsindex+1]);
+  R=[Ladung[Anfangsindex+1]/2,Ladebreite-Ladung[Anfangsindex+1]/2];
+  Resultat.push(R);
+  Anfangsindex=Anfangsindex+1;
+    
+  
+  for(var i=Anfangsindex;i<Ladung.length;i++) {//alert(i);
     var d=Ladung[i];
-    var xmin=LM+d+d;
+    var xmin=100000;
     var y=d/2;
     
     for (var j=Math.max(0,Resultat.length-20);j<Resultat.length;j++) {
@@ -107,7 +115,7 @@ function Ausgabe_SVG() {
   }
 
 function Zurueck_zum_Anfang() {
-  Resultat=[[0.5,0.5],[0.5,1.5],[0.5,Ladebreite-0.5]];
+  Resultat=[];
   LM=1;
   var LF=document.getElementById('Ladeflaeche');
   while (LF.hasChildNodes()) LF.removeChild(LF.firstChild);
