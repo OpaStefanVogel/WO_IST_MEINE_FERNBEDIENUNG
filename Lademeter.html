@@ -5,16 +5,12 @@
 <style>
   </style>
 <script>
-var Ladebreite=6.5;
+var Ladebreite=3.5;
 var LM=1;
-var Epsilon=0.001; //soviel quetschen möglich
+var Epsilon=0.001; //soviel quetschen möglich, in m
 
 var Ladung=[
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1.1,1.3,1.2,1,1,1,1,1.4,1,1,1,1,1.3,1,1,1.2,1,1.1,1,1,1,1,1,1,1.2,1,1.2,1,1,0.8,1,1.33,1,1.12,1,0.7,1.14,1,1,0.8,0.9,0.7,0.81,0.77,0.86,0.6,0.5,0.6,0.50,
 ];
 
 var Resultat=[];
@@ -38,7 +34,7 @@ function Lademeter() {
     R=[Ladung[Anfangsindex]/2,R[1]+Math.sqrt((Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)-(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2))];
     } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite-Ladung[Anfangsindex+1]+Epsilon);
   if (Ladung[0]+Ladung[1]<Ladebreite+Epsilon) {
-    R=[Ladung[Anfangsindex+1]/2,Ladebreite-Ladung[Anfangsindex+1]/2];
+    R=[Ladung[Anfangsindex]/2,Ladebreite-Ladung[Anfangsindex]/2];
     Resultat.push(R);
     Anfangsindex=Anfangsindex+1;
     }
@@ -49,7 +45,7 @@ function Lademeter() {
     var xmin=100000;
     var y=d/2;
     
-    for (var j=Math.max(0,Resultat.length-20);j<Resultat.length;j++) {
+    for (var j=0;j<Resultat.length;j++) {//statt j=0 auch j=Math.max(0,Resultat.length-20)
       for (var k=0;k<Resultat.length;k++) if (j!=k) {
         var a=Abstand(Resultat[j],Resultat[k]);
         //alert(Resultat[j]+" "+Resultat[k]+" "+a);
@@ -61,6 +57,7 @@ function Lademeter() {
           if (R[1]-d/2+Epsilon<0) gueltig=false;
           if (R[1]+d/2>Ladebreite+Epsilon) gueltig=false;
           for (var l=0;l<Resultat.length;l++) if (l!=j&&l!=k&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+          for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
           if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
           //alert(R+" "+gueltig);
           }
@@ -71,6 +68,7 @@ function Lademeter() {
         R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+        for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       //rechter Rand
@@ -81,6 +79,7 @@ function Lademeter() {
         //alert(i+" "+j+"\n"+R+"\n"+xmin+" "+y);
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+        for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       }
@@ -88,8 +87,8 @@ function Lademeter() {
     if (LM<xmin+d/2) LM=xmin+d/2;
     }  
   document.getElementById("Logfile").firstChild.nodeValue=
-    (Resultat[110][0]-Resultat[010][0])+"\n"+
-    (Resultat[210][0]-Resultat[110][0])+"\n"+
+//    (Resultat[110][0]-Resultat[010][0])+"\n"+
+//    (Resultat[210][0]-Resultat[110][0])+"\n"+
     LM+"\n"+Resultat.join("\n");
   return LM;
   }
@@ -97,6 +96,15 @@ function Lademeter() {
 function Ausgabe_SVG() {
   //alert(LM+"\n"+Resultat.join("\n"));
   var dc=document.getElementById("Ladeflaeche");
+  var c=document.createElementNS("http://www.w3.org/2000/svg","rect");
+  c.setAttribute("x",0);
+  c.setAttribute("y",0);
+  c.setAttribute("width",LM);
+  c.setAttribute("height",Ladebreite);
+  c.setAttribute("stroke","grey");
+  c.setAttribute("fill","none");
+  dc.appendChild(document.createTextNode("\n      "));
+  dc.appendChild(c);
   for (var i=0;i<Resultat.length;i++) {
     var c=document.createElementNS("http://www.w3.org/2000/svg","circle");
     c.setAttribute("cx",Resultat[i][0]);
@@ -105,7 +113,7 @@ function Ausgabe_SVG() {
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
     var c=document.createElementNS("http://www.w3.org/2000/svg","text");
-    c.setAttribute("x",Resultat[i][0]-0.2);
+    c.setAttribute("x",Resultat[i][0]);
     c.setAttribute("y",Resultat[i][1]+0.1);
     c.appendChild(document.createTextNode((i+1)));
     dc.appendChild(document.createTextNode("\n      "));
@@ -127,18 +135,16 @@ function Zurueck_zum_Anfang() {
 <body onload="Lademeter();Ausgabe_SVG()">hallo
 <p>
 Ladebreite=<span id="Ladebreite"> </span> m.
-<button onclick="Ladebreite=Ladebreite+1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+1</button>
-<button onclick="Ladebreite=Ladebreite+0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.1</button>
-<button onclick="Ladebreite=Ladebreite+0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.01</button>
-<button onclick="Ladebreite=Ladebreite-0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.01</button>
-<button onclick="Ladebreite=Ladebreite-0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.1</button>
 <button onclick="Ladebreite=Ladebreite-1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-1</button>
-Lademeter=<span id="Lademeter"> </span> m für <span id="Ladungszahl"> </span> Fässer.
+<button onclick="Ladebreite=Ladebreite-0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.1</button>
+<button onclick="Ladebreite=Ladebreite-0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.01</button>
+<button onclick="Ladebreite=Ladebreite+0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.01</button>
+<button onclick="Ladebreite=Ladebreite+0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.1</button>
+<button onclick="Ladebreite=Ladebreite+1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+1</button>
+Lademeter=<span id="Lademeter"> </span> m für <span id="Ladungszahl"> </span> Fass.
   </p>
 <svg width="800" height="200">
-<g id="Ladeflaeche" transform="scale(20)" fill="blue" stroke="black" stroke-width="0.01" font-size="2%">
-  <line x1="0" y1="0" x2="30" y2="0"/>
-  <line x1="0" y1="3.5" x2="30" y2="3.5"/>
+<g id="Ladeflaeche" transform="scale(20)" fill="whiteSmoke" stroke="black" stroke-width="0.01" font-size="2%" text-anchor="middle">
   </g>
   </svg>
 <div id="Logfile" style="white-space:pre">
