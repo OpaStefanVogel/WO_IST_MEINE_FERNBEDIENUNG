@@ -121,7 +121,8 @@ function Ausgabe_SVG() {
     }
   document.getElementById("Ladebreite").firstChild.nodeValue=Math.round(Ladebreite*100)/100;
   document.getElementById("Lademeter").firstChild.nodeValue=Math.round(LM*100)/100;
-  document.getElementById("Ladungszahl").firstChild.nodeValue=Ladung.length;
+  //document.getElementById("Ladungszahl").firstChild.nodeValue=Ladung.length;
+  Ausgabe_TikZ();
   }
 
 function Zurueck_zum_Anfang() {
@@ -131,15 +132,28 @@ function Zurueck_zum_Anfang() {
   while (LF.hasChildNodes()) LF.removeChild(LF.firstChild);
   }
 
+function Ausgabe_TikZ() {
+  var code="%TikZ:\n\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n\n";
+  code=code+"%Ladeflaeche:\n\\draw[grey] (0,0) -- ";
+  code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite+") -- (0,"+Ladebreite+") -- cycle;\n\n";
+  code=code+"%Ladung\n\\foreach \\i/\\x/\\y/\\r in {\n";
+  for (var i=0;i<Resultat.length;i++) {
+    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+Ladung[i]+"\n";
+    }
+  code=code+"  } \\draw (\\x,\\y) circle (\\r) node {\i};\n\n";
+  code=code+"\\end{tikzpicture}\n";
+  document.getElementById("Logfile").firstChild.nodeValue=code;
+  }
+
   </script>
 <body onload="Lademeter();Ausgabe_SVG()">
 <p>Hallo, ein Programm zu <a href="https://matheplanet.de/matheplanet/nuke/html/viewtopic.php?rd2&topic=244876&start=0#p1783527" target="_blank">Rundes im Eckigem</a></p>
 
 <p>"..."</p>
 
-<div>Input:</div>
+<div>Input (javascript, "." als Dezimaltrenner):</div>
 <textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.5;
-Ladung=[1,1.1,1.3,1.2,1,1,1,1,1.4,1,1,1,1,1.3,1,1,1.2,1,1.1,1,1,1,1,1,1,1.2,1,1.2,1,1,0.8,1,1.33,1,1.12,1,0.7,1.14,1,1,0.8,0.9,0.7,0.81,0.77,0.86,0.6,0.5,0.6,0.50];
+Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 1.00, 1.10, 1.00, 1.00, 1.00, 1.00, 1.00, 1.20, 1.00, 1.20, 1.00, 1.00, 0.80, 1.00, 1.33, 1.00, 1.12, 1.00, 0.70, 1.14, 1.00, 1.00, 0.80, 0.90, 0.70, 0.81, 0.77, 0.86, 0.60, 0.50, 0.60, 0.50];
 
 
 </textarea><button onclick="eval(document.getElementById('Input').value), Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">neu ausrechnen</button>
@@ -156,7 +170,7 @@ Ladung=[1,1.1,1.3,1.2,1,1,1,1,1.4,1,1,1,1,1.3,1,1,1.2,1,1.1,1,1,1,1,1,1,1.2,1,1.
 <g id="Ladeflaeche" transform="scale(20)" fill="whiteSmoke" stroke="black" stroke-width="0.01" font-size="2%" text-anchor="middle">
   </g>
   </svg></svg>
-<div id="Logfile" style="white-space:pre">
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
   <div>
   </body>
   </html>
