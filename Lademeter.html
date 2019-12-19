@@ -5,7 +5,7 @@
 <style>
   </style>
 <script>
-var Ladebreite=3.5;
+var Ladebreite=5.60; //3.39;
 var LM=1;
 var Epsilon=0.001; //soviel quetschen möglich, in m
 
@@ -25,6 +25,7 @@ function Dreieck(P,Pr,Q,Qr,Rr) {
   }
 
 function Lademeter() {
+  for(var i=0;i<Ladung.length;i++) if (Ladebreite<Ladung[i]) Ladebreite=Ladung[i];
   LM=0;
   var R=[Ladung[0]/2,Ladung[0]/2];
   var Anfangsindex=0;
@@ -32,14 +33,11 @@ function Lademeter() {
     Resultat.push(R);
     Anfangsindex=Anfangsindex+1;
     R=[Ladung[Anfangsindex]/2,R[1]+Math.sqrt((Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)-(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2))];
-    } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite-Ladung[Anfangsindex+1]+Epsilon);
-  if (Ladung[0]+Ladung[1]<Ladebreite+Epsilon) {
-    R=[Ladung[Anfangsindex]/2,Ladebreite-Ladung[Anfangsindex]/2];
-    Resultat.push(R);
-    Anfangsindex=Anfangsindex+1;
+    } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite+Epsilon&&Ladung[Anfangsindex]<Ladebreite-Resultat[Anfangsindex-1][1]-Ladung[Anfangsindex-1]/2+Epsilon);
+  if (Anfangsindex>1) {
+    Resultat[Anfangsindex-1][1]=Ladebreite-Ladung[Anfangsindex-1]/2;
     }
-    
-  
+
   for(var i=Anfangsindex;i<Ladung.length;i++) {//alert(i);
     var d=Ladung[i];
     var xmin=100000;
@@ -151,12 +149,12 @@ function Ausgabe_TikZ() {
 
 <p>"..."</p>
 
-<div>Input (javascript, "." als Dezimaltrenner):</div>
+<div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
 <textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.5;
 Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 1.00, 1.10, 1.00, 1.00, 1.00, 1.00, 1.00, 1.20, 1.00, 1.20, 1.00, 1.00, 0.80, 1.00, 1.33, 1.00, 1.12, 1.00, 0.70, 1.14, 1.00, 1.00, 0.80, 0.90, 0.70, 0.81, 0.77, 0.86, 0.60, 0.50, 0.60, 0.50];
 
 
-</textarea><button onclick="eval(document.getElementById('Input').value), Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">neu ausrechnen</button>
+</textarea><button onclick="eval(document.getElementById('Input').value), Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">neu aufladen</button>
 
 <p>Ergebnis Ladebreite×Lademeter: <span id="Ladebreite"> </span> m × <span id="Lademeter"> </span> m.</p>
 <p>Ladebreite variieren: <button onclick="Ladebreite=Ladebreite-1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-1</button>
