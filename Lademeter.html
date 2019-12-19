@@ -5,13 +5,11 @@
 <style>
   </style>
 <script>
-var Ladebreite=5.60; //3.39;
+var Ladebreite=3.5;
 var LM=1;
 var Epsilon=0.001; //soviel quetschen möglich, in m
 
-var Ladung=[
-1,1.1,1.3,1.2,1,1,1,1,1.4,1,1,1,1,1.3,1,1,1.2,1,1.1,1,1,1,1,1,1,1.2,1,1.2,1,1,0.8,1,1.33,1,1.12,1,0.7,1.14,1,1,0.8,0.9,0.7,0.81,0.77,0.86,0.6,0.5,0.6,0.50,
-];
+var Ladung=[1,1,1,1,1,1];
 
 var Resultat=[];
 
@@ -119,8 +117,20 @@ function Ausgabe_SVG() {
     }
   document.getElementById("Ladebreite").firstChild.nodeValue=Math.round(Ladebreite*100)/100;
   document.getElementById("Lademeter").firstChild.nodeValue=Math.round(LM*100)/100;
-  //document.getElementById("Ladungszahl").firstChild.nodeValue=Ladung.length;
-  Ausgabe_TikZ();
+  document.getElementById("svg").setAttribute("height",Math.max(200,Ladebreite*20));
+  }
+
+function Ausgabe_TikZ() {
+  var code="%TikZ\n\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
+  code=code+"\\draw[grey] (0,0) -- ";
+  code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite.toFixed(2)+") -- (0,"+Ladebreite.toFixed(2)+") -- cycle;\n";
+  code=code+"\\foreach \\i/\\x/\\y/\\r in {\n";
+  for (var i=0;i<Resultat.length;i++) {
+    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+Ladung[i]+"\n";
+    }
+  code=code+"  } \\draw (\\x,\\y) circle (\\r) node {\i};\n";
+  code=code+"\\end{tikzpicture}\n";
+  document.getElementById("Logfile").firstChild.nodeValue=code;
   }
 
 function Zurueck_zum_Anfang() {
@@ -130,21 +140,20 @@ function Zurueck_zum_Anfang() {
   while (LF.hasChildNodes()) LF.removeChild(LF.firstChild);
   }
 
-function Ausgabe_TikZ() {
-  var code="%TikZ:\n\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n\n";
-  code=code+"%Ladeflaeche:\n\\draw[grey] (0,0) -- ";
-  code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite+") -- (0,"+Ladebreite+") -- cycle;\n\n";
-  code=code+"%Ladung\n\\foreach \\i/\\x/\\y/\\r in {\n";
-  for (var i=0;i<Resultat.length;i++) {
-    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+Ladung[i]+"\n";
-    }
-  code=code+"  } \\draw (\\x,\\y) circle (\\r) node {\i};\n\n";
-  code=code+"\\end{tikzpicture}\n";
-  document.getElementById("Logfile").firstChild.nodeValue=code;
+function Nochmal() {
+  Zurueck_zum_Anfang();
+  Lademeter();
+  Ausgabe_SVG();
+  Ausgabe_TikZ();
+  }
+
+function Los() {
+  eval(document.getElementById('Input').value);
+  Nochmal();
   }
 
   </script>
-<body onload="Lademeter();Ausgabe_SVG()">
+<body onload="Los()">
 <p>Hallo, ein Programm zu <a href="https://matheplanet.de/matheplanet/nuke/html/viewtopic.php?rd2&topic=244876&start=0#p1783527" target="_blank">Rundes im Eckigem</a></p>
 
 <p>"..."</p>
@@ -154,17 +163,18 @@ function Ausgabe_TikZ() {
 Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 1.00, 1.10, 1.00, 1.00, 1.00, 1.00, 1.00, 1.20, 1.00, 1.20, 1.00, 1.00, 0.80, 1.00, 1.33, 1.00, 1.12, 1.00, 0.70, 1.14, 1.00, 1.00, 0.80, 0.90, 0.70, 0.81, 0.77, 0.86, 0.60, 0.50, 0.60, 0.50];
 
 
-</textarea><button onclick="eval(document.getElementById('Input').value), Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">neu aufladen</button>
+</textarea><button onclick="Los()">neu aufladen</button>
 
 <p>Ergebnis Ladebreite×Lademeter: <span id="Ladebreite"> </span> m × <span id="Lademeter"> </span> m.</p>
-<p>Ladebreite variieren: <button onclick="Ladebreite=Ladebreite-1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-1</button>
-<button onclick="Ladebreite=Ladebreite-0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.1</button>
-<button onclick="Ladebreite=Ladebreite-0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">-0.01</button>
-<button onclick="Ladebreite=Ladebreite+0.01;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.01</button>
-<button onclick="Ladebreite=Ladebreite+0.1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+0.1</button>
-<button onclick="Ladebreite=Ladebreite+1;Zurueck_zum_Anfang();Lademeter();Ausgabe_SVG()">+1</button>
+<p>Ladebreite variieren: 
+<button onclick="Ladebreite=Ladebreite-1;Nochmal()">-1</button>
+<button onclick="Ladebreite=Ladebreite-0.1;Nochmal()">-0.1</button>
+<button onclick="Ladebreite=Ladebreite-0.01;Nochmal()">-0.01</button>
+<button onclick="Ladebreite=Ladebreite+0.01;Nochmal()">+0.01</button>
+<button onclick="Ladebreite=Ladebreite+0.1;Nochmal()">+0.1</button>
+<button onclick="Ladebreite=Ladebreite+1;Nochmal()">+1</button>
   </p>
-<p><svg width="800" height="200">
+<p><svg id="svg" width="800" height="200">
 <g id="Ladeflaeche" transform="scale(20)" fill="whiteSmoke" stroke="black" stroke-width="0.01" font-size="2%" text-anchor="middle">
   </g>
   </svg></svg>
