@@ -124,7 +124,8 @@ function Ausgabe_SVG() {
   }
 
 function Ausgabe_TikZ() {
-  var code="%TikZ\n\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
+  var code="%TikZ\n%Ladebreite="+Ladebreite+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
+  code=code+"\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
   code=code+"\\draw[grey] (0,0) -- ";
   code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite.toFixed(2)+") -- (0,"+Ladebreite.toFixed(2)+") -- cycle;\n";
   code=code+"\\foreach \\i/\\x/\\y/\\r in {\n";
@@ -151,7 +152,7 @@ function Nochmal() {
   }
 
 function Los() {
-  eval(document.getElementById('Input').value);
+  eval(document.getElementById('Input').value.replace(/%/g,""));
   Nochmal();
   }
 
@@ -162,7 +163,7 @@ function Los() {
 <p>"..."</p>
 
 <div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
-<textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.39;//3.5;
+<textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.5;
 Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 1.00, 1.10, 1.00, 1.00, 1.00, 1.00, 1.00, 1.20, 1.00, 1.20, 1.00, 1.00, 0.80, 1.00, 1.33, 1.00, 1.12, 1.00, 0.70, 1.14, 1.00, 1.00, 0.80, 0.90, 0.70, 0.81, 0.77, 0.86, 0.60, 0.50, 0.60, 0.50];
 Epsilon=0.001;
 
