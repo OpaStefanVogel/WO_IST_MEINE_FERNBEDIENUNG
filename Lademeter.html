@@ -8,6 +8,7 @@
 var Ladebreite=3.5;
 var LM=1;
 var Epsilon=0.001; //soviel quetschen möglich, in m
+var Zwischenraeume_auffuellen=false;
 
 var Ladung=[1,1,1,1,1,1];
 
@@ -56,7 +57,7 @@ function Lademeter() {
           if (R[1]-d/2+Epsilon<0) gueltig=false;
           if (R[1]+d/2>Ladebreite+Epsilon) gueltig=false;
           for (var l=0;l<Resultat.length;l++) if (l!=j&&l!=k&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
-          for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+          if (Zwischenraeume_auffuellen!=true) for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
           if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
           //alert(R+" "+gueltig);
           }
@@ -67,7 +68,7 @@ function Lademeter() {
         R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
-        for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+        if (Zwischenraeume_auffuellen!=true) for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       //rechter Rand
@@ -78,7 +79,7 @@ function Lademeter() {
         //alert(i+" "+j+"\n"+R+"\n"+xmin+" "+y);
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
-        for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+        if (Zwischenraeume_auffuellen!=true) for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       }
@@ -107,13 +108,13 @@ function Ausgabe_SVG() {
   for (var i=0;i<Resultat.length;i++) {
     var c=document.createElementNS("http://www.w3.org/2000/svg","circle");
     c.setAttribute("cx",Resultat[i][0]);
-    c.setAttribute("cy",Resultat[i][1]);
+    c.setAttribute("cy",Ladebreite-Resultat[i][1]);
     c.setAttribute("r",Ladung[i]/2);
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
     var c=document.createElementNS("http://www.w3.org/2000/svg","text");
     c.setAttribute("x",Resultat[i][0]);
-    c.setAttribute("y",Resultat[i][1]+0.1);
+    c.setAttribute("y",Ladebreite-Resultat[i][1]+0.1);
     c.appendChild(document.createTextNode((i+1)));
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
@@ -166,6 +167,7 @@ function Los() {
 <textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.5;
 Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 1.00, 1.10, 1.00, 1.00, 1.00, 1.00, 1.00, 1.20, 1.00, 1.20, 1.00, 1.00, 0.80, 1.00, 1.33, 1.00, 1.12, 1.00, 0.70, 1.14, 1.00, 1.00, 0.80, 0.90, 0.70, 0.81, 0.77, 0.86, 0.60, 0.50, 0.60, 0.50];
 Epsilon=0.001;
+Zwischenraeume_auffuellen=true;
 
 
 </textarea><button onclick="Los()">neu aufladen</button>
