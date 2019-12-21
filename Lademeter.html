@@ -32,7 +32,7 @@ function Lademeter() {
     Resultat.push(R);
     Anfangsindex=Anfangsindex+1;
     R=[Ladung[Anfangsindex]/2,R[1]+Math.sqrt((Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)-(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2))];
-    } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite+Epsilon&&Ladung[Anfangsindex]<Ladebreite-Resultat[Anfangsindex-1][1]-Ladung[Anfangsindex-1]/2+Epsilon);
+    } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite+0.001&&Ladung[Anfangsindex]<Ladebreite-Resultat[Anfangsindex-1][1]-Ladung[Anfangsindex-1]/2+0.001);
   if (Anfangsindex>1) {
     Resultat[Anfangsindex-1][1]=Ladebreite-Ladung[Anfangsindex-1]/2;
     }
@@ -129,17 +129,19 @@ function Ausgabe_SVG() {
   }
 
 function Ausgabe_TikZ() {
-  var code="%TikZ\n%Ladebreite="+Ladebreite.toFixed(2)+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
+  var code="<math>\n%TikZ\n%Ladebreite="+Ladebreite.toFixed(2)+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
   if (Zwischenraeume_auffuellen) code=code+"%Zwischenraeume_auffuellen=true;\n";
   code=code+"\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
   code=code+"\\draw[grey] (0,0) -- ";
   code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite.toFixed(2)+") -- (0,"+Ladebreite.toFixed(2)+") -- cycle;\n";
   code=code+"\\foreach \\i/\\x/\\y/\\r in {\n";
   for (var i=0;i<Resultat.length;i++) {
-    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+Ladung[i]+"\n";
+    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+(Ladung[i]/2);
+    if (i<Resultat.length-1) code=code+",";
+    code=code+"\n";
     }
-  code=code+"  } \\draw (\\x,\\y) circle (\\r) node {\i};\n";
-  code=code+"\\end{tikzpicture}\n";
+  code=code+"  } \\filldraw[fill=gray!20] (\\x,\\y) circle (\\r) node {\\i};\n";
+  code=code+"\\end{tikzpicture}\n</math>\n";
   document.getElementById("Logfile").firstChild.nodeValue=code;
   }
 
@@ -183,7 +185,7 @@ function Auswahl(i) {
 <body onload="Los()">
 <p>Hallo, ein Programm zu <a href="https://matheplanet.de/matheplanet/nuke/html/viewtopic.php?rd2&topic=244876&start=0#p1783527" target="_blank">Rundes im Eckigem</a></p>
 
-<p>"..."</p>
+<p>"zur Erläuterung: bei Durchmessern, welche in der Summe in der vorgegebenen Breite nebeneinanderpassen geht man aus Ladungssicherungsgründen hin und packt diese auf Kontakt nebeneinander, wenn dies nicht paßt und volle Reihen nicht voll werden geht man hin und packt jeweils aussen ein Teil und geht dann mit dem nächsten Teil möglichst weit in den Zwischenraum (Ausschnitt) zwischen diese beiden Teile."</p>
 
 <div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
 <textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.5;
@@ -191,7 +193,7 @@ Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 
 Epsilon=0.001;
 
 
-</textarea><button onclick="Los()">neu aufladen</button>
+</textarea><button onclick="Los()">neu verladen</button>
 
 <p>Ergebnis Ladebreite×Lademeter: <span id="Ladebreite"> </span> m × <span id="Lademeter"> </span> m.</p>
 <p>Ladebreite variieren: 
