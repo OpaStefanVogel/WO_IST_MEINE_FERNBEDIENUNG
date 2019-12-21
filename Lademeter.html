@@ -106,19 +106,20 @@ function Ausgabe_SVG() {
   dc.appendChild(document.createTextNode("\n      "));
   dc.appendChild(c);
   for (var i=0;i<Resultat.length;i++) {
+    var c=document.createElementNS("http://www.w3.org/2000/svg","text");
+    c.setAttribute("x",Resultat[i][0]);
+    c.setAttribute("y",Ladebreite-Resultat[i][1]+0.1);
+    c.setAttribute("onclick","Auswahl("+i+")");
+    c.appendChild(document.createTextNode((i+1)));
+    dc.appendChild(document.createTextNode("\n      "));
+    dc.appendChild(c);
     var c=document.createElementNS("http://www.w3.org/2000/svg","circle");
     c.setAttribute("cx",Resultat[i][0]);
     c.setAttribute("cy",Ladebreite-Resultat[i][1]);
     c.setAttribute("r",Ladung[i]/2);
     c.setAttribute("id","Kreis"+i);
     c.setAttribute("onclick","Auswahl("+i+")");
-    dc.appendChild(document.createTextNode("\n      "));
-    dc.appendChild(c);
-    var c=document.createElementNS("http://www.w3.org/2000/svg","text");
-    c.setAttribute("x",Resultat[i][0]);
-    c.setAttribute("y",Ladebreite-Resultat[i][1]+0.1);
-    c.setAttribute("onclick","Auswahl("+i+")");
-    c.appendChild(document.createTextNode((i+1)));
+    c.setAttribute("fill-opacity","0.2");
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
     }
@@ -128,7 +129,7 @@ function Ausgabe_SVG() {
   }
 
 function Ausgabe_TikZ() {
-  var code="%TikZ\n%Ladebreite="+Ladebreite+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
+  var code="%TikZ\n%Ladebreite="+Ladebreite.toFixed(2)+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
   if (Zwischenraeume_auffuellen) code=code+"%Zwischenraeume_auffuellen=true;\n";
   code=code+"\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
   code=code+"\\draw[grey] (0,0) -- ";
@@ -170,7 +171,7 @@ function Auswahl(i) {
       (Resultat[i][1]-Ladung[i]/2).toFixed(2)+" + "+Ladung[i]+" + "+(Ladebreite-Resultat[i][1]-Ladung[i]/2).toFixed(2);
     //alert(i);
     } else {
-      document.getElementById("Kreis"+ersterKlick).setAttribute("fill","WhiteSmoke");
+      document.getElementById("Kreis"+ersterKlick).setAttribute("fill","grey");
       document.getElementById("Abstaende").firstChild.nodeValue=" ";
       var merk=Ladung[i]; Ladung[i]=Ladung[ersterKlick]; Ladung[ersterKlick]=merk;
       ersterKlick=-1;
@@ -200,11 +201,11 @@ Epsilon=0.001;
 <button onclick="Ladebreite=Ladebreite+0.01;Nochmal()">+0.01</button>
 <button onclick="Ladebreite=Ladebreite+0.1;Nochmal()">+0.1</button>
 <button onclick="Ladebreite=Ladebreite+1;Nochmal()">+1</button>
-<span id="Abstaende"> </span>
+<span id="Abstaende" style="color:Green"> </span>
   </p>
 
 <p><svg id="svg" width="800" height="200">
-<g id="Ladeflaeche" transform="scale(50)" fill="whiteSmoke" stroke="black" stroke-width="0.01" font-size="2%" text-anchor="middle">
+<g id="Ladeflaeche" transform="scale(50)" fill="grey" stroke="black" stroke-width="0.01" font-size="2%" text-anchor="middle">
   </g>
   </svg></svg>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
