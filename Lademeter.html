@@ -13,6 +13,9 @@ var Ladung=[1,1,1,1,1,1];
 
 var Resultat=[];
 
+var Wagennummer=1;
+var T=[]; //als i-tes wird das T[i]-te Ladungsteil aufgeladen.
+
 function Abstand(P,Q) {return Math.sqrt((P[0]-Q[0])*(P[0]-Q[0])+(P[1]-Q[1])*(P[1]-Q[1]))}
 
 function Dreieck(P,Pr,Q,Qr,Rr) {
@@ -25,19 +28,19 @@ function Dreieck(P,Pr,Q,Qr,Rr) {
 function Lademeter() {
   for(var i=0;i<Ladung.length;i++) if (Ladebreite<Ladung[i]) Ladebreite=Ladung[i];
   LM=0;
-  var R=[Ladung[0]/2,Ladung[0]/2];
+  var R=[Ladung[T[0]]/2,Ladung[T[0]]/2];
   var Anfangsindex=0;
   do {
     Resultat.push(R);
     Anfangsindex=Anfangsindex+1;
-    R=[Ladung[Anfangsindex]/2,R[1]+Math.sqrt((Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2+Ladung[Anfangsindex]/2)-(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2)*(Ladung[Anfangsindex-1]/2-Ladung[Anfangsindex]/2))];
-    } while (R[1]+Ladung[Anfangsindex]/2<Ladebreite+0.001&&Ladung[Anfangsindex]<Ladebreite-Resultat[Anfangsindex-1][1]-Ladung[Anfangsindex-1]/2+0.001);
+    R=[Ladung[T[Anfangsindex]]/2,R[1]+Math.sqrt((Ladung[T[Anfangsindex-1]]/2+Ladung[T[Anfangsindex]]/2)*(Ladung[T[Anfangsindex-1]]/2+Ladung[T[Anfangsindex]]/2)-(Ladung[T[Anfangsindex-1]]/2-Ladung[T[Anfangsindex]]/2)*(Ladung[T[Anfangsindex-1]]/2-Ladung[T[Anfangsindex]]/2))];
+    } while (R[1]+Ladung[T[Anfangsindex]]/2<Ladebreite+0.001&&Ladung[T[Anfangsindex]]<Ladebreite-Resultat[Anfangsindex-1][1]-Ladung[T[Anfangsindex-1]]/2+0.001);
   if (Anfangsindex>1) {
-    Resultat[Anfangsindex-1][1]=Ladebreite-Ladung[Anfangsindex-1]/2;
+    Resultat[Anfangsindex-1][1]=Ladebreite-Ladung[T[Anfangsindex-1]]/2;
     }
 
   for(var i=Anfangsindex;i<Ladung.length;i++) {//alert(i);
-    var d=Ladung[i];
+    var d=Ladung[T[i]];
     var xmin=100000;
     var y=d/2;
     
@@ -45,37 +48,37 @@ function Lademeter() {
       for (var k=0;k<Resultat.length;k++) if (j!=k) {
         var a=Abstand(Resultat[j],Resultat[k]);
         //alert(Resultat[j]+" "+Resultat[k]+" "+a);
-        if (a<Ladung[j]/2+Ladung[k]/2+d+Epsilon) {
-          var R=Dreieck(Resultat[j],Ladung[j],Resultat[k],Ladung[k],d);
+        if (a<Ladung[T[j]]/2+Ladung[T[k]]/2+d+Epsilon) {
+          var R=Dreieck(Resultat[j],Ladung[T[j]],Resultat[k],Ladung[T[k]],d);
           //alert(R);
           var gueltig=true;
           if (R[0]-d/2+Epsilon<0) if (R[0]>Resultat[j][0]) {
             R[0]=d/2;
-            //R[1]=Resultat[j][1]+Math.sqrt((Ladung[j]/2+Ladung[i]/2)*(Ladung[j]/2+Ladung[i]/2)-(Ladung[j]/2-Ladung[i]/2)*(Ladung[j]/2-Ladung[i]/2));alert(R+" "+Resultat[j]);
+            //R[1]=Resultat[j][1]+Math.sqrt((Ladung[T[j]]/2+Ladung[T[i]]/2)*(Ladung[T[j]]/2+Ladung[T[i]]/2)-(Ladung[T[j]]/2-Ladung[T[i]]/2)*(Ladung[T[j]]/2-Ladung[T[i]]/2));alert(R+" "+Resultat[j]);
             } else gueltig=false;
           if (R[1]-d/2+Epsilon<0) gueltig=false;
           if (R[1]+d/2>Ladebreite+Epsilon) gueltig=false;
-          for (var l=0;l<Resultat.length;l++) if (l!=j&&l!=k&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+          for (var l=0;l<Resultat.length;l++) if (l!=j&&l!=k&&Abstand(Resultat[l],R)+Epsilon<Ladung[T[l]]/2+d/2) gueltig=false;
           if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
           //alert(R+" "+gueltig);
           }
         }
       //linker Rand
-      if (Resultat[j][1]-Ladung[j]/2+Epsilon<d) {
+      if (Resultat[j][1]-Ladung[T[j]]/2+Epsilon<d) {
         //if (i==55&&j==15) alert(i+" "+j+" "+Resultat[j]);
-        R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
+        R=[Resultat[j][0]+Math.sqrt((Ladung[T[j]]/2+d/2)*(Ladung[T[j]]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
         var gueltig=true;
-        for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+        for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[T[l]]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       //rechter Rand
-      //alert(i+" "+j+(Resultat[j][1]+Ladung[j]/2));
-      if (Resultat[j][1]+Ladung[j]/2+Epsilon>Ladebreite-d) {
+      //alert(i+" "+j+(Resultat[j][1]+Ladung[T[j]]/2));
+      if (Resultat[j][1]+Ladung[T[j]]/2+Epsilon>Ladebreite-d) {
         //alert(i+"."+j+" "+Resultat[j]+" "+(Ladebreite-d));
-        R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Ladebreite-Resultat[j][1]-d/2)*(Ladebreite-Resultat[j][1]-d/2)),Ladebreite-d/2];
+        R=[Resultat[j][0]+Math.sqrt((Ladung[T[j]]/2+d/2)*(Ladung[T[j]]/2+d/2)-(Ladebreite-Resultat[j][1]-d/2)*(Ladebreite-Resultat[j][1]-d/2)),Ladebreite-d/2];
         //alert(i+" "+j+"\n"+R+"\n"+xmin+" "+y);
         var gueltig=true;
-        for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
+        for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[T[l]]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       }
@@ -104,15 +107,15 @@ function Ausgabe_SVG() {
   for (var i=0;i<Resultat.length;i++) {
     var c=document.createElementNS("http://www.w3.org/2000/svg","text");
     c.setAttribute("x",Resultat[i][0]);
-    c.setAttribute("y",Ladebreite-Resultat[i][1]+0.1);
+    c.setAttribute("y",(2*Wagennummer-1)*Ladebreite-Resultat[i][1]+0.1);
     c.setAttribute("onclick","Auswahl("+i+")");
-    c.appendChild(document.createTextNode((i+1)));
+    c.appendChild(document.createTextNode((T[i]+1)));
     dc.appendChild(document.createTextNode("\n      "));
     dc.appendChild(c);
     var c=document.createElementNS("http://www.w3.org/2000/svg","circle");
     c.setAttribute("cx",Resultat[i][0]);
-    c.setAttribute("cy",Ladebreite-Resultat[i][1]);
-    c.setAttribute("r",Ladung[i]/2);
+    c.setAttribute("cy",(2*Wagennummer-1)*Ladebreite-Resultat[i][1]);
+    c.setAttribute("r",Ladung[T[i]]/2);
     c.setAttribute("id","Kreis"+i);
     c.setAttribute("onclick","Auswahl("+i+")");
     c.setAttribute("fill-opacity","0.2");
@@ -121,17 +124,17 @@ function Ausgabe_SVG() {
     }
   document.getElementById("Ladebreite").firstChild.nodeValue=Math.round(Ladebreite*100)/100;
   document.getElementById("Lademeter").firstChild.nodeValue=Math.round(LM*100)/100;
-  document.getElementById("svg").setAttribute("height",Math.max(200,Ladebreite*50));
+  //document.getElementById("svg").setAttribute("height",Math.max(200,Ladebreite*50));
   }
 
 function Ausgabe_TikZ() {
-  var code="<math>\n%TikZ\n%Ladebreite="+Ladebreite.toFixed(2)+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
+  var code="<math>\n%TikZ\n%Ladebreite="+Ladebreite.toFixed(2)+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\nT=["+T+"];\n";
   code=code+"\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
   code=code+"\\draw[grey] (0,0) -- ";
   code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite.toFixed(2)+") -- (0,"+Ladebreite.toFixed(2)+") -- cycle;\n";
   code=code+"\\foreach \\i/\\x/\\y/\\r in {\n";
   for (var i=0;i<Resultat.length;i++) {
-    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+(Ladung[i]/2);
+    code=code+"  "+(i+1)+"/"+(Resultat[i][0].toFixed(2))+"/"+(Resultat[i][1].toFixed(2))+"/"+(Ladung[T[i]]/2);
     if (i<Resultat.length-1) code=code+",";
     code=code+"\n";
     }
@@ -156,6 +159,8 @@ function Nochmal() {
 
 function Los() {
   eval(document.getElementById('Input').value.replace(/%/g,""));
+  T=[]; 
+  for(var i=0;i<Ladung.length;i++) T[i]=i;
   Nochmal();
   }
 
@@ -165,12 +170,12 @@ function Auswahl(i) {
     ersterKlick=i;
     document.getElementById("Kreis"+i).setAttribute("fill","lightgreen");
     document.getElementById("Abstaende").firstChild.nodeValue=
-      (Resultat[i][1]-Ladung[i]/2).toFixed(2)+" + "+Ladung[i]+" + "+(Ladebreite-Resultat[i][1]-Ladung[i]/2).toFixed(2);
-    //alert(i);
+      (Resultat[i][1]-Ladung[T[i]]/2).toFixed(2)+" + "+Ladung[T[i]]+" + "+(Ladebreite-Resultat[i][1]-Ladung[T[i]]/2).toFixed(2);
+    //
     } else {
       document.getElementById("Kreis"+ersterKlick).setAttribute("fill","grey");
       document.getElementById("Abstaende").firstChild.nodeValue=" ";
-      var merk=Ladung[i]; Ladung[i]=Ladung[ersterKlick]; Ladung[ersterKlick]=merk;
+      var merk=T[i]; T[i]=T[ersterKlick]; T[ersterKlick]=merk;
       ersterKlick=-1;
       Nochmal();
       }
@@ -201,7 +206,7 @@ Epsilon=0.001;
 <span id="Abstaende" style="color:Green"> </span>
   </p>
 
-<p><svg id="svg" width="800" height="200">
+<p><svg id="svg" width="800" height="500">
 <g id="Ladeflaeche" transform="scale(50)" fill="grey" stroke="black" stroke-width="0.01" font-size="2%" text-anchor="middle">
   </g>
   </svg></svg>
