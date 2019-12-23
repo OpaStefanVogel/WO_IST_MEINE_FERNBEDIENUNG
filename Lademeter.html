@@ -8,7 +8,6 @@
 var Ladebreite=3.5;
 var LM=1;
 var Epsilon=0.001; //soviel quetschen möglich, in m
-var Zwischenraeume_auffuellen=false;
 
 var Ladung=[1,1,1,1,1,1];
 
@@ -57,7 +56,6 @@ function Lademeter() {
           if (R[1]-d/2+Epsilon<0) gueltig=false;
           if (R[1]+d/2>Ladebreite+Epsilon) gueltig=false;
           for (var l=0;l<Resultat.length;l++) if (l!=j&&l!=k&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
-          if (Zwischenraeume_auffuellen!=true) for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
           if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
           //alert(R+" "+gueltig);
           }
@@ -68,7 +66,6 @@ function Lademeter() {
         R=[Resultat[j][0]+Math.sqrt((Ladung[j]/2+d/2)*(Ladung[j]/2+d/2)-(Resultat[j][1]-d/2)*(Resultat[j][1]-d/2)),d/2];
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
-        if (Zwischenraeume_auffuellen!=true) for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       //rechter Rand
@@ -79,7 +76,6 @@ function Lademeter() {
         //alert(i+" "+j+"\n"+R+"\n"+xmin+" "+y);
         var gueltig=true;
         for (var l=0;l<Resultat.length;l++) if (l!=j&&Abstand(Resultat[l],R)+Epsilon<Ladung[l]/2+d/2) gueltig=false;
-        if (Zwischenraeume_auffuellen!=true) for (var l=0;l<Resultat.length;l++) if (Resultat[l][0]>R[0]&&Math.abs(Resultat[l][1]-R[1])+Epsilon<Ladung[l]/2+d/2) gueltig=false;
         if (gueltig==true&&R[0]<xmin) {xmin=R[0];y=R[1]}
         }
       }
@@ -130,7 +126,6 @@ function Ausgabe_SVG() {
 
 function Ausgabe_TikZ() {
   var code="<math>\n%TikZ\n%Ladebreite="+Ladebreite.toFixed(2)+";\n%Ladung=["+Ladung+"];\n%Epsilon="+Epsilon+";\n";
-  if (Zwischenraeume_auffuellen) code=code+"%Zwischenraeume_auffuellen=true;\n";
   code=code+"\\begin{tikzpicture}[draw=grey,font=\\sffamily\\scriptsize]\n";
   code=code+"\\draw[grey] (0,0) -- ";
   code=code+"("+LM.toFixed(2)+",0) -- ("+LM.toFixed(2)+","+Ladebreite.toFixed(2)+") -- (0,"+Ladebreite.toFixed(2)+") -- cycle;\n";
@@ -188,7 +183,7 @@ function Auswahl(i) {
 <p>"zur Erläuterung: bei Durchmessern, welche in der Summe in der vorgegebenen Breite nebeneinanderpassen geht man aus Ladungssicherungsgründen hin und packt diese auf Kontakt nebeneinander, wenn dies nicht paßt und volle Reihen nicht voll werden geht man hin und packt jeweils aussen ein Teil und geht dann mit dem nächsten Teil möglichst weit in den Zwischenraum (Ausschnitt) zwischen diese beiden Teile."</p>
 
 <div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
-<textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=3.5;
+<textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">Ladebreite=2.55;
 Ladung=[1.00, 1.10, 1.30, 1.20, 1.10, 1.00, 1.40, 1.00, 1.00, 1.30, 1.00, 1.20, 1.00, 1.10, 1.00, 1.00, 1.00, 1.00, 1.00, 1.20, 1.00, 1.20, 1.00, 1.00, 0.80, 1.00, 1.33, 1.00, 1.12, 1.00, 0.70, 1.14, 1.00, 1.00, 0.80, 0.90, 0.70, 0.81, 0.77, 0.86, 0.60, 0.50, 0.60, 0.50];
 Epsilon=0.001;
 
