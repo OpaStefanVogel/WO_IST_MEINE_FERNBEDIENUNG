@@ -159,6 +159,9 @@ function Nochmal() {
 
 function Los() {
   eval(document.getElementById('Input').value.replace(/%/g,""));
+  var A=0;
+  for (var i=0;i<Ladung.length;i++) A=A+Ladung[i]*Ladung[i]*Math.PI/4;
+  alert(A/Ladebreite);
   T=[]; 
   for(var i=0;i<Ladung.length;i++) T[i]=i;
   Nochmal();
