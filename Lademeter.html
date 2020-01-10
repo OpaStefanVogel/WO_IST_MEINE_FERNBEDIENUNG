@@ -177,6 +177,9 @@ function Los() {
   for(var i=0;i<Ladung.length;i++) {T[i]=i; R[i]=i}
   for(var i=0;i<Ladung.length;i++) {T[i]=n-i-1; R[i]=n-i-1}
   alert(T);
+  var A=0;
+  for (var i=0;i<Ladung.length;i++) A=A+Ladung[i]*Ladung[i]*Math.PI/4;
+  alert(A/Ladebreite);
   Nochmal();
   }
 
