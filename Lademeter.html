@@ -14,7 +14,15 @@ var Ladung=[1,1,1,1,1,1];
 var Resultat=[];
 
 var Wagennummer=1;
-var T=[]; //als i-tes wird das T[i]-te Ladungsteil aufgeladen.
+var T=[]; //Transformation, als i-tes wird das T[i]-te Ladungsteil aufgeladen.
+var R=[]; //Rücktransformation, das i-te Ladungsteil wird als R[i]-tes verladen.
+var VL=[];
+var LMIN=100000000;
+var LMAX=0;
+var TMIN=[];
+var RMIN=[];
+var TMAX=[];
+var RMAX=[];
 
 function Abstand(P,Q) {return Math.sqrt((P[0]-Q[0])*(P[0]-Q[0])+(P[1]-Q[1])*(P[1]-Q[1]))}
 
@@ -124,7 +132,7 @@ function Ausgabe_SVG() {
     }
   document.getElementById("Ladebreite").firstChild.nodeValue=Math.round(Ladebreite*100)/100;
   document.getElementById("Lademeter").firstChild.nodeValue=Math.round(LM*100)/100;
-  //document.getElementById("svg").setAttribute("height",Math.max(200,Ladebreite*50));
+  document.getElementById("svg").setAttribute("height",Math.max(200,Ladebreite*50));
   }
 
 function Ausgabe_TikZ() {
@@ -159,11 +167,19 @@ function Nochmal() {
 
 function Los() {
   eval(document.getElementById('Input').value.replace(/%/g,""));
+  VL=Vertauschliste();
+  Ladung=Ladung.sort();
+  //alert(VL.join("\n"));
+  T=[];
+  LMIN=1000000;
+  LMAX=0; 
+  n=Ladung.length;
+  for(var i=0;i<Ladung.length;i++) {T[i]=i; R[i]=i}
+  for(var i=0;i<Ladung.length;i++) {T[i]=n-i-1; R[i]=n-i-1}
+  alert(T);
   var A=0;
   for (var i=0;i<Ladung.length;i++) A=A+Ladung[i]*Ladung[i]*Math.PI/4;
   alert(A/Ladebreite);
-  T=[]; 
-  for(var i=0;i<Ladung.length;i++) T[i]=i;
   Nochmal();
   }
 
@@ -179,11 +195,42 @@ function Auswahl(i) {
       document.getElementById("Kreis"+ersterKlick).setAttribute("fill","grey");
       document.getElementById("Abstaende").firstChild.nodeValue=" ";
       var merk=T[i]; T[i]=T[ersterKlick]; T[ersterKlick]=merk;
+      R[T[i]]=i; R[T[ersterKlick]]=ersterKlick;
       ersterKlick=-1;
       Nochmal();
       }
   }
 
+function Vertauschliste() {
+  var RET=[];
+  for (var i=0; i<Ladung.length;i++) 
+    for (var j=i; j<Ladung.length;j++)
+      if (Math.abs(Ladung[i]-Ladung[j])>Epsilon+0.0001) RET.push([i,j]);    
+  return RET;
+  }
+
+function Versuch_Maximieren() {  
+  for (var ij=0;ij<VL.length;ij++) {
+    var i=VL[ij][0];
+    var j=VL[ij][1];
+    T[R[i]]=j; T[R[j]]=i; 
+    var m=R[i]; R[i]=R[j]; R[j]=m;
+    //alert(ij+"* +  "+VL[ij]+" "+LM+"\n\n"+T+"\n\n"+R);
+    Resultat=[];
+    LM=0;
+    Lademeter();
+    if (LM<LMIN) {LMIN=LM; TMIN=T.slice(); RMIN=R.slice()}
+    if (LMAX<LM) {LMAX=LM; TMAX=T.slice(); RMAX=R.slice()}
+    T[R[i]]=j; T[R[j]]=i; 
+    var m=R[i]; R[i]=R[j]; R[j]=m;
+    //alert(ij+" "+VL[ij]+" "+LM+"\n\n"+T+"\n\n"+R);
+    }
+  T=TMIN.slice();
+  R=RMIN.slice();
+  alert(LMIN+" "+LMAX+"\n"+T+"\n"+R);
+  Nochmal();
+  }
+  
   </script>
 <body onload="Los()">
 <p>Hallo, ein Programm zu <a href="https://matheplanet.de/matheplanet/nuke/html/viewtopic.php?rd2&topic=244876&start=0#p1783527" target="_blank">Rundes im Eckigem</a></p>
@@ -207,6 +254,8 @@ Epsilon=0.001;
 <button onclick="Ladebreite=Ladebreite+0.1;Nochmal()">+0.1</button>
 <button onclick="Ladebreite=Ladebreite+1;Nochmal()">+1</button>
 <span id="Abstaende" style="color:Green"> </span>
+Versuch weiter zu 
+<button onclick="Versuch_Maximieren()">maximieren</button>
   </p>
 
 <p><svg id="svg" width="800" height="500">
