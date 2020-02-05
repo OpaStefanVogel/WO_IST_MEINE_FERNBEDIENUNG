@@ -9,15 +9,19 @@ var Ausgangsmarix=[];
 var gemeinsamer_Nenner=1;
 var m=0;
 var n=0;
+var D=[];
+var B=[];
+
 function Los() {
   //alert(document.getElementById("input").value);
   eval(document.getElementById("input").value);
   }
 
 function tausche(r,s) {
-  alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
+  //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
   m=Ausgangsmatrix.length;
-  n=Ausgangsmatrix[0].length;alert(m+" "+n);
+  n=Ausgangsmatrix[0].length;
+  //alert(m+" "+n);
   var neueMatrix=[];
   var neuerNenner=Ausgangsmatrix[r][s];
   for (var i=0;i<m;i++) {
@@ -35,8 +39,46 @@ function tausche(r,s) {
     }
   Ausgangsmatrix=neueMatrix;
   gemeinsamer_Nenner=neuerNenner;
-  alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
+  //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   }
+
+function suche_Pivot() {
+  var r=m+n-1; 
+  var s=r;
+  var ri=0;
+  var sj=0;
+  for (var i=1;i<m;i++) if (Ausgangsmatrix[i][0]<0&&B[i]<r) {r=B[i]; ri=i}
+  for (var j=1;j<n;j++) if (Ausgangsmatrix[0][j]>0&&D[j]<s) {s=D[j]; sj=j}
+  if (r<s) {
+    s=m+n-1; sj=0;
+    for (var j=1;j<n;j++) if (Ausgangsmatrix[ri][j]>0&&D[j]<s) {s=D[j]; sj=j}
+    } else {
+      r=m+n-1; ri=0;
+      for (var i=1;i<m;i++) if (Ausgangsmatrix[i][sj]<0&&B[i]<r) {r=B[i]; ri=i}  
+      }
+  //alert("suche_Pivot()\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nr="+r+"; s="+s+"; ri="+ri+"; sj="+sj+";\n");
+  return [r,s,ri,sj];
+  }
+
+function starte_Suche() {
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  D=[0]; for (var j=1;j<n;j++) D[j]=j;
+  B=[0]; for (var i=1;i<m;i++) B[i]=m+i-1;
+  var p=suche_Pivot();
+  alert("Ausgangsmatrix und Ergebnis Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n");
+  while (p[2]>0&&p[3]>0) {
+    var merk=B[p[2]];
+    B[p[2]]=D[p[3]];
+    D[p[3]]=merk;
+    //alert("B=["+B+"]; D=["+D+"];");
+    tausche(p[2],p[3]);
+    p=suche_Pivot();
+    //alert("Zwischenmatrix und Ergebnis Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n");
+    }
+  alert("Ergebnis:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];");
+  }
+
   </script>
 <body>
 <p>Ein Programm zu <a href="https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens" target="_blank">https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens</a></p>
@@ -49,9 +91,26 @@ function tausche(r,s) {
   [ 4, -3, -1 ] 
   ];
 gemeinsamer_Nenner=1;
-tausche(1,1);
-tausche(1,2);
+Ausgangsmatrix=[ 
+  [     0,  300,  350,  200,  250 ],
+  [  1400,   -2,    0,   -2,    0 ],
+  [   800,    0,   -4,    0,    0 ],
+  [ 14500,  -20,  -30,  -10,  -40 ],
+  [   850,   -1,   -1,   -1,   -1 ] ] ;
+
+//tausche(1,1);
+//tausche(1,2);
 //tausche(2,2);
+
+
+//tausche(1,1);
+//tausche(2,2);
+//tausche(3,3);
+//tausche(4,1);
+//tausche(2,2);
+//tausche(4,2);
+
+starte_Suche();
 </textarea>
 <button onclick="Los()">losrechnen</button>
 
