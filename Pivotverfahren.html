@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>Pivotverfahren</title>
+<meta charset="utf-8"/>
+<style>
+  </style>
+<script>
+var Ausgangsmarix=[];
+var gemeinsamer_Nenner=1;
+var m=0;
+var n=0;
+function Los() {
+  //alert(document.getElementById("input").value);
+  eval(document.getElementById("input").value);
+  }
+
+function tausche(r,s) {
+  alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;alert(m+" "+n);
+  var neueMatrix=[];
+  var neuerNenner=Ausgangsmatrix[r][s];
+  for (var i=0;i<m;i++) {
+    neueMatrix[i]=[];
+    for (var j=0;j<n;j++) {
+      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner;
+      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j];
+      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j];
+      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
+      }
+    }
+  if (neuerNenner<0) {
+    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
+    neuerNenner=-neuerNenner;
+    }
+  Ausgangsmatrix=neueMatrix;
+  gemeinsamer_Nenner=neuerNenner;
+  alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
+  }
+  </script>
+<body>
+<p>Ein Programm zu <a href="https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens" target="_blank">https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens</a></p>
+
+<div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
+<textarea id="input" cols="40" rows="10" >Ausgangsmatrix=[ 
+  [ 0,  3,  2 ],
+  [ 3, -2, -1 ],
+  [ 7, -2, -3 ],
+  [ 4, -3, -1 ] 
+  ];
+gemeinsamer_Nenner=1;
+tausche(1,1);
+tausche(1,2);
+//tausche(2,2);
+</textarea>
+<button onclick="Los()">losrechnen</button>
+
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  <div>
+  </body>
+  </html>
