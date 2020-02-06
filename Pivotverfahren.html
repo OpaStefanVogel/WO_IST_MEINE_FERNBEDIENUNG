@@ -3,6 +3,7 @@
 <title>Pivotverfahren</title>
 <meta charset="utf-8"/>
 <style>
+  td {text-align:right}
   </style>
 <script>
 var Ausgangsmarix=[];
@@ -12,6 +13,7 @@ var n=0;
 var D=[];
 var B=[];
 var LCode="";
+var HCode="";
 
 function Los() {
   //alert(document.getElementById("input").value);
@@ -61,13 +63,14 @@ function suche_Pivot() {
   return [r,s,ri,sj];
   }
 
-function starte_Suche() {
+function starte_Pivotverfahren() {
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
   D=[0]; for (var j=1;j<n;j++) D[j]=j;
   B=[0]; for (var i=1;i<m;i++) B[i]=m+i-1;
   var p=suche_Pivot();
-  LCode="Ausgangsmatrix und Ergebnis der ersten Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  LCode="Ausgangsmatrix und Ergebnis der ersten Pivotsuche:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  HCode="<p>Ausgangsmatrix und Ergebnis der ersten Pivotsuche:<p>"+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
   while (p[2]>0&&p[3]>0) {
     var merk=B[p[2]];
     B[p[2]]=D[p[3]];
@@ -75,12 +78,49 @@ function starte_Suche() {
     //alert("B=["+B+"]; D=["+D+"];");
     tausche(p[2],p[3]);
     p=suche_Pivot();
-    LCode=LCode+"\n\nZwischenergebnis und weitere Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+    LCode=LCode+"\n\nZwischenergebnis und weitere Pivotsuche:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+    if (p[2]>0&&p[3]>0)
+      HCode=HCode+"<p>Zwischenergebnis und Ergebnis der nächsten Pivotsuche:<p>";
+      else HCode=HCode+"<p>letztes Ergebnis (kein Pivot mehr gefunden):<p>";
+    HCode=HCode+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
     }
-  LCode=LCode+"\n\nErgebnis:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];";
-  document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  LCode=LCode+"\n\nErgebnis:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  //document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  document.getElementById("HCode").innerHTML=HCode;
   }
 
+function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  var T=Ausgangsmatrix.join("],\n  [")+"] ] / "
+    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
+    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  return T;
+  }
+
+function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  var T='<table style="font-style:italic">';
+  for (var i=0;i<m;i++) {
+    T=T+"<tr><td>"+gemeinsamer_Nenner+"</td>";
+    if (i==0) T=T+"<td>z</td>"; else
+      if (B[i]<n) T=T+"<td>x<sub>"+B[i]+"</sub></td>"; 
+        else T=T+"<td>y<sub>"+(B[i]-n+1)+"</sub></td>";
+    T=T+"<td>=</td>";
+    for (var j=0;j<n;j++) {
+      if (i==p[2]&&j==p[3]&&i>0&&j>0) T=T+'<td style="color:blue; border:solid">';
+        else T=T+"<td>";
+      if (Ausgangsmatrix[i][j]>=0) T=T+"+";
+      T=T+Ausgangsmatrix[i][j]+"</td>";
+      if (j>0) if (D[j]<n) T=T+"<td>x<sub>"+D[j]+"</sub></td>"; 
+        else T=T+"<td>y<sub>"+(D[j]-n+1)+"</sub></td>";
+      }
+    T=T+"</tr>";
+    }
+//  T=T+Ausgangsmatrix.join("],\n  [")+"] ] / "
+//    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
+//    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  T=T+"</table>";
+  //alert(T);
+  return T;
+  }
   </script>
 <body>
 <p>Ein Programm zu <a href="https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens" target="_blank">https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens</a></p>
@@ -112,10 +152,11 @@ Ausgangsmatrix=[
 //tausche(2,2);
 //tausche(4,2);
 
-starte_Suche();
+starte_Pivotverfahren();
 </textarea>
 <button onclick="Los()">losrechnen</button>
 
+<div id="HCode"> </div>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
   <div>
 <div id="Ausgabe">
