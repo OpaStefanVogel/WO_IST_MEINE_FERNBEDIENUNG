@@ -11,6 +11,7 @@ var m=0;
 var n=0;
 var D=[];
 var B=[];
+var LCode="";
 
 function Los() {
   //alert(document.getElementById("input").value);
@@ -66,7 +67,7 @@ function starte_Suche() {
   D=[0]; for (var j=1;j<n;j++) D[j]=j;
   B=[0]; for (var i=1;i<m;i++) B[i]=m+i-1;
   var p=suche_Pivot();
-  alert("Ausgangsmatrix und Ergebnis Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n");
+  LCode="Ausgangsmatrix und Ergebnis der ersten Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
   while (p[2]>0&&p[3]>0) {
     var merk=B[p[2]];
     B[p[2]]=D[p[3]];
@@ -74,9 +75,10 @@ function starte_Suche() {
     //alert("B=["+B+"]; D=["+D+"];");
     tausche(p[2],p[3]);
     p=suche_Pivot();
-    //alert("Zwischenmatrix und Ergebnis Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n");
+    LCode=LCode+"\n\nZwischenergebnis und weitere Pivotsuche:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"+"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
     }
-  alert("Ergebnis:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];");
+  LCode=LCode+"\n\nErgebnis:\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];";
+  document.getElementById("Logfile").firstChild.nodeValue=LCode;
   }
 
   </script>
@@ -115,6 +117,8 @@ starte_Suche();
 <button onclick="Los()">losrechnen</button>
 
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  <div>
+<div id="Ausgabe">
   <div>
   </body>
   </html>
