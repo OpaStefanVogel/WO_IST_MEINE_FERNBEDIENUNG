@@ -67,7 +67,7 @@ function starte_Pivotverfahren() {
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
   D=[0]; for (var j=1;j<n;j++) D[j]=j;
-  B=[0]; for (var i=1;i<m;i++) B[i]=m+i-1;
+  B=[0]; for (var i=1;i<m;i++) B[i]=n+i-1;
   var p=suche_Pivot();
   LCode="Ausgangsmatrix und Ergebnis der ersten Pivotsuche:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
   HCode="<p>Ausgangsmatrix und Ergebnis der ersten Pivotsuche:<p>"+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
@@ -85,7 +85,7 @@ function starte_Pivotverfahren() {
     HCode=HCode+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
     }
   LCode=LCode+"\n\nErgebnis:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
-  //document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  document.getElementById("Logfile").firstChild.nodeValue=LCode;
   document.getElementById("HCode").innerHTML=HCode;
   }
 
@@ -98,8 +98,10 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   var T='<table style="font-style:italic">';
+  var Nenner=gemeinsamer_Nenner;
+  if (p[2]>0&&p[3]>0) Nenner=1;
   for (var i=0;i<m;i++) {
-    T=T+"<tr><td>"+gemeinsamer_Nenner+"</td>";
+    T=T+"<tr><td>"+(gemeinsamer_Nenner/Nenner)+"</td>";
     if (i==0) T=T+"<td>z</td>"; else
       if (B[i]<n) T=T+"<td>x<sub>"+B[i]+"</sub></td>"; 
         else T=T+"<td>y<sub>"+(B[i]-n+1)+"</sub></td>";
@@ -108,7 +110,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       if (i==p[2]&&j==p[3]&&i>0&&j>0) T=T+'<td style="color:blue; border:solid">';
         else T=T+"<td>";
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+Ausgangsmatrix[i][j]+"</td>";
+      T=T+(Ausgangsmatrix[i][j]/Nenner)+"</td>";
       if (j>0) if (D[j]<n) T=T+"<td>x<sub>"+D[j]+"</sub></td>"; 
         else T=T+"<td>y<sub>"+(D[j]-n+1)+"</sub></td>";
       }
@@ -132,13 +134,35 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   [ 7, -2, -3 ],
   [ 4, -3, -1 ] 
   ];
+
 gemeinsamer_Nenner=1;
-Ausgangsmatrix=[ 
+
+Ausgangsmatrix2=[ 
   [     0,  300,  350,  200,  250 ],
   [  1400,   -2,    0,   -2,    0 ],
   [   800,    0,   -4,    0,    0 ],
   [ 14500,  -20,  -30,  -10,  -40 ],
   [   850,   -1,   -1,   -1,   -1 ] ] ;
+
+Ausgangsmatrix3=[ 
+  [     0,  2,  4,  1,  1 ],
+  [     4, -1, -3,  0, -1 ],
+  [     3, -2, -1,  0,  0 ],
+  [     3,  0, -1, -4, -1 ] ] ;
+
+gemeinsamer_Nenner4=2;
+
+Ausgangsmatrix4=[ 
+  [ 0, -20, 114, 18, 48 ],
+  [ 0,   -1, 11,  5,-18 ],
+  [ 0,   -1,  3,  1, -2 ],
+  [ 2,   -2,  0,  0,  0 ] ] ;
+  
+Ausgangsmatrix=[
+  [   0, 10, 20, 15 ],
+  [ 100, -1, -1, -2 ],
+  [ 720, -6, -9,-10 ],
+  [  60,  0, -1,  0 ] ] ;
 
 //tausche(1,1);
 //tausche(1,2);
