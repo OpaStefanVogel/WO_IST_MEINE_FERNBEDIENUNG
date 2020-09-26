@@ -21,7 +21,7 @@
   </g>
 <circle id="sonne" cx="350" cy="200" r="16.68" fill="yellow" stroke="black" stroke-width="1" />
 <g id="mond" stroke="black" stroke-width="1" transform="translate(400,200)">
-<circle cx="0" cy="150" r="16.68" fill="grey"/>
+<circle cx="0" cy="150" r="16.68" fill="grey" onclick="diff=diff+1;fun1(evt)"/>
 <circle cx="0" cy="102" r="1" transform="rotate(-0)"/>
 <circle cx="0" cy="102" r="1" transform="rotate(-12.75)"/>
 <circle cx="0" cy="102" r="1" transform=" rotate(-25.5)"/>
@@ -37,7 +37,11 @@
 <text x="580" y="100" align="central">Frost</text>
 <text x="330" y="050" align="central">Sonne und Wolken</text>
 <text x="170" y="270" align="central">Dauerregen</text>
-<text id="Zenitstand" x="370" y="270" text-anchor="middle">xxx</text>
+<g fill="gray" font-family="Courier">
+<text id="Zenitstand" x="400" y="180" text-anchor="middle">xxx</text>
+<text id="am" x="400" y="200" text-anchor="middle">xxx</text>
+<text id="um" x="400" y="220" text-anchor="middle">xxx</text>
+  </g>
 </g>
 
 <a xlink:href="SCHIEBEREGLER.xml"
@@ -48,8 +52,9 @@
 
 <script type="application/ecmascript"> 
 <![CDATA[ 
+var diff=0;
 function fun1(evt) {
-  var t = new Date();
+  var t = new Date(Date.now()+diff*24*60*60*1000);
   var tn = new Date(2015,9,13);//irgendein nahegelegener Neumond
 //  var circle = evt.target;
   var phi = (t.valueOf() % 31556952000)/31556952000*2*Math.PI+0.19191919;
@@ -60,13 +65,15 @@ function fun1(evt) {
   var mmphi = -mphi*180/Math.PI;
   var mondx = Math.sin(mphi)*150+400;
   var mondy = Math.cos(mphi)*150+200;
-  evt.target.getElementById("sonne").setAttribute("cx", sonnex);
-  evt.target.getElementById("sonne").setAttribute("cy", sonney);
+  document.getElementById("sonne").setAttribute("cx", sonnex);
+  document.getElementById("sonne").setAttribute("cy", sonney);
 //  evt.target.getElementById("mond").setAttribute("cx", mondx);
 //  evt.target.getElementById("mond").setAttribute("cy", mondy);
-  evt.target.getElementById("mond").setAttribute("transform", "translate(400,200) rotate("+mmphi+")");
+  document.getElementById("mond").setAttribute("transform", "translate(400,200) rotate("+mmphi+")");
   var Zenitstand=new Date(kw*86400000+43200000);
-  evt.target.getElementById("Zenitstand").firstChild.nodeValue="Zenitstand: "+Zenitstand.getHours()+":"+Zenitstand.getMinutes();
+  document.getElementById("Zenitstand").firstChild.nodeValue="Zenit "+Zenitstand.toLocaleTimeString();
+  document.getElementById("am").firstChild.nodeValue="am "+t.toLocaleDateString();
+  document.getElementById("um").firstChild.nodeValue="um "+t.toLocaleTimeString();
 //  alert(Math.PI-phi);
 //  alert(sonnex);
   }
