@@ -6,7 +6,8 @@
   width="100%" height="100%" 
   style="border:dotted; font-family:Arial;"
   viewBox="0 0 422 100"
-  preserveAspectRatio="xMinYMin">
+  preserveAspectRatio="xMinYMin"
+  ontouchstart="Restart(evt)">
 <defs>
 <circle cx="30" cy="30" r="30"/>
 <path id="Ei" d="M30,0C
@@ -18,7 +19,7 @@ Z"/>
 </defs>
 <title>Eieruhr</title>
 
-<g id="gesamt" ontouchstart="Restart(evt)"> 
+<g id="gesamt"> 
 <g opacity="1" stroke="black" transform="translate(0,70)">
 <g fill="yellow">
 <use xlink:href="#Ei" x="0" y="0" />
@@ -40,6 +41,9 @@ Zum Starten der Eieruhr auf das jeweilige Ei tippen.
 <tspan x="0" dy="20">Von insgesamt 
 <tspan id="von" von="7">7</tspan> Minuten sind es jetzt noch 
 <tspan id="noch" noch="421">7:00</tspan> Minuten.</tspan></text>
+  <animate attributeName="opacity"
+    begin="0" dur="2"
+    values="0;1" fill="freeze"/>
 
 </g>
 
@@ -117,10 +121,6 @@ Startzeit=Date.now();
 worte=new SpeechSynthesisUtterance("");
 worte.lang = "de-DE";
 window.speechSynthesis.speak(worte);
-/*  <animate attributeName="opacity"
-    begin="0" dur="1"
-    values="0;1" fill="freeze"/>
-*/
 ]]> </script> 
   </svg>
   
