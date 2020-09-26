@@ -21,7 +21,7 @@ Z"/>
 <g id="gesamt" ontouchstart="Restart(evt)"> 
 <g opacity="1" stroke="black" transform="translate(0,70)">
 <g fill="yellow">
-<use xlink:href="#Ei" x="0" y="0" width="10" height="10"/>
+<use xlink:href="#Ei" x="0" y="0" />
 <use xlink:href="#Ei" x="60" y="0" />
 <use xlink:href="#Ei" x="120" y="0" />
 <use xlink:href="#Ei" x="180" y="0" />
@@ -40,9 +40,6 @@ Zum Starten der Eieruhr auf das jeweilige Ei tippen.
 <tspan x="0" dy="20">Von insgesamt 
 <tspan id="von" von="7">7</tspan> Minuten sind es jetzt noch 
 <tspan id="noch" noch="421">7:00</tspan> Minuten.</tspan></text>
-  <animate attributeName="opacity"
-    begin="0" dur="1"
-    values="0;1" fill="freeze"/>
 
 </g>
 
@@ -120,10 +117,14 @@ Startzeit=Date.now();
 worte=new SpeechSynthesisUtterance("");
 worte.lang = "de-DE";
 window.speechSynthesis.speak(worte);
+/*  <animate attributeName="opacity"
+    begin="0" dur="1"
+    values="0;1" fill="freeze"/>
+*/
 ]]> </script> 
   </svg>
   
-  
+
   
   
   
