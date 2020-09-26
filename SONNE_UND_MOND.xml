@@ -7,30 +7,29 @@
   viewBox="150 10 510 410"
   preserveAspectRatio="xMinYMin"
   onload="fun1(evt)" style="border:dotted">
-<g id="gesamt"> 
 <circle id="kursor" cx="100" cy="100" r="10" fill="none" stroke="green" stroke-width="1" />
 <circle id="kreis" cx="400" cy="200" r="100" fill="white" stroke="black" stroke-width="1" />
 <g id="=Pleyaden" transform="translate(400,200) rotate(-47) translate(190)">
-<circle id="Pleyad1" cx="0" cy="0" r="2" fill="green" stroke="none"/>
-<circle id="Pleyad2" cx="11" cy="0" r="2" fill="green" stroke="none"/>
-<circle id="Pleyad3" cx="17" cy=" 4" r="2" fill="green" stroke="none"/>
-<circle id="Pleyad4" cx="19" cy="-3" r="2" fill="green" stroke="none"/>
-<circle id="Pleyad5" cx="22" cy="-5" r="2" fill="green" stroke="none"/>
-<circle id="Pleyad6" cx="23" cy=" 3" r="2" fill="green" stroke="none"/>
-<circle id="Pleyad5" cx="25" cy="-2" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad1" cx="0" cy="0" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad2" cx="11" cy="0" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad3" cx="17" cy=" 4" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad4" cx="19" cy="-3" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad5" cx="22" cy="-5" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad6" cx="23" cy=" 3" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad5" cx="25" cy="-2" r="2" fill="green" stroke="none"/>
   </g>
 <circle id="sonne" cx="350" cy="200" r="16.68" fill="yellow" stroke="black" stroke-width="1" />
 <g id="mond" stroke="black" stroke-width="1" transform="translate(400,200)">
-<circle cx="0" cy="150" r="16.68" fill="grey" onclick="diff=diff+1;fun1(evt)"/>
-<circle cx="0" cy="102" r="1" transform="rotate(-0)"/>
-<circle cx="0" cy="102" r="1" transform="rotate(-12.75)"/>
-<circle cx="0" cy="102" r="1" transform=" rotate(-25.5)"/>
-<circle cx="0" cy="102" r="1" transform=" rotate(-38.25)"/>
-<circle cx="0" cy="102" r="1" transform=" rotate(-51.00)"/>
-<circle cx="0" cy="102" r="1" transform=" rotate(-63.7)"/>
-<circle cx="0" cy="102" r="1" transform=" rotate(-76.5)"/>
-<circle cx="0" cy="102" r="1" transform=" rotate(-89.2)"/>
- </g>
+  <circle cx="0" cy="150" r="16.68" fill="grey" onclick="diff=diff+1;fun1(evt)"/>
+  <circle cx="0" cy="102" r="1" transform="rotate(-0)"/>
+  <circle cx="0" cy="102" r="1" transform="rotate(-12.75)"/>
+  <circle cx="0" cy="102" r="1" transform=" rotate(-25.5)"/>
+  <circle cx="0" cy="102" r="1" transform=" rotate(-38.25)"/>
+  <circle cx="0" cy="102" r="1" transform=" rotate(-51.00)"/>
+  <circle cx="0" cy="102" r="1" transform=" rotate(-63.7)"/>
+  <circle cx="0" cy="102" r="1" transform=" rotate(-76.5)"/>
+  <circle cx="0" cy="102" r="1" transform=" rotate(-89.2)"/>
+  </g>
 <text x="370" y="400" align="central">Heuwetter</text>
 <text x="560" y="330" align="central">Sturm und
 <tspan x="540" dy="1em" align="central">Regenschauer</tspan></text>
@@ -38,17 +37,15 @@
 <text x="330" y="050" align="central">Sonne und Wolken</text>
 <text x="170" y="270" align="central">Dauerregen</text>
 <g fill="gray" font-family="Courier">
-<text id="Zenitstand" x="400" y="180" text-anchor="middle">xxx</text>
-<text id="am" x="400" y="200" text-anchor="middle">xxx</text>
-<text id="um" x="400" y="220" text-anchor="middle">xxx</text>
+  <text id="Zenitstand" x="400" y="180" text-anchor="middle">xxx</text>
+  <text id="am" x="400" y="200" text-anchor="middle">xxx</text>
+  <text id="um" x="400" y="220" text-anchor="middle">xxx</text>
   </g>
-</g>
 
-<a xlink:href="SCHIEBEREGLER.xml"
-     xlink:title="Verweis zu einer HTML-Seite">
-    <rect x="10" y="10" ry="5" width="80" height="160"
-    style="fill:limegreen; stroke:black;" />
+<a xlink:href="SCHIEBEREGLER.xml" xlink:title="Verweis zu einer HTML-Seite">
+  <rect x="10" y="10" ry="5" width="80" height="160" fill="green" style="fill:limegreen; stroke:black;" />
   </a>
+  
 
 <script type="application/ecmascript"> 
 <![CDATA[ 
@@ -79,6 +76,7 @@ function fun1(evt) {
   }
 setInterval(jedeStunde,1000);
 function jedeStunde() {fun1(0)};
- ]]> </script> 
+  ]]> 
+  </script> 
 
   </svg>
