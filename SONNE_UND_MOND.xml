@@ -50,6 +50,7 @@
 <script type="application/ecmascript"> 
 <![CDATA[ 
 var diff=0;
+var Woche=["So","Mo","Di","Mi","Do","Fr","Sa"];
 function fun1(evt) {
   var t = new Date(Date.now()+diff*24*60*60*1000);
   var tn = new Date(2015,9,13);//irgendein nahegelegener Neumond
@@ -69,7 +70,7 @@ function fun1(evt) {
   document.getElementById("mond").setAttribute("transform", "translate(400,200) rotate("+mmphi+")");
   var Zenitstand=new Date(kw*86400000+43200000);
   document.getElementById("Zenitstand").firstChild.nodeValue="Zenit "+Zenitstand.toLocaleTimeString();
-  document.getElementById("am").firstChild.nodeValue="am "+t.toLocaleDateString();
+  document.getElementById("am").firstChild.nodeValue=Woche[t.getDay()]+" "+t.toLocaleDateString();
   document.getElementById("um").firstChild.nodeValue="um "+t.toLocaleTimeString();
 //  alert(Math.PI-phi);
 //  alert(sonnex);
