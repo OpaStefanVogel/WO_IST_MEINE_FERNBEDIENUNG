@@ -13,13 +13,15 @@ function go(evt){
 <body>
 <svg width="100%" height="100%">
 <g ontouchstart="go(evt)">
-  <rect id="button" x="0" y="200" rx="15" width="200" height="100" fill="yellow" stroke="blue" />
-  <text x="10" y="215" fill="blue" stroke="blue">button</text>
+  <rect id="button" x="0" y="240" rx="15" width="200" height="100" fill="yellow" stroke="blue" />
+  <text x="10" y="255" fill="blue" stroke="blue">button</text>
   </g>
-<text x="10" y="25">1. Touch the yellow button (moves the green rectangle)!</text>
-<text x="10" y="45">2. Touch the yellow button again (should move the rectangle). <tspan fill="red">This does not work!</tspan></text>
+<text x="10" y="25">1. Touch the yellow button (moves the green rectangle).</text>
+<text x="10" y="45">2. Touch the yellow button again (should move the green rectangle again). <tspan fill="red">→This does not work!</tspan></text>
 <text x="10" y="65">3. Only touch text "<tspan fill="blue" stroke="blue">button</tspan>" works.</text>
-<rect id="car" x="0" y="80" width="100" height="100" fill="lightgreen" stroke="green"/>
+<text x="10" y="85">4. Replacing attribute ontouchstart with ontouchend works too.</text>
+<text x="10" y="105">5. Placing attribute ontouchstart in the svg-Element works too.</text>
+<rect id="car" x="0" y="120" width="100" height="100" fill="lightgreen" stroke="green"/>
 </svg>
 </body>
 </html>
