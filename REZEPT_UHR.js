@@ -14,7 +14,7 @@ var YPOS=0;
 function Kartoffeluhr(){
   AKTUELLE_ZEIT=Date.now();
   for (j=0;j<UHREN.length;j++) {
-    node=UHREN[j];
+    node=UHREN[j].lastElementChild;
     if (node.getAttribute("angehalten")=="nein") {
       ZIELZEIT=node.getAttribute("Zielzeit");
       DIFFERENZ=ZIELZEIT-AKTUELLE_ZEIT;
@@ -43,10 +43,10 @@ function CLICKI(event) {
     node.setAttribute("style","");
     } else {
   NOCH_ZEIT=node.lastChild.nodeValue.split(":");
-//  alert(NOCH_ZEIT[0]*60000+NOCH_ZEIT[1]*1000);
+  //alert(NOCH_ZEIT[0]*60000+NOCH_ZEIT[1]*1000);
   ZIELZEIT=AKTUELLE_ZEIT+NOCH_ZEIT[0]*60000+NOCH_ZEIT[1]*1000;
   node.setAttribute("Zielzeit",ZIELZEIT);
-//alert(node.getAttribute("Zielzeit"));
+  //alert(node.getAttribute("Zielzeit"));
   if (node.getAttribute("angehalten")=="ja") {
     node.setAttribute("angehalten","nein");
     node.setAttribute("style","background:yellow; outline:solid red");
@@ -61,7 +61,7 @@ function DRAGGI(event) {
   event.preventDefault();
   node=event.target;
   node.setAttribute("angehalten","ja");
-  if (YPOS <= event.touches[0].screenY) {//alert(node.getAttribute("Merkzeit"));
+  if (YPOS <= event.touches[0].screenY) {
     node.lastChild.nodeValue=node.getAttribute("Merkzeit");
     } else {
       node.setAttribute("Merkzeit",node.lastChild.nodeValue);
