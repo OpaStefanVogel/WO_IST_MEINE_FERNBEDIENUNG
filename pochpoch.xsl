@@ -16,7 +16,7 @@
 .FREQMESS {
   display:inline-block;
   font-family:Courier,monospace;
-  font-size:300%;
+  font-size:500%;
   outline: dashed;
   background: yellow ;
   outline-color:white;
@@ -34,6 +34,7 @@ var FREQMESSSUM=0;
 var FREQMESSCOUNT=0;
 var FREQMESSDISP="00";
 var FREQ=0;
+var FREQMESSDIFFMERK=[];
 function CLICKFREQMESS() {
   event.preventDefault();
   node=event.target;
@@ -45,15 +46,17 @@ function CLICKFREQMESS() {
   FREQMESSDIFF=FREQMESS-FREQMESSMERK;
   if (2000 > FREQMESSDIFF && FREQMESSDIFF > 300 ) {
     clearTimeout(pochtimer);
+    FREQMESSDIFFMERK.push(FREQMESSDIFF);
     FREQMESSCOUNT=FREQMESSCOUNT+1;
-    FREQMESSSUM=FREQMESSSUM+FREQMESSDIFF;
-    FREQ=(60000*FREQMESSCOUNT/(FREQMESSSUM)).toFixed(1);
+    FREQMESSSUM=FREQMESSSUM+FREQMESSDIFF-FREQMESSDIFFMERK.shift();
+    FREQ=(60000*Math.min(FREQMESSCOUNT,FREQMESSDIFFMERK.length)/FREQMESSSUM).toFixed(1);
     node.previousSibling.previousSibling.previousSibling.previousSibling.lastChild.nodeValue=FREQ;
     if (10>FREQMESSCOUNT) {FREQMESSDISP="0"+FREQMESSCOUNT} else {FREQMESSDISP=FREQMESSCOUNT}
     node.previousSibling.previousSibling.lastChild.nodeValue=FREQMESSDISP;
     } else {
       FREQMESSSUM=0;
       FREQMESSCOUNT=0;
+      FREQMESSDIFFMERK=Array(60).fill(0);
       node.previousSibling.previousSibling.previousSibling.previousSibling.lastChild.nodeValue="00.0";
       node.previousSibling.previousSibling.lastChild.nodeValue="00";
       }
