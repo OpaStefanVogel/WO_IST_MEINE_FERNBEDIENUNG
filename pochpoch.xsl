@@ -5,6 +5,7 @@
   <html>
     <head>
       <!--link rel="stylesheet" type="text/css" href="los.css" /-->
+      <title>pochpoch.xml</title>
       <style type="text/css">
 .FREQMESSRAHMEN {
   border:double;
@@ -35,6 +36,8 @@ var FREQMESSCOUNT=0;
 var FREQMESSDISP="00";
 var FREQ=0;
 var FREQMESSDIFFMERK=[];
+var YPOS=0;
+var XPOS=0;
 function CLICKFREQMESS() {
   event.preventDefault();
   node=event.target;
@@ -44,6 +47,7 @@ function CLICKFREQMESS() {
 //scrollBy(10,10);
   FREQMESS=new Date();
   FREQMESSDIFF=FREQMESS-FREQMESSMERK;
+  var Graph=document.getElementById("Graph");
   if (2000 > FREQMESSDIFF && FREQMESSDIFF > 300 ) {
     clearTimeout(pochtimer);
     FREQMESSDIFFMERK.push(FREQMESSDIFF);
@@ -53,12 +57,20 @@ function CLICKFREQMESS() {
     node.previousSibling.previousSibling.previousSibling.previousSibling.lastChild.nodeValue=FREQ;
     if (10>FREQMESSCOUNT) {FREQMESSDISP="0"+FREQMESSCOUNT} else {FREQMESSDISP=FREQMESSCOUNT}
     node.previousSibling.previousSibling.lastChild.nodeValue=FREQMESSDISP;
+    var neue_Linie=Graph.cloneNode();
+    neue_Linie.setAttribute("x1",XPOS); XPOS=XPOS+4;
+    neue_Linie.setAttribute("x2",XPOS);
+    neue_Linie.setAttribute("y1",YPOS); YPOS=FREQMESSDIFF/4-100;
+    neue_Linie.setAttribute("y2",YPOS);
+    Graph.parentNode.appendChild(neue_Linie);
     } else {
       FREQMESSSUM=0;
       FREQMESSCOUNT=0;
       FREQMESSDIFFMERK=Array(60).fill(0);
       node.previousSibling.previousSibling.previousSibling.previousSibling.lastChild.nodeValue="00.0";
       node.previousSibling.previousSibling.lastChild.nodeValue="00";
+      YPOS=0;
+      XPOS=XPOS+8;
       }
   FREQMESSMERK=FREQMESS;
   pochnode=node;
@@ -68,7 +80,13 @@ function CLICKFREQMESS() {
       </head>
     <body class="los">
       <xsl:apply-templates />
-      
+      <svg width="100%" height="100%" >
+        <line stroke="gray" x1="0" y1="150" x2="2000" y2="150" />
+        <line stroke="orange" x1="0" y1="114" x2="2000" y2="114" />
+        <line stroke="darkred" x1="0" y1="87" x2="2000" y2="87" />
+        <line stroke="violet" x1="0" y1="66" x2="2000" y2="66" />
+        <line id="Graph" stroke="black" x1="0" y1="0" x2="0" y2="0" />
+        </svg>
       </body>
     </html>
   </xsl:template>
