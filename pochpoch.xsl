@@ -80,13 +80,17 @@ function CLICKFREQMESS() {
       </head>
     <body class="los">
       <xsl:apply-templates />
-      <svg width="100%" height="100%" >
-        <line stroke="gray" x1="0" y1="150" x2="2000" y2="150" />
-        <line stroke="orange" x1="0" y1="114" x2="2000" y2="114" />
-        <line stroke="darkred" x1="0" y1="87" x2="2000" y2="87" />
-        <line stroke="violet" x1="0" y1="66" x2="2000" y2="66" />
+
+<div style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap">
+      <svg width="20000px" height="250px" >
+        <line stroke="gray" x1="0" y1="150" x2="20000" y2="150" />
+        <line stroke="black" x1="1000" y1="0" x2="1200" y2="150" />
+        <line stroke="orange" x1="0" y1="114" x2="20000" y2="114" />
+        <line stroke="darkred" x1="0" y1="87" x2="20000" y2="87" />
+        <line stroke="violet" x1="0" y1="66" x2="20000" y2="66" />
         <line id="Graph" stroke="black" x1="0" y1="0" x2="0" y2="0" />
         </svg>
+  </div>
       </body>
     </html>
   </xsl:template>
