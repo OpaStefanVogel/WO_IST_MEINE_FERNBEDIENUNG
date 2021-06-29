@@ -72,6 +72,11 @@ function CLICKFREQMESS() {
       YPOS=0;
       XPOS=XPOS+8;
       }
+  document.getElementById("svg").scrollTo({
+    top: 0,
+    left: Math.max(0,XPOS-600),
+    behavior: 'smooth'
+    });
   FREQMESSMERK=FREQMESS;
   pochnode=node;
   pochtimer=setTimeout(function(){pochnode.previousSibling.previousSibling.lastChild.nodeValue="--"},2000);
@@ -81,7 +86,7 @@ function CLICKFREQMESS() {
     <body class="los">
       <xsl:apply-templates />
 
-<div style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap">
+<div id="svg" style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap">
       <svg width="20000px" height="250px" >
         <line stroke="gray" x1="0" y1="150" x2="20000" y2="150" />
         <line stroke="black" x1="1000" y1="0" x2="1200" y2="150" />
