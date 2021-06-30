@@ -48,13 +48,14 @@ function CLICKFREQMESS() {
   FREQMESS=new Date();
   FREQMESSDIFF=FREQMESS-FREQMESSMERK;
   var Graph=document.getElementById("Graph");
+  var Graph2=document.getElementById("Graph2");
   if (2000 > FREQMESSDIFF && FREQMESSDIFF > 300 ) {
     clearTimeout(pochtimer);
     FREQMESSDIFFMERK.push(FREQMESSDIFF);
     FREQMESSCOUNT=FREQMESSCOUNT+1;
     FREQMESSSUM=FREQMESSSUM+FREQMESSDIFF-FREQMESSDIFFMERK.shift();
-    FREQ=(60000*Math.min(FREQMESSCOUNT,FREQMESSDIFFMERK.length)/FREQMESSSUM).toFixed(1);
-    node.previousSibling.previousSibling.previousSibling.previousSibling.lastChild.nodeValue=FREQ;
+    FREQ=(60000*Math.min(FREQMESSCOUNT,FREQMESSDIFFMERK.length)/FREQMESSSUM);
+    node.previousSibling.previousSibling.previousSibling.previousSibling.lastChild.nodeValue=FREQ.toFixed(1);
     if (10>FREQMESSCOUNT) {FREQMESSDISP="0"+FREQMESSCOUNT} else {FREQMESSDISP=FREQMESSCOUNT}
     node.previousSibling.previousSibling.lastChild.nodeValue=FREQMESSDISP;
     var neue_Linie=Graph.cloneNode();
@@ -62,6 +63,12 @@ function CLICKFREQMESS() {
     neue_Linie.setAttribute("x2",XPOS);
     neue_Linie.setAttribute("y1",YPOS); YPOS=FREQMESSDIFF/4-100;
     neue_Linie.setAttribute("y2",YPOS);
+    Graph.parentNode.appendChild(neue_Linie);
+    var neue_Linie=Graph2.cloneNode();
+    neue_Linie.setAttribute("x1",XPOS-4);
+    neue_Linie.setAttribute("x2",XPOS);
+    neue_Linie.setAttribute("y1",60000/FREQ/4-100);
+    neue_Linie.setAttribute("y2",60000/FREQ/4-100);
     Graph.parentNode.appendChild(neue_Linie);
     } else {
       FREQMESSSUM=0;
@@ -93,13 +100,14 @@ function CLICKFREQMESS() {
         <line stroke="orange" x1="0" y1="114" x2="20000" y2="114" />
         <line stroke="darkred" x1="0" y1="87" x2="20000" y2="87" />
         <line stroke="violet" x1="0" y1="66" x2="20000" y2="66" />
-        <line id="Graph" stroke="black" x1="0" y1="0" x2="0" y2="0" />
+        <line id="Graph" stroke="gray" stroke-width="1" x1="0" y1="0" x2="0" y2="0" />
+        <line id="Graph2" stroke="blue" stroke-width="2" x1="0" y1="0" x2="0" y2="0" />
         </svg>
   </div>
       </body>
     </html>
   </xsl:template>
- 
+
 <xsl:template match="FREQMESS">
   <span class="FREQMESSRAHMEN">
   im Durchschnitt <span class="FREQMESS">00.0</span> je Minute 
