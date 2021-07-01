@@ -49,6 +49,7 @@ function CLICKFREQMESS() {
   FREQMESSDIFF=FREQMESS-FREQMESSMERK;
   var Graph=document.getElementById("Graph");
   var Graph2=document.getElementById("Graph2");
+  var Gtext=document.getElementById("Gtext");
   if (2000 > FREQMESSDIFF && FREQMESSDIFF > 300 ) {
     clearTimeout(pochtimer);
     FREQMESSDIFFMERK.push(FREQMESSDIFF);
@@ -86,7 +87,19 @@ function CLICKFREQMESS() {
     });
   FREQMESSMERK=FREQMESS;
   pochnode=node;
-  pochtimer=setTimeout(function(){pochnode.previousSibling.previousSibling.lastChild.nodeValue="--"},2000);
+  pochtimer=setTimeout(function(){
+    var Ntext=Gtext.cloneNode(true);
+    if (FREQMESSCOUNT>20) {
+      Ntext.setAttribute("x",XPOS-80);
+      Ntext.firstChild.nodeValue=(new Date()).toTimeString().slice(0,5)+" "+FREQ.toFixed(1);
+      } else {
+        Ntext.setAttribute("x",XPOS-10);
+        Ntext.firstChild.nodeValue="-";
+        }
+    Gtext.parentNode.appendChild(Ntext);
+  
+    pochnode.previousSibling.previousSibling.lastChild.nodeValue="--"
+    },2000);
   }
 ]]>        </script>
       </head>
@@ -102,6 +115,8 @@ function CLICKFREQMESS() {
         <line stroke="violet" x1="0" y1="66" x2="20000" y2="66" />
         <line id="Graph" stroke="gray" stroke-width="1" x1="0" y1="0" x2="0" y2="0" />
         <line id="Graph2" stroke="blue" stroke-width="2" x1="0" y1="0" x2="0" y2="0" />
+        <text id="Gtext" x="0" y="20" fill="black" stroke="black">-</text>
+
         </svg>
   </div>
       </body>
