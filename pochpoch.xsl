@@ -38,6 +38,7 @@ var FREQ=0;
 var FREQMESSDIFFMERK=[];
 var YPOS=0;
 var XPOS=0;
+var Logtext="";
 function CLICKFREQMESS() {
   event.preventDefault();
   node=event.target;
@@ -91,7 +92,13 @@ function CLICKFREQMESS() {
     var Ntext=Gtext.cloneNode(true);
     if (FREQMESSCOUNT>20) {
       Ntext.setAttribute("x",XPOS-80);
-      Ntext.firstChild.nodeValue=(new Date()).toTimeString().slice(0,5)+" "+FREQ.toFixed(1);
+      var t=(new Date()).toTimeString().slice(0,5);
+      Ntext.firstChild.nodeValue=t+" "+FREQ.toFixed(1);
+      Logtext=Logtext+"<div>"+t+" "+FREQ.toFixed(1)+" "+FREQMESSCOUNT+"</div>\n";
+      var Logfile=document.getElementById("Logfile")
+      Logfile.innerHTML=Logtext;
+      Logfile.scrollTop = Logfile.scrollHeight;
+      selectText("Logfile");
       } else {
         Ntext.setAttribute("x",XPOS-10);
         Ntext.firstChild.nodeValue="-";
@@ -100,6 +107,24 @@ function CLICKFREQMESS() {
   
     pochnode.previousSibling.previousSibling.lastChild.nodeValue="--"
     },2000);
+  }
+
+function selectText(element) { //Quelle: https://gist.github.com/gubatron/6599366
+    var doc = document
+        , text = doc.getElementById(element)
+        , range, selection
+    ;
+    if (doc.body.createTextRange) { //ms
+        range = doc.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) { //all others
+        selection = window.getSelection();        
+        range = doc.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
   }
 ]]>        </script>
       </head>
@@ -119,6 +144,8 @@ function CLICKFREQMESS() {
 
         </svg>
   </div>
+<div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:150px; width:400px; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:200%" ontouchstart="selectText('Logfile')">    </div>
+
       </body>
     </html>
   </xsl:template>
