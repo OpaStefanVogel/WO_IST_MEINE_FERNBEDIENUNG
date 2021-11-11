@@ -25,7 +25,7 @@ function Kartoffeluhr(){
         }
       NOCHZEIT=new Date(DIFFERENZ);
       if (NOCHZEIT.getSeconds()<10) {TB=":0"} else { TB = ":" };
-      node.lastChild.nodeValue=NOCHZEIT.getMinutes()+TB+NOCHZEIT.getSeconds();
+      node.lastChild.nodeValue=((NOCHZEIT.getHours()-1)*60+NOCHZEIT.getMinutes())+TB+NOCHZEIT.getSeconds();
       }
     }
   }
@@ -58,6 +58,7 @@ function CLICKI(event) {
   VORHERIGE_ZEIT=AKTUELLE_ZEIT;
   }
 function DRAGGI(event) {
+/*funktioniert nicht auf screens, wo ondragstart vor onclick ausgeführt wird oder sowas
   event.preventDefault();
   node=event.target;
   node.setAttribute("angehalten","ja");
@@ -68,6 +69,7 @@ function DRAGGI(event) {
       node.lastChild.nodeValue=node.getAttribute("Anfangszeit");
       }
   node.setAttribute("style","");
+*/
   }
 
 
