@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:param name="Pfad" select="'WO_IST_MEINE_FERNBEDIENUNG/'"/>
 <xsl:template match="/REZEPTE">
 <html>
  <head>
-   <link rel="stylesheet" type="text/css" href="Rezepte.css" />
+   <title>Rezepte</title>
+   <link rel="stylesheet" type="text/css">
+     <xsl:attribute name="href"><xsl:value-of select="$Pfad" />Rezepte.css</xsl:attribute>
+     </link>
    <style>button {font-size:100%}</style> 
    </head>
 <body class="REZEPT">
@@ -20,7 +24,9 @@
       <xsl:copy-of select="." />
       </xsl:for-each>
     </textarea>
-<script src="REZEPT_UHR.js" type="text/javascript"/>
+<script type="text/javascript">
+  <xsl:attribute name="src"><xsl:value-of select="$Pfad" />REZEPT_UHR.js</xsl:attribute>
+  </script>
   </body></html>
 </xsl:template>
 
@@ -28,7 +34,9 @@
 <span class="UHR" ontouchstart="CLICKI(event)"
   ontouchmove="DRAGGI(event)"
   angehalten="ja"><xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute>
-  <img src="REZEPT_UHR.svg"/>
+  <img>
+    <xsl:attribute name="src"><xsl:value-of select="$Pfad" />REZEPT_UHR.svg</xsl:attribute>
+    </img>
   <button angehalten="ja"><xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute><xsl:value-of select="." /></button>
   </span>
 </xsl:template>
@@ -45,9 +53,25 @@
 
 <xsl:template match="TITEL">
 <div><span class="TITEL" style="vertical-align:top"><xsl:attribute name="id"><xsl:value-of select="." /></xsl:attribute>Rezept</span>
-<svg style="border:solid" width="90%" height="110px" font-family="Helvicta">
+<svg style="border:solid" width="90%" height="110px" font-family="Helvicta" font-style="">
 <text transform="scale(6,4) rotate(0) translate(0,16)" stroke="red" fill="green">
-  * *    * <xsl:value-of select="." /> * * *
+  * * * <xsl:value-of select="." /> * * *
+   <xsl:value-of select="." /> * * *
+    <xsl:value-of select="." /> * * *
+     <xsl:value-of select="." /> * * *
+      <xsl:value-of select="." /> * * *
+   <xsl:value-of select="." /> * * *
+    <xsl:value-of select="." /> * * *
+     <xsl:value-of select="." /> * * *
+      <xsl:value-of select="." /> * * *
+   <xsl:value-of select="." /> * * *
+    <xsl:value-of select="." /> * * *
+     <xsl:value-of select="." /> * * *
+      <xsl:value-of select="." /> * * *
+   <xsl:value-of select="." /> * * *
+    <xsl:value-of select="." /> * * *
+     <xsl:value-of select="." /> * * *
+      <xsl:value-of select="." /> * * *
    <xsl:value-of select="." /> * * *
     <xsl:value-of select="." /> * * *
      <xsl:value-of select="." /> * * *
@@ -74,18 +98,23 @@
  <span class="ZUBEREITUNG"><xsl:apply-templates /></span>
 </xsl:template>
 
-<xsl:template match="ZUBEREITUNG/a">
- <a target="_blank"><xsl:attribute name="href"><xsl:value-of select="." /></xsl:attribute>
-  <u><xsl:value-of select="." /></u></a>
- </xsl:template>
-
 <xsl:template match="BILD">
  <img><xsl:attribute name="src"><xsl:value-of select="." /></xsl:attribute></img>
  </xsl:template>
 
+<xsl:template match="a[@href]">
+ <a><xsl:attribute name="href"><xsl:value-of select="@href" /></xsl:attribute>
+  <xsl:attribute name="target">_blank</xsl:attribute>
+  <u><xsl:value-of select="." /></u></a>
+ </xsl:template>
+
 <xsl:template match="a">
- <a><xsl:attribute name="href" target="_blank"><xsl:value-of select="." /></xsl:attribute>
-  <u><xsl:value-of select="." /></u></a>;
+ <a><xsl:attribute name="href">#<xsl:value-of select="." /></xsl:attribute>
+  <u><xsl:value-of select="." /></u></a>
+ </xsl:template>
+
+<xsl:template match="*">
+ <xsl:copy-of select="." />
  </xsl:template>
 
 </xsl:stylesheet>
