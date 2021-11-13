@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:param name="Pfad" select="'WO_IST_MEINE_FERNBEDIENUNG/'"/>
+<xsl:param name="Pfad" select="'Repositories/WO_IST_MEINE_FERNBEDIENUNG/'"/>
 <xsl:template match="/REZEPTE">
 <html>
  <head>
