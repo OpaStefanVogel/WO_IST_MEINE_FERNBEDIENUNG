@@ -31,7 +31,7 @@
 </xsl:template>
 
 <xsl:template match="UHR">
-<span class="UHR" ontouchstart="CLICKI(event)"
+<span class="UHR" ontouchstart="CLICKI(event)" onclick="CLICKM(event)"
   ontouchmove="DRAGGI(event)"
   angehalten="ja"><xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute>
   <img>

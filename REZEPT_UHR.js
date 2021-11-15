@@ -31,10 +31,7 @@ function Kartoffeluhr(){
   }
 setInterval(Kartoffeluhr,999);
 
-function CLICKI(event) {
-  event.preventDefault();
-  node=event.target;
-  YPOS=event.touches[0].screenY;
+function CLICKA(node,YPOS) {
   AKTUELLE_ZEIT=Date.now();
   if (AKTUELLE_ZEIT<VORHERIGE_ZEIT+600) {
     //alert("doppelclick");
@@ -57,6 +54,21 @@ function CLICKI(event) {
       }
   VORHERIGE_ZEIT=AKTUELLE_ZEIT;
   }
+
+function CLICKI(event) {
+  event.preventDefault();
+  node=event.target;
+  YPOS=event.touches[0].screenY;
+  CLICKA(node,YPOS);
+  }
+
+function CLICKM(event) {
+  event.preventDefault();
+  node=event.target;
+  YPOS=event.screenY;
+  CLICKA(node,YPOS);
+  }
+
 function DRAGGI(event) {
 /*funktioniert nicht auf screens, wo ondragstart vor onclick ausgeführt wird oder sowas
   event.preventDefault();
