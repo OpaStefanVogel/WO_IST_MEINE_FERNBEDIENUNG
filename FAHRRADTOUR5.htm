@@ -4,6 +4,8 @@
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
 <p id="demo"> </p>
+<div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
+<div id="TV" style="white-space:pre"> </div>
 <svg id="graph" width="100%" height="800" stroke="blue" style="border:solid">
   <line x1="0" y1="0" x2="100" y2="100" stroke="red"/>
   <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
@@ -24,6 +26,10 @@ function xyrech(lat,lon) {
   return [800+(lon-12.88)*1000,-(lat-50.84)*1200+50];
   }
 
+function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2) }
+
+var nahestgelegener_Trackpunkt=0;
+var bisherige_Distanzmarkierung=0;
 function showPosition(position) {
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude+
@@ -36,6 +42,12 @@ function showPosition(position) {
     next.setAttribute("y2",xy[1]);
     next.setAttribute("x2",xy[0]);
     graph.appendChild(next);
+    var imin=mindist(xy[0],xy[1],TV);
+    var neue_Distanzmarkierung=Math.floor(TV[imin[0]][0]*10)/10;
+    if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung) {
+      bisherige_Distanzmarkierung=neue_Distanzmarkierung;
+      }
+    document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
 </script>
 
@@ -79,7 +91,7 @@ function Trackplot() {
   TV[0][0]=0;
   for (var i=1;i<TV.length;i++) {
     var ti=TV[i];
-    sum=sum+Math.sqrt((TV[i-1][12]-ti[12])**2+(TV[i-1][13]-ti[13])**2);
+    sum=sum+dist(TV[i-1][12],TV[i-1][13],ti[12],ti[13]);
     ti[0]=sum;
     }
   //alert(sum);
@@ -88,8 +100,10 @@ function Trackplot() {
     var ti=TV[i];
     ti[0]=ti[0]*110/sum;
     if (i==0||i>0&&Math.floor(ti[0])!=Math.floor(TV[i-1][0])) ti[10]=Math.floor(ti[0]); else ti[10]=0;
+    if (i==0||i>0&&Math.floor(ti[0]*10)!=Math.floor(TV[i-1][0]*10)) ti[11]=Math.floor(ti[0]*10)/10; else ti[11]=0;
     }
-  //alert(TV.slice(50).join("\n"));
+  alert(TV.slice(0).join("\n"));
+  document.getElementById("TV").firstChild.nodeValue=TV.slice(0,100).join("\n");
   var d="M"+TV[0][12]+","+(TV[0][13]-0)+" L";
   for (var i=0;i<TV.length;i++) {
     d=d+" "+TV[i][12]+","+TV[i][13];
@@ -97,6 +111,16 @@ function Trackplot() {
     }
   //alert(d);
   document.getElementById("Track").setAttribute("d",d);
+  }
+
+function mindist(x1,y1,TV) {
+  var min=100000000;
+  var imin=0;
+  for (var i=0;i<TV.length;i++) {
+    var dis=dist(x1,y1,TV[i][12],TV[i][13]);
+    if (dis<min) {min=dis; imin=i}
+    }
+  return [imin,min];
   }
   </script>
 </body>
