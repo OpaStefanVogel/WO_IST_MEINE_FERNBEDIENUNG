@@ -68,11 +68,32 @@ function Trackplot() {
   
   //alert(TV.join("\n"));
   //alert(TV.length);
-  var xy=xyrech(TV[0][2],TV[0][3]);
-  var d="M"+xy[0]+","+(xy[1]-0)+" L";
   for (var i=0;i<TV.length;i++) {
     var xy=xyrech(TV[i][2],TV[i][3]);
-    d=d+" "+xy[0]+","+(xy[1]-0);
+    TV[i][12]=xy[0];
+    TV[i][13]=xy[1];
+    }
+  //alert(TV.join("\n"));
+  //Summe
+  var sum=0;
+  TV[0][0]=0;
+  for (var i=1;i<TV.length;i++) {
+    var ti=TV[i];
+    sum=sum+Math.sqrt((TV[i-1][12]-ti[12])**2+(TV[i-1][13]-ti[13])**2);
+    ti[0]=sum;
+    }
+  //alert(sum);
+  //alert(TV.join("\n"));
+  for (var i=0;i<TV.length;i++) {
+    var ti=TV[i];
+    ti[0]=ti[0]*110/sum;
+    if (i==0||i>0&&Math.floor(ti[0])!=Math.floor(TV[i-1][0])) ti[10]=Math.floor(ti[0]); else ti[10]=0;
+    }
+  //alert(TV.slice(50).join("\n"));
+  var d="M"+TV[0][12]+","+(TV[0][13]-0)+" L";
+  for (var i=0;i<TV.length;i++) {
+    d=d+" "+TV[i][12]+","+TV[i][13];
+    if (TV[i][10]>0) d=d+"h 6 h -6 L";
     }
   //alert(d);
   document.getElementById("Track").setAttribute("d",d);
