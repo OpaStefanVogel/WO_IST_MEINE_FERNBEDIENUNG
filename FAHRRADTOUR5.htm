@@ -46,6 +46,7 @@ function showPosition(position) {
     var neue_Distanzmarkierung=Math.floor(TV[imin[0]][0]*10)/10;
     if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
+      Sprich("Distanz "+neue_Distanzmarkierung);
       }
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
@@ -102,7 +103,7 @@ function Trackplot() {
     if (i==0||i>0&&Math.floor(ti[0])!=Math.floor(TV[i-1][0])) ti[10]=Math.floor(ti[0]); else ti[10]=0;
     if (i==0||i>0&&Math.floor(ti[0]*10)!=Math.floor(TV[i-1][0]*10)) ti[11]=Math.floor(ti[0]*10)/10; else ti[11]=0;
     }
-  alert(TV.slice(0).join("\n"));
+  //alert(TV.slice(0).join("\n"));
   document.getElementById("TV").firstChild.nodeValue=TV.slice(0,100).join("\n");
   var d="M"+TV[0][12]+","+(TV[0][13]-0)+" L";
   for (var i=0;i<TV.length;i++) {
