@@ -11,6 +11,7 @@
   <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
   </svg>
 <button onclick='Sprich("Es geht los")'>Los</button>
+<button onclick='bisherige_Distanzmarkierung=-1'>bisherige_Distanzmarkierung=-1</button>
 <script>
 var x = document.getElementById("demo");
 var graph=document.getElementById("graph");    
@@ -30,6 +31,7 @@ function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2) }
 
 var nahestgelegener_Trackpunkt=0;
 var bisherige_Distanzmarkierung=0;
+var Geschwindigkeit=0;
 function showPosition(position) {
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude+
@@ -46,7 +48,8 @@ function showPosition(position) {
     var neue_Distanzmarkierung=Math.floor(TV[imin[0]][0]*10)/10;
     if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
-      Sprich("Distanz "+neue_Distanzmarkierung);
+      Geschwindigkeit=Math.floor(position.coords.speed*3.6);
+      Sprich("Distanz "+neue_Distanzmarkierung+" schnell "+Geschwindigkeit);
       }
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
