@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html></head><meta charset="utf-8"/><title>Fahrplan</title></head>
 <body onload='getLocation();Trackplot();Sprich("Es kann losgehen");'>
+<button onclick='Sprich("Es geht los")'>Los</button>
+<button onclick='bisherige_Distanzmarkierung=-1'>bisherige_Distanzmarkierung=-1</button>
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
 <p id="demo"> </p>
 <div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
-<div id="TV" style="white-space:pre"> </div>
+<div id="TV" style="display:flex; max-height:200px; overflow:auto; white-space:pre"> </div>
 <svg id="graph" width="100%" height="800" stroke="blue" style="border:solid">
   <line x1="0" y1="0" x2="100" y2="100" stroke="red"/>
   <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
   </svg>
-<button onclick='Sprich("Es geht los")'>Los</button>
-<button onclick='bisherige_Distanzmarkierung=-1'>bisherige_Distanzmarkierung=-1</button>
 <script>
 var x = document.getElementById("demo");
 var graph=document.getElementById("graph");    
@@ -30,7 +30,7 @@ function xyrech(lat,lon) {
 function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2) }
 
 var nahestgelegener_Trackpunkt=0;
-var bisherige_Distanzmarkierung=0;
+var bisherige_Distanzmarkierung=-1;
 var Geschwindigkeit=0;
 function showPosition(position) {
     x.innerHTML="Latitude: " + position.coords.latitude + 
@@ -49,7 +49,7 @@ function showPosition(position) {
     if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
-      Sprich("Distanz "+neue_Distanzmarkierung+" schnell "+Geschwindigkeit);
+      Sprich("Distanz "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+". Höhe"+Math.floor(position.coords.altitude));
       }
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
@@ -78,6 +78,9 @@ function Trackplot() {
     //alert(i+"\n"+S.join("\n"));
     T[2]=S[2]*1.0;
     T[3]=S[3]*1.0;
+    T[5]=S[5]*1.0;
+    T[6]=S[12];
+    T[1]=S[1];
     //alert("T=["+T+"]");
     TV.push(T);
     }
@@ -107,7 +110,7 @@ function Trackplot() {
     if (i==0||i>0&&Math.floor(ti[0]*10)!=Math.floor(TV[i-1][0]*10)) ti[11]=Math.floor(ti[0]*10)/10; else ti[11]=0;
     }
   //alert(TV.slice(0).join("\n"));
-  document.getElementById("TV").firstChild.nodeValue=TV.slice(0,100).join("\n");
+  document.getElementById("TV").firstChild.nodeValue=TV.slice(0,-1).join("\n");
   var d="M"+TV[0][12]+","+(TV[0][13]-0)+" L";
   for (var i=0;i<TV.length;i++) {
     d=d+" "+TV[i][12]+","+TV[i][13];
