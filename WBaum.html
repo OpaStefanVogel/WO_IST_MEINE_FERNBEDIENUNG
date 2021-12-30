@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html></head><meta charset="utf-8"/><title>WBaum</title></head><body onload="getLocation()">
+<p id="demo"> </p>
+<div id="TV" style="display:flex; max-height:200px; overflow:auto; white-space:pre"> </div>
+<svg id="graph" width="100%" height="800" stroke="blue" style="border:solid">
+  <line x1="0" y1="0" x2="100" y2="100" stroke="red"/>
+  <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
+  </svg>
+<script>
+var x = document.getElementById("demo");
+var graph=document.getElementById("graph");    
+
+function getLocation() {
+    if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
+        navigator.geolocation.watchPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";}
+    }
+
+function xyrech(lat,lon) {
+  return [800+(lon-12.88)*1000,-(lat-50.84)*1200+50];
+  }
+
+function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/1248 }
+
+function showPosition(position) {
+    x.innerHTML="Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude+
+    "<br>Speed: " + position.coords.speed + 
+    "<br>Altitude: " + position.coords.altitude + 
+    "<br>Heading: " + position.coords.heading + 
+    "<br>Timestamp: " + new Date(position.timestamp).toTimeString();
+    var next=graph.firstElementChild.cloneNode(true);
+    var xy=xyrech(position.coords.latitude,position.coords.longitude); //alert(xy);
+    next.setAttribute("y2",xy[1]);
+    next.setAttribute("x2",xy[0]);
+    graph.appendChild(next);
+}
+</script>
+
+</body>
+</html>
