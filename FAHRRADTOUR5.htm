@@ -27,7 +27,7 @@ function xyrech(lat,lon) {
   return [800+(lon-12.88)*1000,-(lat-50.84)*1200+50];
   }
 
-function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2) }
+function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/1248 }
 
 var nahestgelegener_Trackpunkt=0;
 var bisherige_Distanzmarkierung=-1;
@@ -49,7 +49,12 @@ function showPosition(position) {
     if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
-      Sprich("Distanz "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+". Höhe"+Math.floor(position.coords.altitude));
+      Sprich("Geschafft "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+". Höhe"+Math.floor(position.coords.altitude))+". ";
+      if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)) {
+        var gipf=imin[0]+1;
+        while (!TV[gipf][16]) gipf=gipf+1;
+        Sprich("Nächster Berggipfel "+TV[gipf][16]+". Noch "+(TV[gipf][11]-neue_Distanzmarkierung)+" Kilometer. Höhendifferenz "+(TV[gipf][5]-TV[imin[0]][5])+" Meter.");
+        }
       }
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
@@ -78,8 +83,8 @@ function Trackplot() {
     //alert(i+"\n"+S.join("\n"));
     T[2]=S[2]*1.0;
     T[3]=S[3]*1.0;
-    T[5]=S[5]*1.0;
-    T[6]=S[12];
+    T[5]=Math.floor(S[5]*1.0);
+    T[16]=S[12];
     T[1]=S[1];
     //alert("T=["+T+"]");
     TV.push(T);
@@ -99,22 +104,22 @@ function Trackplot() {
   for (var i=1;i<TV.length;i++) {
     var ti=TV[i];
     sum=sum+dist(TV[i-1][12],TV[i-1][13],ti[12],ti[13]);
+    if (ti[16]&&ti[16].slice(0,3)=="GPS") sum=0;
     ti[0]=sum;
     }
   //alert(sum);
   //alert(TV.join("\n"));
   for (var i=0;i<TV.length;i++) {
     var ti=TV[i];
-    ti[0]=ti[0]*110/sum;
-    if (i==0||i>0&&Math.floor(ti[0])!=Math.floor(TV[i-1][0])) ti[10]=Math.floor(ti[0]); else ti[10]=0;
-    if (i==0||i>0&&Math.floor(ti[0]*10)!=Math.floor(TV[i-1][0]*10)) ti[11]=Math.floor(ti[0]*10)/10; else ti[11]=0;
+    ti[10]=Math.floor(ti[0]);
+    ti[11]=Math.floor(ti[0]*10)/10;
     }
   //alert(TV.slice(0).join("\n"));
   document.getElementById("TV").firstChild.nodeValue=TV.slice(0,-1).join("\n");
   var d="M"+TV[0][12]+","+(TV[0][13]-0)+" L";
-  for (var i=0;i<TV.length;i++) {
+  for (var i=1;i<TV.length;i++) {
     d=d+" "+TV[i][12]+","+TV[i][13];
-    if (TV[i][10]>0) d=d+"h 6 h -6 L";
+    if (TV[i][10]!=TV[i-1][10]) d=d+"h 6 h -6 L";
     }
   //alert(d);
   document.getElementById("Track").setAttribute("d",d);
