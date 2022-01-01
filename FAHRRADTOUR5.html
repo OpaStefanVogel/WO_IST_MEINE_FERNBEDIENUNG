@@ -9,7 +9,10 @@
 <div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
 <div id="Gipfel" style="white-space:pre-wrap; font-family:monospace; font.size:80%">Gipfel</div>
 <div id="TV" style="display:flex; max-height:200px; overflow:auto; white-space:pre"> </div>
-<svg id="graph" width="100%" height="800" stroke="blue" style="border:solid">
+<svg id="graph" width="100%" height="2200" stroke="blue" style="border:solid">
+  <g>
+  <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="800"/-->
+  </g>
   <line x1="0" y1="0" x2="100" y2="100" stroke="red"/>
   <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
   </svg>
@@ -137,7 +140,7 @@ function mindist(x1,y1,TV) {
   return [imin,min];
   }
 
-function Gipfel() {alert(TV);
+function Gipfel() {
   var gipf=[];
   for (var i=0;i<TV.length;i++) {
     if (TV[i][16]) gipf.push([TV[i][0].toFixed(2),"   "+TV[i][16]]);
