@@ -53,7 +53,8 @@ function showPosition(position) {
       if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)) {
         var gipf=imin[0]+1;
         while (!TV[gipf][16]) gipf=gipf+1;
-        Sprich("Nächster Berggipfel "+TV[gipf][16]+". Noch "+(TV[gipf][11]-neue_Distanzmarkierung)+" Kilometer. Höhendifferenz "+(TV[gipf][5]-TV[imin[0]][5])+" Meter.");
+        var dat=new Date();
+        Sprich("Nächster Berggipfel "+TV[gipf][16]+". Noch "+(TV[gipf][11]-neue_Distanzmarkierung)+" Kilometer. Höhendifferenz "+(TV[gipf][5]-TV[imin[0]][5])+" Meter. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
       }
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
