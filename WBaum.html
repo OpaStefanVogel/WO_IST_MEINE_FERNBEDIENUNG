@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html></head><meta charset="utf-8"/><title>WBaum</title></head><body onload="getLocation();getEXIF();showIMG()">
 <p id="demo"> </p>
-<div id="TV" style="display:flex; max-height:200px; overflow:auto; white-space:pre"> </div>
+<div><button style="font-size:300%" onclick="Nullsetzen()">Nullsetzen</button></div>
+<div style="display:flex; max-height:200px; overflow:auto; white-space:pre">Sekunden=[<div id="TVsek"> </div>], Bildposition=[<div id="TV"> </div>]</div>
 <svg id="graph" width="100%" height="1000" stroke="gray" fill="green" style="border:solid" onclick="showJPG()">
   <imag height="395" width="600" y="120" x="234" href="https://www.openstreetmap.org/#map=17/50.26044/12.27884" />
   <circle id="def" cx="-100" cy="-100" r="20"/>
+  <circle id="position" cx="100" cy="100" r="25" stroke="blue" fill="none"/>
   </svg>
 <script>
 var x = document.getElementById("demo");
 var graph=document.getElementById("graph");    
+var pos=document.getElementById("position");    
+var posax=18.89;
+var posay=49.20;
+var pos0x=18.89;
+var pos0y=49.20;
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -17,25 +24,38 @@ function getLocation() {
         x.innerHTML = "Geolocation is not supported by this browser.";}
     }
 
+function gms(deg) {
+  var grad=Math.floor(deg);
+  var minuten=Math.floor((deg-grad)*60);
+  var sekunden=((deg-grad)*60-minuten)*60;
+  return [grad,minuten,sekunden.toFixed(5)];
+  }
+IMG_20211215_105517.jpg,36.3,46.36
 function xyrech(lat,lon) {
-  return [800+(lon-12.88)*1000,-(lat-50.84)*1200+50];
+  return [0+(gms(lat)[2]-pos0x+(IMG[0][1]-36))*1000,100+(gms(lon)[2]-pos0y+(IMG[0][2]-46))*1000];
   }
 
-function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/1248 }
-
 function showPosition(position) {
-    x.innerHTML="Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude+
+    x.innerHTML="Latitude: " + position.coords.latitude + " " + gms(position.coords.latitude) +
+    "<br>Longitude: " + position.coords.longitude+" "+ gms(position.coords.longitude) +
     "<br>Speed: " + position.coords.speed + 
     "<br>Altitude: " + position.coords.altitude + 
     "<br>Heading: " + position.coords.heading + 
     "<br>Timestamp: " + new Date(position.timestamp).toTimeString();
-    var next=graph.firstElementChild.cloneNode(true);
-    var xy=xyrech(position.coords.latitude,position.coords.longitude); //alert(xy);
-    next.setAttribute("y2",xy[1]);
-    next.setAttribute("x2",xy[0]);
+    posax=gms(position.coords.latitude)[2];
+    posay=gms(position.coords.longitude)[2];
+    document.getElementById("TVsek").firstChild.nodeValue=[posax,posay];    
+    var xy=xyrech(position.coords.latitude,position.coords.longitude);
+    document.getElementById("TV").firstChild.nodeValue=xy;
+    pos.setAttribute("cx",xy[0]);
+    pos.setAttribute("cy",xy[1]);
     graph.appendChild(next);
 }
+
+function Nullsetzen() {
+  pos0x=posax;
+  pos0y=posay;
+  }
 </script>
 
 <script>

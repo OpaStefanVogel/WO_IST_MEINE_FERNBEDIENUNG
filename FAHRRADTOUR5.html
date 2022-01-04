@@ -4,6 +4,10 @@
 #graph {
   background-image: url("../../Screenshot_20220101-195407_Maps.jpg");
   }
+#Track {
+  transform:translate3d(0px,0px,0px);
+  
+  }
   </style>
 </head>
 <body onload='getLocation();Trackplot();Gipfel();Sprich("Es kann losgehen");'>
@@ -11,6 +15,7 @@
 <button onclick='bisherige_Distanzmarkierung=-1'>bisherige_Distanzmarkierung=-1</button>
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
+<div>50.25520490,12.28000737 Raun</div>
 <p id="demo"> </p>
 <div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
 <div id="Gipfel" style="white-space:pre-wrap; font-family:monospace; font.size:80%">Gipfel</div>
@@ -20,7 +25,7 @@
   <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="800"/-->
   </g>
   <line x1="0" y1="0" x2="100" y2="100" stroke="red"/>
-  <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
+  <path style="transform:translate(100,0)" id="Track" d="M600,200 L500,300 400,200" fill="none"/>
   </svg>
 <script>
 var x = document.getElementById("demo");
@@ -37,7 +42,7 @@ function xyrech(lat,lon) {
   return [965+(lon-12.88)*1498,-(lat-50.84)*2395+305];
   }
 
-function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/1248 }
+function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/2270 }
 
 var nahestgelegener_Trackpunkt=0;
 var bisherige_Distanzmarkierung=-1;
@@ -61,7 +66,7 @@ function showPosition(position) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
       Richtung=Math.floor(position.coords.heading);
-      Sprich("Geschafft "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+". Richtung "+Richtung+". Höhe"+Math.floor(position.coords.altitude))+". ";
+      Sprich("Geschafft "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+".0. Richtung "+Richtung+". Höhe"+Math.floor(position.coords.altitude))+". ";
       if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)) {
         var gipf=imin[0]+1;
         while (!TV[gipf][16]) gipf=gipf+1;
