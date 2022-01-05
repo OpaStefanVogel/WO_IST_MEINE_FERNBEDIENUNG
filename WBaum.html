@@ -2,12 +2,14 @@
 <html></head><meta charset="utf-8"/><title>WBaum</title></head><body onload="getLocation();getEXIF();showIMG()">
 <p id="demo"> </p>
 <div><button style="font-size:300%" onclick="Nullsetzen()">Nullsetzen</button></div>
-<div style="display:flex; max-height:200px; overflow:auto; white-space:pre">Sekunden=[<div id="TVsek"> </div>], Bildposition=[<div id="TV"> </div>]</div>
-<svg id="graph" width="100%" height="1000" stroke="gray" fill="green" style="border:solid" onclick="showJPG()">
+<div style="display:flex; max-height:200px; overflow:auto; white-space:pre">Sekunden=[<span id="TVsek"> </span>], Bildposition=[<span id="TV"> </span>], Datei <span id="TVdatei"> </span></div>
+<div style="display:flex; flex-direction:row; max-height:400px; min-width:100%; overflow:auto;">
+<svg id="graph" width="4000" height="2000" stroke="gray" fill="green" style="border:solid; border-color:red" onclick="showJPG()">
   <imag height="395" width="600" y="120" x="234" href="https://www.openstreetmap.org/#map=17/50.26044/12.27884" />
   <circle id="def" cx="-100" cy="-100" r="20"/>
   <circle id="position" cx="100" cy="100" r="25" stroke="blue" fill="none"/>
   </svg>
+  </div>
 <script>
 var x = document.getElementById("demo");
 var graph=document.getElementById("graph");    
@@ -16,6 +18,7 @@ var posax=18.89;
 var posay=49.20;
 var pos0x=18.89;
 var pos0y=49.20;
+var Bildindex=0;
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -30,9 +33,9 @@ function gms(deg) {
   var sekunden=((deg-grad)*60-minuten)*60;
   return [grad,minuten,sekunden.toFixed(5)];
   }
-IMG_20211215_105517.jpg,36.3,46.36
+
 function xyrech(lat,lon) {
-  return [0+(gms(lat)[2]-pos0x+(IMG[0][1]-36))*1000,100+(gms(lon)[2]-pos0y+(IMG[0][2]-46))*1000];
+  return [0+(gms(lat)[2]-pos0x+(IMG[Bildindex][1]-36))*1000,100+(gms(lon)[2]-pos0y+(IMG[Bildindex][2]-46))*1000];
   }
 
 function showPosition(position) {
@@ -52,14 +55,11 @@ function showPosition(position) {
     graph.appendChild(next);
 }
 
-function Nullsetzen() {
-  pos0x=posax;
-  pos0y=posay;
-  }
 </script>
 
 <script>
 var IMG=[];
+var target_neu=0;
 function getEXIF() {
   var EXIF=document.getElementById("EXIF").firstChild.nodeValue;
   //alert(EXIF);
@@ -81,12 +81,24 @@ function showIMG() {
     c.setAttribute("cx",0+(IMG[i][1]-36)*1000);
     c.setAttribute("cy",100+(IMG[i][2]-46)*1000);
     c.setAttribute("Dateiname",IMG[i][0]);
+    c.setAttribute("Bildindex",i);
     graph.appendChild(c);
     }
   }
 
 function showJPG() {
-  document.getElementById("img").setAttribute("src","../../"+event.target.getAttribute("Dateiname"));
+  if (target_neu) target_neu.setAttribute("fill","brown");
+  if (event.target.tagName=="circle") target_neu=event.target;
+  var Dateiname=target_neu.getAttribute("Dateiname");
+  document.getElementById("img").setAttribute("src","../../"+Dateiname);
+  document.getElementById("TVdatei").firstChild.nodeValue=Dateiname;
+  target_neu.setAttribute("fill","red");
+  }
+
+function Nullsetzen() {
+  pos0x=posax;
+  pos0y=posay;
+  Bildindex=target_neu.getAttribute("Bildindex")*1;
   }
   </script>
 <div style="display:flex; overflow:auto"></div>
