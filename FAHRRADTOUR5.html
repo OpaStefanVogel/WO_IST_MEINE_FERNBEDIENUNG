@@ -12,7 +12,7 @@
 </head>
 <body onload='getLocation();Trackplot();Gipfel();Sprich("Es kann losgehen");'>
 <button onclick='Sprich("Es geht los")'>Los</button>
-<button onclick='bisherige_Distanzmarkierung=-1'>bisherige_Distanzmarkierung=-1</button>
+<button onclick='bisherige_Distanzmarkierung=-1;showPosition(position_merk)'>bisherige_Distanzmarkierung=-1</button>
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
 <div>50.25520490,12.28000737 Raun</div>
@@ -29,7 +29,7 @@
   </svg>
 <script>
 var x = document.getElementById("demo");
-var graph=document.getElementById("graph");    
+var graph=document.getElementById("graph");
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -48,7 +48,11 @@ var nahestgelegener_Trackpunkt=0;
 var bisherige_Distanzmarkierung=-1;
 var Geschwindigkeit=0;
 var Richtung=0;
+var position_merk=0;
+var pause=0;
+var imin=0;
 function showPosition(position) {
+    position_merk=position;
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude+
     "<br>Speed: " + position.coords.speed + 
@@ -60,22 +64,45 @@ function showPosition(position) {
     next.setAttribute("y2",xy[1]);
     next.setAttribute("x2",xy[0]);
     graph.appendChild(next);
-    var imin=mindist(xy[0],xy[1],TV);
+    imin=mindist(xy[0],xy[1],TV);
     var neue_Distanzmarkierung=Math.floor(TV[imin[0]][0]*10)/10;
     if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
       Richtung=Math.floor(position.coords.heading);
-      Sprich("Geschafft "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+".0. Richtung "+Richtung+". Höhe"+Math.floor(position.coords.altitude))+". ";
+      Sprich("Geschafft "+neue_Distanzmarkierung+". Schnell "+Geschwindigkeit+". Höhe"+Math.floor(position.coords.altitude-46.0)+Vorsprung()+". ");
       if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)) {
-        var gipf=imin[0]+1;
-        while (!TV[gipf][16]) gipf=gipf+1;
+        var gipf=imin[0]+1; //Rückzu -1
+        while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
         var dat=new Date();
-        Sprich("Nächster Berggipfel "+TV[gipf][16]+". Noch "+(TV[gipf][11]-neue_Distanzmarkierung)+" Kilometer. Höhendifferenz "+(TV[gipf][5]-TV[imin[0]][5])+" Meter. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
+        Sprich("Nächster Berggipfel "+TV[gipf][16]+" bei Kilometer "+(TV[gipf][11])+" und Höhe "+(TV[gipf][5])+" Meter. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
+      if (pause!=0) clearTimeout(pause);
+      pause=setTimeout(Pausenfunktion,60000);
       }
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
+
+function Vorsprung() {
+  var ret="";
+  var dat1=Date.now();
+  var dat2=Date.parse(TV[imin[0]][1]);
+  var diff=(dat2-dat1)%(24*60*60*1000);
+  if (diff<0) {ret=ret+"später";diff=-diff} else ret=ret+"eher";
+  diff=(diff%(60*60*1000))/1000;
+  var minu=Math.floor(diff/60);
+  var seku=Math.floor(diff-60*minu);
+  ret=ret+" "+minu+":"+seku;
+  return ret; 
+  }
+
+function Pausenfunktion() {
+  var dat1=Date.now();
+  var dat2=Date.parse(TV[imin[0]][1]);
+  //alert((dat2-dat1)%(24*60*60*1000));
+  Sprich(Vorsprung());
+  pause=setTimeout(Pausenfunktion,60000);
+  }
 </script>
 
 <script>
@@ -156,7 +183,7 @@ function mindist(x1,y1,TV) {
 function Gipfel() {
   var gipf=[];
   for (var i=0;i<TV.length;i++) {
-    if (TV[i][16]) gipf.push([TV[i][0].toFixed(2),"   "+TV[i][16]]);
+    if (TV[i][16]) gipf.push([TV[i][1].slice(11)+"     "+TV[i][5]+"     "+TV[i][0].toFixed(2)+"   "+TV[i][16]]);
     }
   document.getElementById("Gipfel").firstChild.nodeValue=gipf.join("\n");
   }
