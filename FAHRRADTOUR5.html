@@ -47,7 +47,7 @@ function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/2270 }
 var nahestgelegener_Trackpunkt=0;
 var bisherige_Distanzmarkierung=-1;
 var alte_Distanzmarkierung=-1;
-var bisheriger_Gipfel=-1;
+var bisheriger_Gipfel=0;
 var Geschwindigkeit=0;
 var Richtung=0;
 var position_merk=0;
@@ -82,8 +82,11 @@ function showPosition(position) {
       Sprich("Geschafft "+neue_Distanzmarkierung+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung()+". ");
       var gipf=imin[0]+1; //Rückzu -1
       while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
-      if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)||gipf!=bisheriger_Gipfel) {
+      if (gipf!=bisheriger_Gipfel) {
+//        Sprich("Hier ist der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
         bisheriger_Gipfel=gipf;
+        }
+      if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)) {
         var dat=new Date();
         Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
@@ -133,7 +136,9 @@ function Sprich(was) {
 
 <script src="../../Track_Raun_ueber_Wohlhausen.js" type="text/javascript"></script>
 <script src="../../Track_Schoeneck_plus_Wohlhausen.js" type="text/javascript"></script>
-<script src="../../Track_Raun_zurueck_ueber_Leubetha.js" type="text/javascript"></script>
+<script src="../../Track_Raun_ueber_Lugau_und_Schoenlind.js" type="text/javascript"></script>
+<!--script src="../../Track_Raun_zurueck_ueber_Leubetha.js" type="text/javascript"></script-->
+<script src="../../Track_Raun_zurueck_ueber_Leubetha_und_Lugau.js" type="text/javascript"></script>
 <script>
 //alert(Track_Raun_zurueck_ueber_Leubetha);
 //alert(Track_Raun_ueber_Wohlhausen);
