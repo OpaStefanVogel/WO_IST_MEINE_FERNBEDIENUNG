@@ -1,4 +1,5 @@
 int noch_soviel_Haltestellen;
+void PowerOff() { asm { 0x60 }; }
 
 task main() {
   noch_soviel_Haltestellen=10;
@@ -53,6 +54,8 @@ task schauen_ob_Haltestelle_erreicht() {
   if (noch_soviel_Haltestellen == 0) {
     PlaySound(4);PlaySound(4);PlaySound(4);
     PlaySound(4);PlaySound(4);PlaySound(4);
+    Wait(500);
+    PowerOff();
     }
   Wait(500);
   if (noch_soviel_Haltestellen > 0) start los_zu_naechsten_Haltestelle;
