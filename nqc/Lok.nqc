@@ -1,7 +1,8 @@
-int Haltestellennummer;
+int noch_soviel_Haltestellen;
 
 task main() {
-  Haltestellennummer=0;
+  noch_soviel_Haltestellen=10;
+  SetWatch(0,10);
   start los_zu_naechsten_Haltestelle;
   
   }
@@ -9,7 +10,7 @@ task main() {
 task los_zu_naechsten_Haltestelle() {
   SetSensorType(SENSOR_1,SENSOR_TYPE_TOUCH);
   SetSensorMode(SENSOR_1,SENSOR_MODE_RAW);
-  SelectDisplay(DISPLAY_SENSOR_1);
+  //SelectDisplay(DISPLAY_SENSOR_1);
   PlaySound(3);
   Wait(100);
   SetPower(OUT_A,0);
@@ -31,20 +32,30 @@ task los_zu_naechsten_Haltestelle() {
 
 task schauen_ob_Haltestelle_erreicht() {
   while (SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900) ;
-  Haltestellennummer=Haltestellennummer+1;
+  noch_soviel_Haltestellen=noch_soviel_Haltestellen-1;
   PlaySound(1);
   PlaySound(1);
   PlaySound(1);
   Wait(180);
   PlaySound(2);
   OUT_A_langsam_anhalten();
-  if (Haltestellennummer == 10) {
-    PlaySound(4);PlaySound(4);PlaySound(4);
+  if (noch_soviel_Haltestellen == 10) SetWatch(0,10);
+  if (noch_soviel_Haltestellen == 9) SetWatch(1,9);
+  if (noch_soviel_Haltestellen == 8) SetWatch(2,8);
+  if (noch_soviel_Haltestellen == 7) SetWatch(3,7);
+  if (noch_soviel_Haltestellen == 6) SetWatch(4,6);
+  if (noch_soviel_Haltestellen == 5) SetWatch(5,5);
+  if (noch_soviel_Haltestellen == 4) SetWatch(6,4);
+  if (noch_soviel_Haltestellen == 3) SetWatch(7,3);
+  if (noch_soviel_Haltestellen == 2) SetWatch(8,2);
+  if (noch_soviel_Haltestellen == 1) SetWatch(9,1);
+  if (noch_soviel_Haltestellen == 0) SetWatch(10,0);
+  if (noch_soviel_Haltestellen == 0) {
     PlaySound(4);PlaySound(4);PlaySound(4);
     PlaySound(4);PlaySound(4);PlaySound(4);
     }
   Wait(500);
-  if (Haltestellennummer < 10) start los_zu_naechsten_Haltestelle;
+  if (noch_soviel_Haltestellen > 0) start los_zu_naechsten_Haltestelle;
   }
 
 
