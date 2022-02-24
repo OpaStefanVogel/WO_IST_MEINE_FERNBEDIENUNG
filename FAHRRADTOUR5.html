@@ -47,6 +47,7 @@ function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/2270 }
 var nahestgelegener_Trackpunkt=0;
 var bisherige_Distanzmarkierung=-1;
 var alte_Distanzmarkierung=-1;
+var gipf=0;
 var bisheriger_Gipfel=0;
 var Geschwindigkeit=0;
 var Richtung=0;
@@ -80,7 +81,7 @@ function showPosition(position) {
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
       Richtung=Math.floor(position.coords.heading);
       Sprich("Geschafft "+neue_Distanzmarkierung+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung());
-      var gipf=imin[0]+1; //Rückzu -1
+      gipf=imin[0]+1; //Rückzu -1
       while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
       if (gipf!=bisheriger_Gipfel) {
         if (bisheriger_Gipfel==-1) bisheriger_Gipfel=gipf;
@@ -107,7 +108,7 @@ function Vorsprung() {
   if (diff<30*60) ret=ret+"eher, "; else {diff=60*60-diff; ret=ret+"später, "}
   var minu=Math.floor(diff/60);
   var seku=Math.floor(diff-60*minu);
-  ret=ret+" "+minu+" zu "+seku+". ";
+  ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+". ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
     ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, "+Math.floor(100-80*bisherige_Distanzmarkierung/120)+" reichen.";

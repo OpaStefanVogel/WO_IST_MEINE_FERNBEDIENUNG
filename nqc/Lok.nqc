@@ -1,0 +1,84 @@
+int Haltestellennummer;
+
+task main() {
+  Haltestellennummer=0;
+  start los_zu_naechsten_Haltestelle;
+  
+  }
+
+task los_zu_naechsten_Haltestelle() {
+  SetSensorType(SENSOR_1,SENSOR_TYPE_TOUCH);
+  SetSensorMode(SENSOR_1,SENSOR_MODE_RAW);
+  SelectDisplay(DISPLAY_SENSOR_1);
+  PlaySound(3);
+  Wait(100);
+  SetPower(OUT_A,0);
+  OnFwd(OUT_A);
+  OUT_A_langsam_losfahren();
+  Wait(500);
+  start schauen_ob_Haltestelle_erreicht;
+/*
+  Wait(1200);
+  OUT_A_langsam_anhalten();
+  Wait(100);
+  OnRev(OUT_A);
+  OUT_A_langsam_losfahren();
+  Wait(1200);
+  //Off(OUT_A);
+  OUT_A_langsam_anhalten();
+  */
+  }
+
+task schauen_ob_Haltestelle_erreicht() {
+  while (SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900) ;
+  Haltestellennummer=Haltestellennummer+1;
+  PlaySound(1);
+  PlaySound(1);
+  PlaySound(1);
+  Wait(180);
+  PlaySound(2);
+  OUT_A_langsam_anhalten();
+  if (Haltestellennummer == 10) {
+    PlaySound(4);PlaySound(4);PlaySound(4);
+    PlaySound(4);PlaySound(4);PlaySound(4);
+    PlaySound(4);PlaySound(4);PlaySound(4);
+    }
+  Wait(500);
+  if (Haltestellennummer < 10) start los_zu_naechsten_Haltestelle;
+  }
+
+
+sub OUT_A_langsam_anhalten() {
+  SetPower(OUT_A,6);
+  Wait(30);
+  SetPower(OUT_A,5);
+  Wait(30);
+  SetPower(OUT_A,4);
+  Wait(30);
+  SetPower(OUT_A,3);
+  Wait(30);
+  SetPower(OUT_A,2);
+  Wait(30);
+  SetPower(OUT_A,1);
+  Wait(30);
+  SetPower(OUT_A,0);
+  Wait(30);
+  Float(OUT_A);
+  }
+
+sub OUT_A_langsam_losfahren() {
+  SetPower(OUT_A,1);
+  Wait(30);
+  SetPower(OUT_A,2);
+  Wait(30);
+  SetPower(OUT_A,3);
+  Wait(30);
+  SetPower(OUT_A,4);
+  Wait(30);
+  SetPower(OUT_A,5);
+  Wait(30);
+  SetPower(OUT_A,6);
+  Wait(30);
+  SetPower(OUT_A,7);
+  }
+
