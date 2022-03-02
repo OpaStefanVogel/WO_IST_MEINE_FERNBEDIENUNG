@@ -57,6 +57,7 @@ var imin=[0,0];
 var Verfahren=0;
 var Batterielevel=100;
 var Batterielevel_vorher=100;
+var Startzeit=new Date();
 
 function showPosition(position) {
     position_merk=position;
@@ -114,7 +115,11 @@ function Vorsprung() {
   ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
-    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, davon nötig "+Math.floor(100-80*bisherige_Distanzmarkierung/120)+" .";
+    var aktuelle_Zeit=new Date();
+    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, davon werden benötigt "
+      //+Math.floor(100-80*bisherige_Distanzmarkierung/120)
+      +Math.floor(100-(aktuelle_Zeit.valueOf()-Startzeit.valueOf())/1000/60/60*8)
+      +" .";
     }
   return ret; 
   }
