@@ -142,17 +142,18 @@ function Sprich(was) {
 <!--script src="../../Track_Raun_zurueck_ueber_Leubetha.js" type="text/javascript"></script-->
 <!--script src="../../Track_Raun_zurueck_ueber_Lugau.js" type="text/javascript"></script-->
 <script src="../../Track_Raun_ueber_Lugau_und_Schoenlind.js" type="text/javascript"></script>
-<script src="../../Track_Raun_zurueck_ueber_Leubetha_und_Lugau.js" type="text/javascript"></script>
+<script src="../../Track_Raun_zurueck_ueber_Leubetha_2.js" type="text/javascript"></script>
 <script>
 //alert(Track_Raun_zurueck_ueber_Leubetha);
 //alert(Track_Raun_ueber_Wohlhausen);
 //alert(Track_Schoeneck_plus_Wohlhausen);
 var TV=[];
 var Track=eval(document.documentURI.split("?")[1].split(".")[0]);
+var WPunkte=[];
 function Trackplot() {
   //alert(Track.join("\n"));
   //alert(Track[9]);
-  for (var i=2;i<Track.length;i++) {
+  for (var i=2;i<Track.length;i++) if (Track[i].slice(0,1)=="T") {
     var T=[];
     var S=Track[i].split(",");
     //alert(i+"\n"+S.join("\n"));
@@ -164,6 +165,26 @@ function Trackplot() {
     //alert("T=["+T+"]");
     TV.push(T);
     }
+  
+  for (var i=2;i<Track.length;i++) if (Track[i].slice(0,1)=="W") {
+    var T=[];
+    var S=Track[i].split(",");
+    //alert(i+"\n"+S.join("\n"));
+    T[0]=S[2]*1.0;
+    T[1]=S[3]*1.0;
+    T[2]=S[12];
+    WPunkte.push(T);
+    }
+  alert(WPunkte.join("\n"));
+
+  for (var i=0;i<WPunkte.length;i++) { //WPunkte in TV eintragen
+    var noch_nicht_gefunden=true;
+    for (var j=0;j<TV.length;j++) if (noch_nicht_gefunden==true) if (dist(WPunkte[i][0],WPunkte[i][1],TV[j][2],TV[j][3])<0.00001) {
+      TV[j][16]=WPunkte[i][2];alert(i+" "+j+" "+dist(WPunkte[i][0],WPunkte[i][1],TV[j][2],TV[j][3])+" "+WPunkte[i][2]);
+      noch_nicht_gefunden=false;
+      }
+    }
+
   
   //alert(TV.join("\n"));
   //alert(TV.length);
@@ -219,6 +240,12 @@ function Gipfel() {
     if (TV[i][16]) gipf.push([TV[i][1].slice(11)+"     "+TV[i][5]+"     "+TV[i][11]+"   "+TV[i][16]]);
     }
   document.getElementById("Gipfel").firstChild.nodeValue=gipf.join("\n");
+  var WPunkt=[];
+  for (var i=0;i<Track.length;i++) {
+    var S=Track[i].split(",");
+    if (S[12]) WPunkt.push("W"+Track[i].slice(1));
+    }
+  document.getElementById("WPunkt").firstChild.nodeValue=WPunkt.join("\n");
   }
   
   </script>
@@ -261,5 +288,6 @@ Batterie:
   <div style="display:flex; overflow:auto">
     <img src="../../../../DCIM/Screenshots/Screenshot_20220206-232903_Maps.jpg" alt="Abzweig Waldesruh">
     </div>
+<div id="WPunkt" style="white-space:pre-wrap; font-family:monospace; font.size:60%">WPunkt</div>
 </body>
 </html>
