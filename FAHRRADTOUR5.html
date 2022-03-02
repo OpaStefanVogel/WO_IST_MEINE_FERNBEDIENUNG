@@ -51,7 +51,7 @@ var gipf=0;
 var bisheriger_Gipfel=0;
 var Geschwindigkeit=0;
 var Richtung=0;
-var position_merk=0;
+var position_merk={coords:{latitude:50.2553,longitude:12.28,speed:3,altitude:548+46},timestamp:(new Date())};
 var pause=0;
 var imin=[0,0];
 var Verfahren=0;
@@ -60,14 +60,16 @@ var Batterielevel_vorher=100;
 
 function showPosition(position) {
     position_merk=position;
+  if (position!=0) {
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude+
     "<br>Speed: " + position.coords.speed + 
     "<br>Altitude: " + position.coords.altitude + 
     "<br>Heading: " + position.coords.heading + 
     "<br>Timestamp: " + new Date(position.timestamp).toTimeString();
+    }
     var next=graph.firstElementChild.cloneNode(true);
-    var xy=xyrech(position.coords.latitude,position.coords.longitude); //alert(xy);
+    var xy=xyrech(position.coords.latitude,position.coords.longitude);
     next.setAttribute("y2",xy[1]);
     next.setAttribute("x2",xy[0]);
     graph.appendChild(next);
@@ -75,20 +77,21 @@ function showPosition(position) {
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
     if (Verfahren==1&&imin[1]<0.04) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
     var neue_Distanzmarkierung=TV[imin[0]][11];
+    gipf=imin[0]+1; //Rückzu -1
+    while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
+    if (gipf!=bisheriger_Gipfel) {
+      if (bisheriger_Gipfel==-1) bisheriger_Gipfel=gipf;
+      Sprich("Hier ist der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
+      bisheriger_Gipfel=gipf;
+      neue_Distanzmarkierung=Math.floor(neue_Distanzmarkierung);
+      }
     if (neue_Distanzmarkierung!=bisherige_Distanzmarkierung&&neue_Distanzmarkierung!=alte_Distanzmarkierung) {
       alte_Distanzmarkierung=bisherige_Distanzmarkierung;
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
+      if (Geschwindigkeit>20) {Sprich("schnell "+Geschwindigkeit+" .");return}
       Richtung=Math.floor(position.coords.heading);
       Sprich("Geschafft "+neue_Distanzmarkierung+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung());
-      gipf=imin[0]+1; //Rückzu -1
-      while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
-      if (gipf!=bisheriger_Gipfel) {
-        if (bisheriger_Gipfel==-1) bisheriger_Gipfel=gipf;
-        Sprich("Hier ist der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
-        bisheriger_Gipfel=gipf;
-        neue_Distanzmarkierung=Math.floor(neue_Distanzmarkierung);
-        }
       if (neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung)) {
         var dat=new Date();
         Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
@@ -108,10 +111,10 @@ function Vorsprung() {
   if (diff<30*60) ret=ret+"eher, "; else {diff=60*60-diff; ret=ret+"später, "}
   var minu=Math.floor(diff/60);
   var seku=Math.floor(diff-60*minu);
-  ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+". ";
+  ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
-    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, "+Math.floor(100-80*bisherige_Distanzmarkierung/120)+" reichen.";
+    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, davon nötig "+Math.floor(100-80*bisherige_Distanzmarkierung/120)+" .";
     }
   return ret; 
   }
@@ -175,16 +178,15 @@ function Trackplot() {
     T[2]=S[12];
     WPunkte.push(T);
     }
-  alert(WPunkte.join("\n"));
+  //alert(WPunkte.join("\n"));
 
   for (var i=0;i<WPunkte.length;i++) { //WPunkte in TV eintragen
     var noch_nicht_gefunden=true;
     for (var j=0;j<TV.length;j++) if (noch_nicht_gefunden==true) if (dist(WPunkte[i][0],WPunkte[i][1],TV[j][2],TV[j][3])<0.00001) {
-      TV[j][16]=WPunkte[i][2];alert(i+" "+j+" "+dist(WPunkte[i][0],WPunkte[i][1],TV[j][2],TV[j][3])+" "+WPunkte[i][2]);
+      TV[j][16]=WPunkte[i][2];
       noch_nicht_gefunden=false;
       }
     }
-
   
   //alert(TV.join("\n"));
   //alert(TV.length);
@@ -221,6 +223,8 @@ function Trackplot() {
     }
   //alert(d);
   document.getElementById("Track").setAttribute("d",d);
+  position_merk.coords.latitude=TV[0][2];
+  position_merk.coords.longitude=TV[0][3];
   }
 
 function mindist(x1,y1,TV) {
