@@ -91,17 +91,17 @@ function showPosition(position) {
       alte_Distanzmarkierung=bisherige_Distanzmarkierung;
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
-      if (Geschwindigkeit>20) {Sprich("schnell "+Geschwindigkeit+" .");return}
+      if (Geschwindigkeit>20) {Sprich("schnell "+Geschwindigkeit+" ."+Vorsprung());return}
       Richtung=Math.floor(position.coords.heading);
       Sprich("Geschafft "+neue_Distanzmarkierung+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung());
       if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
         var dat=new Date();
         Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
-      Gipfel_erreicht=false;
       if (pause!=0) clearTimeout(pause);
       pause=setTimeout(Pausenfunktion,60000);
       }
+   Gipfel_erreicht=false;
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
 }
 
@@ -159,6 +159,7 @@ function Sprich(was) {
 //alert(Track_Schoeneck_plus_Wohlhausen);
 var TV=[];
 var Track=eval(document.documentURI.split("?")[1].split(".")[0]);
+//alert(Track);
 var WPunkte=[];
 function Trackplot() {
   //alert(Track.join("\n"));
