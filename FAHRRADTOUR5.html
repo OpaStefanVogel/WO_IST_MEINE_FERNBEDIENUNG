@@ -12,7 +12,7 @@
 </head>
 <body onload='getLocation();InitBatteryStatus();Trackplot();Gipfel();Sprich("Es kann losgehen")'>
 <button onclick='Sprich("Es geht los")'>Los</button>
-<button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;showPosition(position_merk)'>nächster Gipfel</button>
+<button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
 <div>50.25520490,12.28000737 Raun</div>
@@ -118,10 +118,10 @@ function Vorsprung() {
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
     var aktuelle_Zeit=new Date();
-    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, davon werden benötigt "
+    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, übrig bleiben "
       //+Math.floor(100-80*bisherige_Distanzmarkierung/120)
-      +Math.floor(100-(aktuelle_Zeit.valueOf()-Startzeit.valueOf())/1000/60/60*8)
-      +" .";
+      +(Math.floor(Batterielevel*100)+20-Math.floor(100-(aktuelle_Zeit.valueOf()-Startzeit.valueOf())/1000/60/60*8))
+      +". ";
     }
   return ret; 
   }
