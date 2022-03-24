@@ -1,14 +1,41 @@
+//nqc -TRCX -S/dev/ttyUSB0 -firmware Downloads/LEGO10ZIP/LEGO\ MINDSTORMS\ RIS\ v1.5/FIRM/FIRM0309.LGO
+//nqc -TRCX -S/dev/ttyUSB0 -d -far -pgm 1 Lok.nqc
+
 int noch_soviel_Haltestellen;
+int angehalten=0;
 void PowerOff() { asm { 0x60 }; }
 
 task main() {
+  SetSensorType(SENSOR_3,SENSOR_TYPE_TOUCH);
+  SetSensorMode(SENSOR_3,SENSOR_MODE_RAW);
   noch_soviel_Haltestellen=10;
   SetWatch(0,10);
+  start Haltewunschtaste;
   start los_zu_naechsten_Haltestelle;
   
   }
 
+task Haltewunschtaste() {
+  while (1==1) {
+    if (SENSOR_3 < 900) {
+      if (angehalten==0) {
+        PlaySound(2);
+        OUT_A_langsam_anhalten();
+        Wait(100);
+         }
+      if (angehalten==1) {
+        PlaySound(3);
+        OnFwd(OUT_A);
+        OUT_A_langsam_losfahren();
+        Wait(100);
+        }
+      angehalten=1-angehalten;
+      }
+    }
+  }
+
 task los_zu_naechsten_Haltestelle() {
+  angehalten=0;
   SetSensorType(SENSOR_1,SENSOR_TYPE_TOUCH);
   SetSensorMode(SENSOR_1,SENSOR_MODE_RAW);
   //SelectDisplay(DISPLAY_SENSOR_1);
@@ -17,29 +44,21 @@ task los_zu_naechsten_Haltestelle() {
   SetPower(OUT_A,0);
   OnFwd(OUT_A);
   OUT_A_langsam_losfahren();
-  Wait(500);
+  Wait(000);
   start schauen_ob_Haltestelle_erreicht;
-/*
-  Wait(1200);
-  OUT_A_langsam_anhalten();
-  Wait(100);
-  OnRev(OUT_A);
-  OUT_A_langsam_losfahren();
-  Wait(1200);
-  //Off(OUT_A);
-  OUT_A_langsam_anhalten();
-  */
   }
 
 task schauen_ob_Haltestelle_erreicht() {
-  while (SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900) ;
+  while ((SENSOR_1 < 900||SENSOR_1 < 900||SENSOR_1 < 900)||(angehalten==1)) ;
   noch_soviel_Haltestellen=noch_soviel_Haltestellen-1;
+  angehalten=1;
   PlaySound(1);
   PlaySound(1);
   PlaySound(1);
   Wait(180);
   PlaySound(2);
   OUT_A_langsam_anhalten();
+  SendMessage(noch_soviel_Haltestellen);
   if (noch_soviel_Haltestellen == 10) SetWatch(0,10);
   if (noch_soviel_Haltestellen == 9) SetWatch(1,9);
   if (noch_soviel_Haltestellen == 8) SetWatch(2,8);

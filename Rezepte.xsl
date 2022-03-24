@@ -27,6 +27,12 @@
 <script type="text/javascript">
   <xsl:attribute name="src"><xsl:value-of select="$Pfad" />REZEPT_UHR.js</xsl:attribute>
   </script>
+<script>
+var ZU=document.getElementsByClassName("ZUTATEN");
+for (var i=0;ZU.length>i;i++) {
+  ZU[i].innerHTML=ZU[i].firstChild.nodeValue.split("\n").join("\n&lt;input type='checkbox'/> ");
+  }
+  </script>
   </body></html>
 </xsl:template>
 
