@@ -82,7 +82,7 @@ function showPosition(position) {
     while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
     var Gipfel_erreicht=false;
     if (gipf!=bisheriger_Gipfel) {
-      if (bisheriger_Gipfel==-1) bisheriger_Gipfel=gipf;
+      if (bisheriger_Gipfel==-1) bisheriger_Gipfel=1;
       Sprich("Hier ist der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
       bisheriger_Gipfel=gipf;
       Gipfel_erreicht=true;
@@ -197,6 +197,7 @@ function Trackplot() {
       noch_nicht_gefunden=false;
       }
     }
+  TV[1][16]="los";
   
   //alert(TV.join("\n"));
   //alert(TV.length);
