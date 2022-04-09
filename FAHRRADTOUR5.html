@@ -139,10 +139,12 @@ function Pausenfunktion() {
 <script>
 function Sprich(was) {
   var worte = new SpeechSynthesisUtterance(was);
+  worte.volume=0.05;
   worte.lang = "de-DE";
   window.speechSynthesis.speak(worte);
   }
 
+//alert(new AudioContext());
 //alert(8);
 //Sprich("Es kann losgehen");
   </script>
