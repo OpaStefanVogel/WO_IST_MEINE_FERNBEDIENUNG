@@ -316,64 +316,55 @@ Batterie:
     </div>
 <div id="WPunkt" style="white-space:pre-wrap; font-family:monospace; font.size:60%">WPunkt</div>
 
-https://codepen.io/travisholliday/pen/AxmyVd
-<h1>VU meter from mic input (getUserMedia API)</h1>
-<canvas id="canvas" width="150" height="300">hallo</canvas>
-<div>div</div>
 
-<script>
-navigator.getUserMedia = navigator.getUserMedia ||
-  navigator.webkitGetUserMedia ||
-  navigator.mozGetUserMedia;
-if (navigator.getUserMedia) {
-  navigator.getUserMedia({
-      audio: true
-    },
-    function(stream) {
-      audioContext = new AudioContext();
-      analyser = audioContext.createAnalyser();
-      microphone = audioContext.createMediaStreamSource(stream);
-      javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-      analyser.smoothingTimeConstant = 0.8;
-      analyser.fftSize = 1024;
+<div id="container">
 
-      microphone.connect(analyser);
-      analyser.connect(javascriptNode);
-      javascriptNode.connect(audioContext.destination);
+    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>Audio stream volume</span>
+    </h1>
 
-      canvasContext = $("#canvas")[0].getContext("2d");
+    <p>Measure the volume of a local media stream using WebAudio.</p>
 
-      javascriptNode.onaudioprocess = function() {
-          var array = new Uint8Array(analyser.frequencyBinCount);
-          analyser.getByteFrequencyData(array);
-          var values = 0;
+    <div id="meters">
+        <div id="instant">
+            <div class="label">Instant:</div>
+            <meter high="0.25" max="1" value="0"></meter>
+            <div class="value"></div>
+        </div>
+        <div id="slow">
+            <div class="label">Slow:</div>
+            <meter high="0.25" max="1" value="0"></meter>
+            <div class="value"></div>
+        </div>
+        <div id="clip">
+            <div class="label">Clip:</div>
+            <meter max="1" value="0"></meter>
+            <div class="value"></div>
+        </div>
+    </div>
 
-          var length = array.length;
-          for (var i = 0; i < length; i++) {
-            values += (array[i]);
-          }
+    <div>
+        <button type="button" id="startButton">Start</button> 
+        <button type="button" id="stopButton" disabled>Stop</button>
+    <div>
 
-          var average = values / length;
+    <p>The 'instant' volume changes approximately every 50ms; the 'slow' volume approximates the average volume over
+        about a second.</p>
+    <p>Note that you will not hear your own voice; use the <a href="../audio">local audio rendering demo</a> for that.
+    </p>
+    <p>The <code>audioContext</code>, <code>stream</code> and <code>soundMeter</code> variables are in global scope, so
+        you can inspect them from the console.</p>
 
-//          console.log(Math.round(average - 40));
+    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/volume"
+       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
 
-          canvasContext.clearRect(0, 0, 150, 300);
-          canvasContext.fillStyle = '#BadA55';
-          canvasContext.fillRect(0, 300 - average, 150, 300);
-          canvasContext.fillStyle = '#262626';
-          canvasContext.font = "48px impact";
-          canvasContext.fillText(Math.round(average - 40), -2, 300);
+</div>
 
-        } // end fn stream
-    },
-    function(err) {
-      alert("The following error occured: " + err.name)
-    });alert(8);
-} else {
-  alert("getUserMedia not supported");
-}
-</script>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="samples/src/content/getusermedia/volume/js/soundmeter.js"></script>
+<script src="samples/src/content/getusermedia/volume/js/main.js" async></script>
+
 
 
 </body>
