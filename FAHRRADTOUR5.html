@@ -21,7 +21,7 @@
 <body onload='getLocation();InitBatteryStatus();Trackplot();Gipfel();Sprich("Es kann losgehen")'>
 <button onclick='Sprich("Es geht los")'>Los</button>
 <button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>, <button onclick="onl()">Starte</button>
-getUserMedia audio: <span id="audiotest"> </span>
+getUserMedia audio: <svg width="200" height="10"><rect id="audio_rect" fill="red" width="20" height="10"/></svg> <span id="audiotest"> </span>
 
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
@@ -374,7 +374,8 @@ Batterie:
 function onl() {
   start();
   setInterval(function(){
-    document.getElementById("audiotest").innerHTML=soundMeter.slow+"<br/>"+soundMeter.script.onaudioprocess;
+    document.getElementById("audio_rect").setAttribute("width",soundMeter.slow*10000);
+    document.getElementById("audiotest").innerHTML=soundMeter.slow.toFixed(6);//+"<br/>"+soundMeter.script.onaudioprocess;
     if (soundMeter.slow>0.001) setAudioVolume=2; else setAudioVolume=0.2;
     },100);
   }
