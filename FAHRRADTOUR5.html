@@ -20,8 +20,9 @@
 </head>
 <body onload='getLocation();InitBatteryStatus();Trackplot();Gipfel();Sprich("Es kann losgehen")'>
 <button onclick='Sprich("Es geht los")'>Los</button>
-<button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>
-am Ende getUserMedia audio
+<button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>, <button onclick="onl()">Starte</button>
+getUserMedia audio: <span id="audiotest"> </span>
+
 <div>50.84 12.88 Altendorf<div>
 <div>50.71 12.76 Stollberg<div>
 <div>50.25520490,12.28000737 Raun</div>
@@ -146,11 +147,15 @@ function Pausenfunktion() {
 </script>
 
 <script>
+var setAudioVolume=0.2;
+var worte=0;
 function Sprich(was) {
-  var worte = new SpeechSynthesisUtterance(was);
-  worte.volume=0.05;
+  //stop();
+  worte = new SpeechSynthesisUtterance(was);
+  worte.volume=setAudioVolume;
   worte.lang = "de-DE";
   window.speechSynthesis.speak(worte);
+  //start();
   }
 
 //alert(new AudioContext());
@@ -363,8 +368,22 @@ Batterie:
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="samples/src/content/getusermedia/volume/js/soundmeter.js"></script>
-<script src="samples/src/content/getusermedia/volume/js/main.js" async></script>
+<script src="samples/src/content/getusermedia/volume/js/main.js"></script> <!-- ohne async-->
 
+<script>
+function onl() {
+  start();
+  setInterval(function(){
+    document.getElementById("audiotest").innerHTML=soundMeter.slow+"<br/>"+soundMeter.script.onaudioprocess;
+    if (soundMeter.slow>0.001) setAudioVolume=2; else setAudioVolume=0.2;
+    },100);
+  }
+
+//alert(start);
+//setTimeout(start,5000);
+//setTimeout(onl,10000);
+//requestAnimationFrame(onl);
+  </script>
 
 
 </body>
