@@ -109,7 +109,7 @@ function showPosition(position) {
         Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
       if (pause!=0) clearTimeout(pause);
-      pause=setTimeout(Pausenfunktion,77000);
+      pause=setTimeout(Pausenfunktion,88000);
       }
    Gipfel_erreicht=false;
     document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
