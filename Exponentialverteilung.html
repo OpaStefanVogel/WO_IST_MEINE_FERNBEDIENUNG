@@ -5,13 +5,15 @@
 <style>
   td {text-align:right}
   </style>
-<body style="background-color:gray">
+<body>
 <h1>Exponentialverteilung</h1>
-<svg fill="none" width="100%"><line x1="0" y1="0" x2="100" y2="100" stroke="white"/>
-  <path id="path1" d="M0,0L50,100" stroke="red"/>
+<svg fill="none" width="100%" style="background-color:gray"><line x1="0" y1="0" x2="100" y2="100" stroke="white"/>
   <path id="path2" d="M0,0L70,100" stroke="blue"/>
+  <path id="path1" d="M0,0L50,100" stroke="red" stroke-dasharray="2 2"/>
   <path id="path3" d="M0,0L80,100" stroke="brown"/>
   <path id="path4" d="M0,0L80,100" stroke="yellow" stroke-dasharray="10 10"/>
+  <path id="path5" d="M0,0L90,100" stroke="brown"/>
+  <path id="path6" d="M0,0L110,100" stroke="yellow" stroke-dasharray="10 10"/>
   <path d="M0,102L1000,102" stroke="green"/>
   </svg>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
@@ -20,8 +22,8 @@
   <div>
 <script>
 //[0,1] Gleichverteilung x Werte
-var lambda=10;
-var mue=8;
+var lambda=3;
+var mue=10;
 var n=50000;
 var Logtext="";
 
@@ -47,16 +49,32 @@ function Zeichne(GV,path) {
   return Anfangspunkt;
   }
   
+function ZeichneFunktion(fun,path) {
+  var d="M0,0";
+  for (var k=0;k<1000;k++) {
+    d=d+"L"+k+","+(fun(k/1000)*100);
+    }
+  //alert(d);
+  document.getElementById(path).setAttribute("d",d);
+  return fun(0);
+  }
+
 var EV1=Exponentialverteilung(mue,n);
 var EV2=Exponentialverteilung(lambda,n);
+var EV3=Exponentialverteilung(lambda,n);
 Zeichne(EV1,"path1");
 Zeichne(EV2,"path2");
 var DV=[]; for(var i=0;i<EV1.length;i++) DV[i]=EV1[i]-EV2[i];
 var AnfangspunktDV=Zeichne(DV,"path3");
-var FV=[]; for(var i=0;i<EV1.length;i++) FV[i]=(1-8/18*Math.exp(-10*i))*100;
-Zeichne(FV,"path4");
+ZeichneFunktion(function(i) {return (1-lambda/(lambda+mue)*Math.exp(-mue*i))},"path4");
+var DDV=[]; for(var i=0;i<EV1.length;i++) DDV[i]=EV1[i]-EV2[i]-EV3[i];
+var AnfangspunktDDV=Zeichne(DDV,"path5");
+ZeichneFunktion(function(i) {return (1-lambda**2/(lambda+mue)**2*Math.exp(-mue*i))},"path6");
 
-Logtext=Logtext+AnfangspunktDV+"\n"+(1-lambda/(lambda+mue))+"\n\n"+DV.sort().reverse().join("\n");
+Logtext=Logtext
+  +AnfangspunktDV+"\n"+(1-lambda/(lambda+mue))+"\n\n"
+  +AnfangspunktDDV+"\n"+(1-lambda**2/(lambda+mue)**2)+"\n\n"
+  +DV.sort().reverse().join("\n");
 
 
 document.getElementById("Logfile").innerHTML=Logtext;
