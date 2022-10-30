@@ -200,12 +200,31 @@ for (k=0;k<4;k++) { //schon voll nah k<3, k=3 ist die Probe
       
       Kanten[i][j][15]="*";
       if (Kanten[i][j][14]) {
-        N1=DREH(Kanten[i][j][14],T[3]);
-        N2=DREH(Kanten[i][j][12],T[4]);
-        N3=DREH(Kanten[i][j][14],T[4]);
-        N4=DREH(Kanten[i][j][12],T[3]);
+        N1=DREH(Kanten[i][j][14],T[4]);//412
+        N2=DREH(Kanten[i][j][12],T[3]);//321
+        N3=DREH(Kanten[i][j][14],T[3]);//321
+        N4=DREH(Kanten[i][j][12],T[4]);//412
         //alert(Kanten[i][j][6]+" "+Kanten[i][j][7]+"\n"+N1+" "+N2+" "+N3+" "+N4);
-        Kanten[i][j][21]=Kanten[Kanten[i][j][6]][Kanten[i][j][7]][18];
+/*das soll rauskommen:
+3443: A3d=302
+4334: A3d=041
+
+012
+345 A1up
+
+041
+352 A3down
+
+142
+035 A4down
+
+025
+314 F2down
+
+302
+415 D5down
+*/
+     Kanten[i][j][21]=Kanten[Kanten[i][j][6]][Kanten[i][j][7]][18];
         Kanten[Kanten[i][j][6]][Kanten[i][j][7]][22]=Kanten[i][j][18];
         if (!Kanten[Kanten[i][j][6]][Kanten[i][j][7]][11]) {
           Kanten[Kanten[i][j][6]][Kanten[i][j][7]][11]=" v";
@@ -232,13 +251,254 @@ for (k=0;k<4;k++) { //schon voll nah k<3, k=3 ist die Probe
 
 Logtext=Logtext+"Kanten=[\n  ["+Kanten.join("],\n  [")+"] ];\n";
 
+var Isomorphietabelle=[];
+for (var i=1;i<21;i++) {
+  for (var j=1;j<21;j++) if (Kanten[i][j]) {
+    Isomorphietabelle.push([Kanten[i][j][12],"\\text{"+Kanten[i][j][18]+"}\\uparrow"]);
+    Isomorphietabelle.push([Kanten[i][j][14],"\\text{"+Kanten[i][j][18]+"}\\downarrow"]);
+    }
+  }
+
+var Isomorphietabelle=[];
+var Isomorphietabelle_zurueck=[];
+for (var i=1;i<21;i++) {
+  for (var j=1;j<21;j++) if (Kanten[i][j]) {
+    Isomorphietabelle.push([Kanten[i][j][12],"\\text{"+Kanten[i][j][18]+"}\\auparrow"]);
+    Isomorphietabelle.push([Kanten[i][j][14],"\\text{"+Kanten[i][j][18]+"}\\downarrow"]);
+    Isomorphietabelle_zurueck.push(["\\text{"+Kanten[i][j][18]+"}\\auparrow",Kanten[i][j][12]]);
+    Isomorphietabelle_zurueck.push(["\\text{"+Kanten[i][j][18]+"}\\downarrow",Kanten[i][j][14]]);
+    }
+  }
+
+Logtext=Logtext+"Isomorphietabelle_zurueck=[\n  ["+Isomorphietabelle_zurueck.sort().join("],\n  [")+"] ];\n";
+
+Logtext=Logtext+"Isomorphietabelle=[\n  ["+Isomorphietabelle.sort().join("],\n  [")+"] ];\n";
+
+Logtext=Logtext+"Latex Isomorphietabelle_zurueck:\n\\begin{array}\n";
+
+for (var i=0;i<120;i++) Logtext=Logtext+"{}^{"+Isomorphietabelle_zurueck[i][1].slice(0,3).join(" ")+"}_{"+Isomorphietabelle_zurueck[i][1].slice(3,6).join(" ")+"} & "+ Isomorphietabelle_zurueck[i][0] + " \\\\\n";
+
+Logtext=Logtext+"\\end{array}\n\n";
+
+Logtext=Logtext+"Latex Isomorphietabelle:\n\\begin{array}\n";
+
+for (var i=0;i<120;i++) Logtext=Logtext+"{}^{"+Isomorphietabelle[i][0].slice(0,3).join(" ")+"}_{"+Isomorphietabelle[i][0].slice(3,6).join(" ")+"} & "+ Isomorphietabelle[i][1] + " \\\\\n";
+
+Logtext=Logtext+"\\end{array}\n\n";
+
 document.getElementById("Logfile").innerHTML=Logtext;
 
 /*
+012
+345 A1up
+
+041
+352 A3down
+
+142
+035 A4down
+
+
+035
+142 a1u
++L
+345
+012 a4d
+-R
+043
+125 a3d
+-L
+105
+432 d3d
++R
+052
+134 b5d
+
+012
+345 A1u
++L
+142
+035 A4d
+-R
+041
+352 A3d
+-L
+302
+415 D5d
++R
+025
+314 F2d
+
+
+c1 +R c3 -L a2 -L a5 +R e3 -L e1 -L B5 +R B2 +R A2 +R A4 +L A1
+
+021
+435 c1u
++R
+032
+451 c3d
+-L
+352
+041 a2u
+-L
+542
+301 a5d
++R
+504
+312 e3u
+-L
+014
+532 e1d
+-L
+134
+052 B5u
++R
+153
+024 B2d
++R
+125
+043 A2u
++R
+142
+035 A4d
++L
+012
+345 A1u
+*/
+
+/*
+Latex Isomorphietabelle:
+\begin{array}
+{}^{0 1 2}_{3 4 5} &  & \text{A1}\uparrow \\
+{}^{0 1 3}_{2 5 4} &  & \text{B4}\uparrow \\
+{}^{0 1 4}_{5 3 2} &  & \text{e1}\downarrow \\
+{}^{0 1 5}_{4 2 3} &  & \text{E5}\downarrow \\
+{}^{0 2 1}_{4 3 5} &  & \text{c1}\uparrow \\
+{}^{0 2 3}_{5 4 1} &  & \text{f4}\downarrow \\
+{}^{0 2 4}_{1 5 3} &  & \text{b3}\uparrow \\
+{}^{0 2 5}_{3 1 4} &  & \text{F2}\downarrow \\
+{}^{0 3 1}_{5 2 4} &  & \text{f2}\uparrow \\
+{}^{0 3 2}_{4 5 1} &  & \text{c3}\downarrow \\
+{}^{0 3 4}_{2 1 5} &  & \text{C3}\downarrow \\
+{}^{0 3 5}_{1 4 2} &  & \text{a1}\uparrow \\
+{}^{0 4 1}_{3 5 2} &  & \text{A3}\downarrow \\
+{}^{0 4 2}_{5 1 3} &  & \text{e4}\uparrow \\
+{}^{0 4 3}_{1 2 5} &  & \text{a3}\downarrow \\
+{}^{0 4 5}_{2 3 1} &  & \text{C1}\uparrow \\
+{}^{0 5 1}_{2 4 3} &  & \text{B1}\downarrow \\
+{}^{0 5 2}_{1 3 4} &  & \text{b5}\downarrow \\
+{}^{0 5 3}_{4 1 2} &  & \text{E3}\uparrow \\
+{}^{0 5 4}_{3 2 1} &  & \text{F5}\uparrow \\
+{}^{1 0 2}_{3 5 4} &  & \text{b2}\uparrow \\
+{}^{1 0 3}_{2 4 5} &  & \text{a5}\uparrow \\
+{}^{1 0 4}_{5 2 3} &  & \text{D3}\downarrow \\
+{}^{1 0 5}_{4 3 2} &  & \text{d3}\downarrow \\
+{}^{1 2 0}_{5 3 4} &  & \text{C4}\uparrow \\
+{}^{1 2 3}_{4 5 0} &  & \text{F5}\downarrow \\
+{}^{1 2 4}_{3 0 5} &  & \text{f1}\downarrow \\
+{}^{1 2 5}_{0 4 3} &  & \text{A2}\uparrow \\
+{}^{1 3 0}_{4 2 5} &  & \text{F3}\uparrow \\
+{}^{1 3 2}_{5 4 0} &  & \text{C1}\downarrow \\
+{}^{1 3 4}_{0 5 2} &  & \text{B5}\uparrow \\
+{}^{1 3 5}_{2 0 4} &  & \text{c5}\downarrow \\
+{}^{1 4 0}_{2 5 3} &  & \text{a2}\downarrow \\
+{}^{1 4 2}_{0 3 5} &  & \text{A4}\downarrow \\
+{}^{1 4 3}_{5 0 2} &  & \text{D1}\uparrow \\
+{}^{1 4 5}_{3 2 0} &  & \text{f4}\uparrow \\
+{}^{1 5 0}_{3 4 2} &  & \text{b4}\downarrow \\
+{}^{1 5 2}_{4 0 3} &  & \text{d1}\uparrow \\
+{}^{1 5 3}_{0 2 4} &  & \text{B2}\downarrow \\
+{}^{1 5 4}_{2 3 0} &  & \text{c3}\uparrow \\
+{}^{2 0 1}_{4 5 3} &  & \text{B3}\uparrow \\
+{}^{2 0 3}_{5 1 4} &  & \text{d5}\downarrow \\
+{}^{2 0 4}_{1 3 5} &  & \text{C5}\uparrow \\
+{}^{2 0 5}_{3 4 1} &  & \text{D1}\downarrow \\
+{}^{2 1 0}_{5 4 3} &  & \text{a4}\uparrow \\
+{}^{2 1 3}_{4 0 5} &  & \text{e3}\downarrow \\
+{}^{2 1 4}_{3 5 0} &  & \text{E3}\downarrow \\
+{}^{2 1 5}_{0 3 4} &  & \text{c2}\uparrow \\
+{}^{2 3 0}_{1 5 4} &  & \text{C2}\downarrow \\
+{}^{2 3 1}_{0 4 5} &  & \text{c4}\downarrow \\
+{}^{2 3 4}_{5 0 1} &  & \text{d3}\uparrow \\
+{}^{2 3 5}_{4 1 0} &  & \text{e1}\uparrow \\
+{}^{2 4 0}_{3 1 5} &  & \text{E1}\uparrow \\
+{}^{2 4 1}_{5 3 0} &  & \text{a1}\downarrow \\
+{}^{2 4 3}_{0 5 1} &  & \text{b4}\uparrow \\
+{}^{2 4 5}_{1 0 3} &  & \text{A5}\downarrow \\
+{}^{2 5 0}_{4 3 1} &  & \text{B5}\downarrow \\
+{}^{2 5 1}_{3 0 4} &  & \text{D4}\uparrow \\
+{}^{2 5 3}_{1 4 0} &  & \text{A3}\uparrow \\
+{}^{2 5 4}_{0 1 3} &  & \text{b1}\downarrow \\
+{}^{3 0 1}_{5 4 2} &  & \text{A5}\uparrow \\
+{}^{3 0 2}_{4 1 5} &  & \text{D5}\downarrow \\
+{}^{3 0 4}_{2 5 1} &  & \text{d1}\downarrow \\
+{}^{3 0 5}_{1 2 4} &  & \text{F4}\uparrow \\
+{}^{3 1 0}_{4 5 2} &  & \text{b1}\uparrow \\
+{}^{3 1 2}_{5 0 4} &  & \text{E2}\downarrow \\
+{}^{3 1 4}_{0 2 5} &  & \text{f3}\uparrow \\
+{}^{3 1 5}_{2 4 0} &  & \text{e4}\downarrow \\
+{}^{3 2 0}_{1 4 5} &  & \text{F1}\downarrow \\
+{}^{3 2 1}_{0 5 4} &  & \text{f5}\downarrow \\
+{}^{3 2 4}_{5 1 0} &  & \text{E5}\uparrow \\
+{}^{3 2 5}_{4 0 1} &  & \text{D3}\uparrow \\
+{}^{3 4 0}_{5 2 1} &  & \text{A2}\downarrow \\
+{}^{3 4 1}_{2 0 5} &  & \text{d4}\uparrow \\
+{}^{3 4 2}_{1 5 0} &  & \text{B1}\uparrow \\
+{}^{3 4 5}_{0 1 2} &  & \text{a4}\downarrow \\
+{}^{3 5 0}_{2 1 4} &  & \text{e2}\uparrow \\
+{}^{3 5 1}_{4 2 0} &  & \text{b3}\downarrow \\
+{}^{3 5 2}_{0 4 1} &  & \text{a2}\uparrow \\
+{}^{3 5 4}_{1 0 2} &  & \text{B3}\downarrow \\
+{}^{4 0 1}_{3 2 5} &  & \text{d2}\downarrow \\
+{}^{4 0 2}_{5 3 1} &  & \text{c5}\uparrow \\
+{}^{4 0 3}_{1 5 2} &  & \text{D4}\downarrow \\
+{}^{4 0 5}_{2 1 3} &  & \text{E2}\uparrow \\
+{}^{4 1 0}_{2 3 5} &  & \text{E4}\downarrow \\
+{}^{4 1 2}_{0 5 3} &  & \text{e2}\downarrow \\
+{}^{4 1 3}_{5 2 0} &  & \text{F2}\uparrow \\
+{}^{4 1 5}_{3 0 2} &  & \text{d5}\uparrow \\
+{}^{4 2 0}_{3 5 1} &  & \text{B2}\uparrow \\
+{}^{4 2 1}_{5 0 3} &  & \text{F4}\downarrow \\
+{}^{4 2 3}_{0 1 5} &  & \text{e5}\uparrow \\
+{}^{4 2 5}_{1 3 0} &  & \text{f2}\downarrow \\
+{}^{4 3 0}_{5 1 2} &  & \text{c2}\downarrow \\
+{}^{4 3 1}_{2 5 0} &  & \text{b5}\uparrow \\
+{}^{4 3 2}_{1 0 5} &  & \text{D2}\uparrow \\
+{}^{4 3 5}_{0 2 1} &  & \text{C4}\downarrow \\
+{}^{4 5 0}_{1 2 3} &  & \text{f5}\uparrow \\
+{}^{4 5 1}_{0 3 2} &  & \text{C2}\uparrow \\
+{}^{4 5 2}_{3 1 0} &  & \text{B4}\downarrow \\
+{}^{4 5 3}_{2 0 1} &  & \text{b2}\downarrow \\
+{}^{5 0 1}_{2 3 4} &  & \text{D2}\downarrow \\
+{}^{5 0 2}_{1 4 3} &  & \text{d4}\downarrow \\
+{}^{5 0 3}_{4 2 1} &  & \text{f1}\uparrow \\
+{}^{5 0 4}_{3 1 2} &  & \text{e3}\uparrow \\
+{}^{5 1 0}_{3 2 4} &  & \text{e5}\downarrow \\
+{}^{5 1 2}_{4 3 0} &  & \text{C3}\uparrow \\
+{}^{5 1 3}_{0 4 2} &  & \text{E1}\downarrow \\
+{}^{5 1 4}_{2 0 3} &  & \text{D5}\uparrow \\
+{}^{5 2 0}_{4 1 3} &  & \text{f3}\downarrow \\
+{}^{5 2 1}_{3 4 0} &  & \text{a3}\uparrow \\
+{}^{5 2 3}_{1 0 4} &  & \text{d2}\uparrow \\
+{}^{5 2 4}_{0 3 1} &  & \text{F3}\downarrow \\
+{}^{5 3 0}_{2 4 1} &  & \text{A4}\uparrow \\
+{}^{5 3 1}_{4 0 2} &  & \text{C5}\downarrow \\
+{}^{5 3 2}_{0 1 4} &  & \text{E4}\uparrow \\
+{}^{5 3 4}_{1 2 0} &  & \text{c1}\downarrow \\
+{}^{5 4 0}_{1 3 2} &  & \text{c4}\uparrow \\
+{}^{5 4 1}_{0 2 3} &  & \text{F1}\uparrow \\
+{}^{5 4 2}_{3 0 1} &  & \text{a5}\downarrow \\
+{}^{5 4 3}_{2 1 0} &  & \text{A1}\downarrow \\
+\end{array}
+
+*/
+
+
+/*Dodekaeder
 <math>
 \def\f{1.618}
 \def\g{0.618}
-\begin{tikzpicture}[scale=4,x={(0.9,-0.1)},y={(0.5,0.3)},z={(-1.46,3)},every node/.style={circle,draw,fill=white,minimum size=24}]
+\begin{tikzpicture}[scale=4,x={(0.9,-0.1)},z={(0,1),y={(0.5,0.3)}},every node/.style={circle,draw,fill=white,minimum size=24}]
 \coordinate (1) at (1,1,1);
 \coordinate (2) at (\g,0,\f);
 \coordinate (3) at (1,-1,1);
