@@ -27,19 +27,50 @@ function rad(grad) { return grad/180*Math.PI }
 function grad(rad) { return rad*180/Math.PI }
 function spunk(A) { return "L"+(A[0])+","+(-A[1]) }
 
+var R1=258.13;
+var X1=1373;
+var Y1=70;
+var R2=97.445446;
+var X2=1330;
+var Y2=97.445446;
+R1=253.8126836679217;
+X1=1373.9477729252212;
+Y1=72.13655866629155;
+R2=95.95;
+X2=1335;
+Y2=90;
+//dgesamt=3.011372951986955e-14;
+R1=214.2497751067147;
+X1=1368.4695672491307;
+Y1=51.31829816644305;
+R2=99;
+X2=1335;
+Y2=87;
+//dgesamt=7.27688164756466e-8;
+R1=215.51023884046262;
+X1=1370.0205012090148;
+Y1=50.45901525745346;
+R2=75;
+X2=1335;
+Y2=75;
+//dgesamt=9.697166891112831e-11;
+R1=191.09641290929105;
+X1=1363.1966605663304;
+Y1=42.84208980215378;
+R2=191.095;
+X2=1335;
+Y2=132;
+//dgesamt=9.17459894760537e-16;
+R2=191.095;
+X2=1335.1;
+Y2=132;
+
 var A1=[-Math.sin(rad(16.5))*145,-Math.cos(rad(16.5))*145+20];
 var A2=[0,-145+20];
 var A3=[-A1[0],A1[1]];
-Logtext=Logtext+"A1="+A1+"\n";
-Logtext=Logtext+"A2="+A2+"\n";
-Logtext=Logtext+"A3="+A3+"\n";
-var R2=97.445446;
 var Q1=[1335+Math.sin(rad(25))*R2,-Math.cos(rad(25))*R2];
 var Q2=[1335+0,-R2];
 var Q3=[1335-Math.sin(rad(25))*R2,Q1[1]];
-Logtext=Logtext+"Q1="+Q1+"\n";
-Logtext=Logtext+"Q2="+Q2+"\n";
-Logtext=Logtext+"Q3="+Q3+"\n";
 
 function BestimmeCaus(A,B,a,b) {
   var alpha=Math.atan2(B[1]-A[1],B[0]-A[0]);
@@ -51,11 +82,17 @@ function BestimmeCaus(A,B,a,b) {
   return C;
   }
 
-var X2=1335;
-var Y2=97.445446;
-Y2=90;
+/*
+Logtext=Logtext+"A1="+A1+"\n";
+Logtext=Logtext+"A2="+A2+"\n";
+Logtext=Logtext+"A3="+A3+"\n";
 Logtext=Logtext+"X2="+X2+"\n";
 Logtext=Logtext+"Y2="+Y2+"\n";
+*/
+
+Logtext=Logtext+"Q1="+Q1+"\n";
+Logtext=Logtext+"Q2="+Q2+"\n";
+Logtext=Logtext+"Q3="+Q3+"\n";
 
 var C1=BestimmeCaus(Q1,A1,Y2,X2);
 var C2=BestimmeCaus(Q2,A2,Y2,X2);
@@ -63,25 +100,6 @@ var C3=BestimmeCaus(Q3,A3,Y2,X2);
 Logtext=Logtext+"C1="+C1+"\n";
 Logtext=Logtext+"C2="+C2+"\n";
 Logtext=Logtext+"C3="+C3+"\n";
-
-var R1=258.13;
-var X1=1373;
-var Y1=70;
-R1=258.24345390919314;
-X1=1372.7700420359224;
-Y1=79.75964448357098;
-R1=259.26508248828185;
-X1=1375.0198939256632;
-Y1=74.1115158590801;
-//dgesamt=0.0552687903346545
-//R2=97.445446;
-//X2=1335;
-//Y2=90;
-R1=258.20391498015636;
-X1=1374.8412681578366;
-Y1=73.61741275168276;
-//dgesamt=0.04723470121525537;
-
 
 
 var P1,P2,P3,B1,B2,B3,delta1,delta2,delta3,d1,d2,d3,dges;
@@ -110,15 +128,15 @@ function allePunkte(R1,X1,Y1) {
   dges=d1*d1+d2*d2+d3*d3;
 /*  Logtext=Logtext+"d1="+d1+"\n";
   Logtext=Logtext+"d2="+d2+"\n";
-  Logtext=Logtext+"d3="+d3+"\n";
-  Logtext=Logtext+"dges="+dges+"\n";*/
+  Logtext=Logtext+"d3="+d3+"\n";*/
+//  Logtext=Logtext+"dges="+dges+"\n";
   return dges;
   }
 
 var dgesamt,gradient;
-var del=0.1;
+var del=0.0000000001;
 var eps=0.01;
-for (var nr=0;nr<200;nr++) {
+for (var nr=0;nr<1000000;nr++) {
   //Logtext=Logtext+"nr="+nr+"\n";
   dgesamt=allePunkte(R1,X1,Y1);
   gradient=[
@@ -129,16 +147,24 @@ for (var nr=0;nr<200;nr++) {
   R1=R1-gradient[0]*eps;
   X1=X1-gradient[1]*eps;
   Y1=Y1-gradient[2]*eps;
+  //Logtext=Logtext+"dgesamt="+dgesamt+";\n";
   }
 
   Logtext=Logtext+"gradient="+gradient+"\n";
-  Logtext=Logtext+"//R2="+R2+";\n";
-  Logtext=Logtext+"//X2="+X2+";\n";
-  Logtext=Logtext+"//Y2="+Y2+";\n";
   Logtext=Logtext+"R1="+R1+";\n";
   Logtext=Logtext+"X1="+X1+";\n";
   Logtext=Logtext+"Y1="+Y1+";\n";
+  Logtext=Logtext+"R2="+R2+";\n";
+  Logtext=Logtext+"X2="+X2+";\n";
+  Logtext=Logtext+"Y2="+Y2+";\n";
   Logtext=Logtext+"//dgesamt="+dgesamt+";\n\n";
+  Logtext=Logtext+"Probe:\n";
+  Logtext=Logtext+"A1-C1="+Math.sqrt((A1[0]-C1[0])**2+(A1[1]-C1[1])**2)+";\n";
+  Logtext=Logtext+"A2-C2="+Math.sqrt((A2[0]-C2[0])**2+(A2[1]-C2[1])**2)+";\n";
+  Logtext=Logtext+"A3-C3="+Math.sqrt((A3[0]-C3[0])**2+(A3[1]-C3[1])**2)+";\n";
+  Logtext=Logtext+"A1-B1="+Math.sqrt((A1[0]-B1[0])**2+(A1[1]-B1[1])**2)+";\n";
+  Logtext=Logtext+"A2-B2="+Math.sqrt((A2[0]-B2[0])**2+(A2[1]-B2[1])**2)+";\n";
+  Logtext=Logtext+"A3-B3="+Math.sqrt((A3[0]-B3[0])**2+(A3[1]-B3[1])**2)+";\n";
 
 document.getElementById("Logfile").innerHTML=Logtext;
 
