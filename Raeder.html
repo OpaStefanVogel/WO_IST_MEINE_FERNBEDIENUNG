@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>Raeder</title>
+<meta charset="utf-8"/>
+<body>
+<h1>Raeder</h1>
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  </div>
+<div id="Ausgabe">
+  </div>
+
+<script>
+var Logtext="Raeder\n\n";
+var m=10000;
+var g=9.81;
+var l_front=2;
+var l_middle=3;
+var l_rear=4;
+var l=l_front+l_rear;
+var c_front=1;
+var c_middle=1;
+var c_rear=1;
+var alpha=0;
+var x_dotdot=0;
+var z_cg=0.5;
+
+var A=[
+  [0,       c_middle*(l_middle+l_front), c_rear*l],
+  [c_front, c_middle,                    c_rear],
+  [l_rear-l_middle,-l_front-l_rear,l_front+l_middle] 
+  ];
+
+var b=[
+  [m*g*l_front*Math.cos(alpha)+m*g*z_cg*Math.sin(alpha)+m*z_cg*x_dotdot],
+  [m*g*Math.cos(alpha)],
+  [0]
+  ];
+
+Logtext=Logtext+"A=\n[ ["+A.join("],\n  [")+"] ];\n\n";
+
+Logtext=Logtext+"b=\n[ ["+b.join("],\n  [")+"] ];\n\n";
+
+document.getElementById("Logfile").innerHTML=Logtext;
+  </script>
+  </body>
+  </html>
