@@ -56,7 +56,7 @@ Logtext=Logtext+"<hr/>Lösungen 2(x+u)=0 und Probe 5(u+x+x)=0:\nfür u="+u+" und
 
 for (var i=0;i<120;i++) {
   N=[0,1,2,3,4,5];
-  N=DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[u],[0,1,2,3,4,5]))));  
+  N=DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[u],[0,1,2,3,4,5]))));
   if (N.toString()=="0,1,2,3,4,5") Logtext=Logtext+i+" "+T[i]+" "+ORD[i]+" "+DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],[0,1,2,3,4,5])))))))))))))))+"\n";
   }
 
@@ -73,41 +73,24 @@ for (var i=0;i<120;i++) {
   if (N.toString()=="0,1,2,3,4,5") Logtext=Logtext+i+" "+T[i]+" "+ORD[i]+" "+DREH(T[i],DREH(T[uq],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[uq],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[uq],DREH(T[i],DREH(T[u],[0,1,2,3,4,5]))))))))))))+"\n";
   }
 
-/*
-u=-L-R
-x=+L+u+L=-R+L
-y=+u-L+u=-L-R-L-L-R bis jetzt
+Logtext=Logtext+"<hr/>neue Lösungen x+y+xq+y+x=0 und Probe 3*(u+y+uq+y)=0\nfür x="+x+"; xq="+xq+"\n";
 
-     180° -R   +L
-012  543  530  250
-345  210  241  431
+for (var i=0;i<120;i++) {
+  N=[0,1,2,3,4,5];
+  N=DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[x]),T[i]),T[xq]),T[i]),T[x]);  //-L+R: 26 Lösungen, bes.70,80,110, 91 leider nicht
+  if (N.toString()=="0,1,2,3,4,5") Logtext=Logtext+i+" "+T[i]+" "+ORD[i]+" "+DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[i]),T[uq]),T[i]),T[u]),T[i]),T[uq]),T[i]),T[u]),T[i]),T[uq]),T[i])+"\n";
+  }
 
 
-*/
-var y=110;
+var y=80;
 Logtext=Logtext+"<hr/>ausgewählt y="+y+" "+T[y]+"\n";
-var z=(TT.indexOf(DREH(T[y],DREH(T[x],[0,1,2,3,4,5]))).toString())/12;
+var z=(TT.indexOf(DREH(DREH([0,1,2,3,4,5],T[x]),T[y])).toString())/12;
 Logtext=Logtext+"z=x+y="+T[z]+" "+z+"\n";
-Logtext=Logtext+"u+z= "+DREH(T[z],DREH(T[u],[0,1,2,3,4,5]))+"\n";
-Logtext=Logtext+"z+uq="+DREH(T[uq],DREH(T[z],[0,1,2,3,4,5]))+"\n";
-Logtext=Logtext+"0=5(u+y+z)="+DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],[0,1,2,3,4,5])))))))))))))))+"\n";
-Logtext=Logtext+"y =-R-R-L-R-L="+DREH(T[2],DREH(T[2],DREH(T[1],DREH(T[2],DREH(T[1],[0,1,2,3,4,5])))))+"\n";
-Logtext=Logtext+"-y=+L+R+L+R+R="+DREH(T[3],DREH(T[4],DREH(T[3],DREH(T[4],DREH(T[4],[0,1,2,3,4,5])))))+"\n";
-
-/*
-z    -R   -L   -R   -L   -R   -L   -R   -L   -R   -L
-035  052  532  524  234  241  431  410  130  105  035
-142  134  014  031  501  530  250  235  425  432  142
-
-z-R-L +z  
-532  504
-014  312
-
-0    -L   -R
-012  142  125
-345  035  043
-
-*/
+Logtext=Logtext+"u+z= "+DREH(DREH([0,1,2,3,4,5],T[u]),T[z])+"\n";
+Logtext=Logtext+"z+uq="+DREH(DREH([0,1,2,3,4,5],T[z]),T[uq])+"\n";
+Logtext=Logtext+"0=5(u+y+z)="+DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[y]),T[z]),T[u]),T[y]),T[z]),T[u]),T[y]),T[z]),T[u]),T[y]),T[z]),T[u]),T[y]),T[z])+"\n";
+Logtext=Logtext+"y =-L-L-R-L-R="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[1]),T[2]),T[1]),T[2])+"\n";
+Logtext=Logtext+"-y=+R+L+R+L+L="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[4]),T[3]),T[4]),T[3]),T[3])+"\n";
 
 var W=[[0,1,2,3,4,5]];
 var WW="0,1,2,3,4,5\n";
@@ -137,17 +120,18 @@ for (var i=0;i<120;i++) {
   Logtext=Logtext+i+" "+WWW[i]+" "+W[i]+" "+j+"\n"; 
   }
 
-Logtext=Logtext+"<hr/>-L=  u+u+u+x+x+y="+DREH(T[u],DREH(T[u],DREH(T[u],DREH(T[x],DREH(T[x],DREH(T[y],[0,1,2,3,4,5]))))))+"\n";
-Logtext=Logtext+"-R=x+u+u+u+x+x+y="+DREH(T[x],DREH(T[u],DREH(T[u],DREH(T[u],DREH(T[x],DREH(T[x],DREH(T[y],[0,1,2,3,4,5])))))))+"\n";
-Logtext=Logtext+"u+u+z=+L="+DREH(T[z],DREH(T[u],DREH(T[u],[0,1,2,3,4,5])))+"\n";
-Logtext=Logtext+"u+u+z=+L="+DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[u]),T[z])+"\n";
-Logtext=Logtext+"x+u=+R+R="+DREH(T[x],DREH(T[u],[0,1,2,3,4,5]))+"\n";
+Logtext=Logtext+"<hr/>-L="+T[1]+"=  u+u+u+x+y="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[u]),T[u]),T[x]),T[y])+"\n";
+Logtext=Logtext+"-R="+T[2]+"=x+u+u+u+x+y="+DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[x]),T[u]),T[u]),T[u]),T[x]),T[y])+"\n";
+Logtext=Logtext+"u+u+y=+L="+T[3]+"="+DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[u]),T[y])+"\n";
+Logtext=Logtext+"u+u+z=+R="+T[4]+"="+DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[u]),T[z])+"\n";
+
+Logtext=Logtext+"x+u=+R+R="+T[9]+"="+DREH(DREH([0,1,2,3,4,5],T[x]),T[u])+"\n";
 Logtext=Logtext+"u=-L-R=T[6]="+T[6]+"="+DREH(DREH([0,1,2,3,4,5],T[1]),T[2])+"\n";
 Logtext=Logtext+"x=-R+L=T[10]="+T[10]+"="+DREH(DREH([0,1,2,3,4,5],T[2]),T[3])+"\n";
-Logtext=Logtext+"y=-R-R-L-R-L=T[110]="+T[110]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[2]),T[2]),T[1]),T[2]),T[1])+"\n";
-Logtext=Logtext+"z=-L-R-L-R-L=T[91]="+T[110]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[2]),T[1]),T[2]),T[1])+"\n";
-Logtext=Logtext+"z=x+y=T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[y]),T[x])+"\n";
-
+Logtext=Logtext+"y=-L-L-R-L-R=T[80]="+T[80]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[1]),T[2]),T[1]),T[2])+"\n";
+Logtext=Logtext+"z=-L-R-L-R-L=T[91]="+T[91]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[2]),T[1]),T[2]),T[1])+"\n";
+Logtext=Logtext+"z=-R-L-R-L-R=T[91]="+T[91]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[2]),T[1]),T[2]),T[1]),T[2])+"\n";
+Logtext=Logtext+"z=x+y=T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[x]),T[y])+"\n";
 
 document.getElementById("Logfile").innerHTML=Logtext;
   </script>
