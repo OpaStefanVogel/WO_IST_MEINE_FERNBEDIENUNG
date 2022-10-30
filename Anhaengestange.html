@@ -5,8 +5,12 @@
 <body>
 <h1<Anhaengestange</h1>
 <svg style="border:solid" width="100%" height="400" fill="none" viewBox="-200 -200 1800 400">
-<path id="path1" d="M0,0L1350,91" stroke="blue"/>
-<path id="path2" d="M0,0L1350,191" stroke="orange"/>
+<circle cx="0" cy="-20" r="160" stroke="black"/>
+<circle cx="0" cy="-20" r="2" stroke="black"/>
+<circle cx="1335" cy="0" r="160" stroke="black"/>
+<circle cx="1335" cy="0" r="2" stroke="black"/>
+<path id="path1" d="M0,0L1350,91" stroke="orange"/>
+<path id="path2" d="M0,0L1350,191" stroke="blue"/>
 <path id="path3" d="M0,0L1350,291" stroke="brown"/>
   </svg>
 
@@ -85,6 +89,20 @@ X2=1335.0014102730404;
 Y2=139.45;
 //dgesamt=6.107690857217977e-17;
 Y2=139.45;//so, daß C1[1]=Q3[1] bzw. R1,R2 minimal bzw. R=200
+R1=179.9999999974977;
+X1=1362.2055567609061;
+Y1=36.66682594893182;
+R2=179.9999999974278;
+X2=1335.0144041672156;
+Y2=123.2281367670028;
+//dgesamt=9.236565424519097e-18;
+R1=170.00002445683964;
+X1=1361.2587829712913;
+Y1=31.455681862930124;
+R2=170.0000394400429;
+X2=1335.0315313549363;
+Y2=115.9497099591099;
+//dgesamt=3.970871048202554e-8;
 R1=199.99999999930628;
 X1=1363.9457896840731;
 Y1=48.06773970630241;
@@ -92,14 +110,36 @@ R2=199.9999999992349;
 X2=1335.0014209562084;
 Y2=139.4138993171782;
 //dgesamt=1.7526422316362672e-18;
-
+R1=174.99999999422423;
+X1=1361.7390958051724;
+Y1=34.01652116344991;
+R2=174.99999999414035;
+X2=1335.021619079906;
+Y2=119.49841491673186;
+//dgesamt=4.044127782796262e-17;
+R1=179.9999999974977;
+X1=1362.2055567609061;
+Y1=36.66682594893182;
+R2=179.9999999974278;
+X2=1335.0144041672156;
+Y2=123.2281367670028;
+//dgesamt=9.236565424519097e-18;
+R1=199.99999999930628;
+X1=1363.9457896840731;
+Y1=48.06773970630241;
+R2=199.9999999992349;
+X2=1335.0014209562084;
+Y2=139.4138993171782;
+//dgesamt=1.7526422316362672e-18;
+RSOLL=200;
 
 var A1=[-Math.sin(rad(16.5))*145,-Math.cos(rad(16.5))*145+20];
 var A2=[0,-145+20];
 var A3=[-A1[0],A1[1]];
-var Q1=[1335+Math.sin(rad(25))*R2,-Math.cos(rad(25))*R2];
-var Q2=[1335+0,-R2];
-var Q3=[1335-Math.sin(rad(25))*R2,Q1[1]];
+var R1alt=97.445446;
+var P1alt=[1335-Math.sin(rad(25))*R1alt,Math.cos(rad(25))*R1alt];
+var P2alt=[1335+0,R1alt];
+var P3alt=[1335+Math.sin(rad(25))*R1alt,P1alt[1]];
 
 function BestimmeCaus(A,B,a,b) {
   var alpha=Math.atan2(B[1]-A[1],B[0]-A[0]);
@@ -119,8 +159,7 @@ Logtext=Logtext+"X2="+X2+"\n";
 Logtext=Logtext+"Y2="+Y2+"\n";
 */
 
-
-var P1,P2,P3,B1,B2,B3,C1,C2,C3,delta1,delta2,delta3,d1,d2,d3,dges;
+var P1,P2,P3,Q1,Q2,Q3,B1,B2,B3,C1,C2,C3,delta1,delta2,delta3,d1,d2,d3,dges;
 
 
 function allePunkte(R1,X1,Y1,R2,X2,Y2) {
@@ -151,7 +190,7 @@ function allePunkte(R1,X1,Y1,R2,X2,Y2) {
   d3=Math.sin(delta3)*Math.sqrt((B3[1]-A3[1])**2+(B3[0]-A3[0])**2);
   d4=(R2-R1);
   d5=(C1[1]-C3[1]);
-  d6=(R1-200);
+  d6=(R1-RSOLL);
   dges=d1*d1+d2*d2+d3*d3+d4*d4+d5*d5+d6*d6;
 /*  Logtext=Logtext+"d1="+d1+"\n";
   Logtext=Logtext+"d2="+d2+"\n";
@@ -160,10 +199,12 @@ function allePunkte(R1,X1,Y1,R2,X2,Y2) {
   return dges;
   }
 
+function P(A) { return (A[0]/100).toFixed(2)+","+(A[1]/100).toFixed(2) }
+
 var dgesamt,gradient;
 var del=0.0000000001;
 var eps=0.01;
-for (var nr=0;nr<1000000;nr++) {
+for (var nr=0;nr<1000000*0+1;nr++) {
   //Logtext=Logtext+"nr="+nr+"\n";
   dgesamt=allePunkte(R1,X1,Y1,R2,X2,Y2);
   gradient=[
@@ -192,6 +233,7 @@ Logtext=Logtext+"C2="+C2+"\n";
 Logtext=Logtext+"C3="+C3+"\n";
   Logtext=Logtext+"gradient1="+gradient.slice(0,3)+"\n";
   Logtext=Logtext+"gradient2="+gradient.slice(3,6)+"\n";
+  Logtext=Logtext+"RSOLL="+RSOLL+";\n";
   Logtext=Logtext+"R1="+R1+";\n";
   Logtext=Logtext+"X1="+X1+";\n";
   Logtext=Logtext+"Y1="+Y1+";\n";
@@ -199,13 +241,77 @@ Logtext=Logtext+"C3="+C3+"\n";
   Logtext=Logtext+"X2="+X2+";\n";
   Logtext=Logtext+"Y2="+Y2+";\n";
   Logtext=Logtext+"//dgesamt="+dgesamt+";\n\n";
+  Logtext=Logtext+"Koordinaten:\n";
+  Logtext=Logtext+"A1=["+A1+"]\n";
+  Logtext=Logtext+"A2=["+A2+"]\n";
+  Logtext=Logtext+"A3=["+A3+"]\n";
+  Logtext=Logtext+"B1=["+B1+"]\n";
+  Logtext=Logtext+"B2=["+B2+"]\n";
+  Logtext=Logtext+"B3=["+B3+"]\n";
+  Logtext=Logtext+"C1=["+C1+"]\n";
+  Logtext=Logtext+"C2=["+C2+"]\n";
+  Logtext=Logtext+"C3=["+C3+"]\n";
+  Logtext=Logtext+"P1=["+P1+"]\n";
+  Logtext=Logtext+"P2=["+P2+"]\n";
+  Logtext=Logtext+"P3=["+P3+"]\n";
+  Logtext=Logtext+"Q1=["+Q1+"]\n";
+  Logtext=Logtext+"Q2=["+Q2+"]\n";
+  Logtext=Logtext+"Q3=["+Q3+"]\n\n";
   Logtext=Logtext+"Probe:\n";
-  Logtext=Logtext+"A1-C1="+Math.sqrt((A1[0]-C1[0])**2+(A1[1]-C1[1])**2)+";\n";
-  Logtext=Logtext+"A2-C2="+Math.sqrt((A2[0]-C2[0])**2+(A2[1]-C2[1])**2)+";\n";
-  Logtext=Logtext+"A3-C3="+Math.sqrt((A3[0]-C3[0])**2+(A3[1]-C3[1])**2)+";\n";
-  Logtext=Logtext+"A1-B1="+Math.sqrt((A1[0]-B1[0])**2+(A1[1]-B1[1])**2)+";\n";
-  Logtext=Logtext+"A2-B2="+Math.sqrt((A2[0]-B2[0])**2+(A2[1]-B2[1])**2)+";\n";
-  Logtext=Logtext+"A3-B3="+Math.sqrt((A3[0]-B3[0])**2+(A3[1]-B3[1])**2)+";\n";
+  Logtext=Logtext+"|A1-C1|="+Math.sqrt((A1[0]-C1[0])**2+(A1[1]-C1[1])**2)+";\n";
+  Logtext=Logtext+"|A2-C2|="+Math.sqrt((A2[0]-C2[0])**2+(A2[1]-C2[1])**2)+";\n";
+  Logtext=Logtext+"|A3-C3|="+Math.sqrt((A3[0]-C3[0])**2+(A3[1]-C3[1])**2)+";\n";
+  Logtext=Logtext+"|A1-B1|="+Math.sqrt((A1[0]-B1[0])**2+(A1[1]-B1[1])**2)+";\n";
+  Logtext=Logtext+"|A2-B2|="+Math.sqrt((A2[0]-B2[0])**2+(A2[1]-B2[1])**2)+";\n";
+  Logtext=Logtext+"|A3-B3|="+Math.sqrt((A3[0]-B3[0])**2+(A3[1]-B3[1])**2)+";\n";
+  Logtext=Logtext+"|P1-B1|="+Math.sqrt((P1[0]-B1[0])**2+(P1[1]-B1[1])**2)+";\n";
+  Logtext=Logtext+"|P2-B2|="+Math.sqrt((P2[0]-B2[0])**2+(P2[1]-B2[1])**2)+";\n";
+  Logtext=Logtext+"|P3-B3|="+Math.sqrt((P3[0]-B3[0])**2+(P3[1]-B3[1])**2)+";\n";
+  Logtext=Logtext+"|Q1-C1|="+Math.sqrt((Q1[0]-C1[0])**2+(Q1[1]-C1[1])**2)+";\n";
+  Logtext=Logtext+"|Q2-C2|="+Math.sqrt((Q2[0]-C2[0])**2+(Q2[1]-C2[1])**2)+";\n";
+  Logtext=Logtext+"|Q3-C3|="+Math.sqrt((Q3[0]-C3[0])**2+(Q3[1]-C3[1])**2)+";\n";
+  Logtext=Logtext+"|P1alt-A1|="+Math.sqrt((P1alt[0]-A1[0])**2+(P1alt[1]-A1[1])**2)+";\n";
+  Logtext=Logtext+"|P2alt-A2|="+Math.sqrt((P2alt[0]-A2[0])**2+(P2alt[1]-A2[1])**2)+";\n";
+  Logtext=Logtext+"|P3alt-A3|="+Math.sqrt((P3alt[0]-A3[0])**2+(P3alt[1]-A3[1])**2)+";\n\n";
+
+  Logtext=Logtext+"tikz:\n";
+  Logtext=Logtext+"\\coordinate (H) at (0,20);\n";
+  Logtext=Logtext+"\\coordinate (V) at (1335,0);\n";
+  Logtext=Logtext+"\\coordinate (A1) at ("+P(A1)+");\n";
+  Logtext=Logtext+"\\coordinate (A2) at ("+P(A2)+");\n";
+  Logtext=Logtext+"\\coordinate (A3) at ("+P(A3)+");\n";
+  Logtext=Logtext+"\\coordinate (B1) at ("+P(B1)+");\n";
+  Logtext=Logtext+"\\coordinate (B2) at ("+P(B2)+");\n";
+  Logtext=Logtext+"\\coordinate (B3) at ("+P(B3)+");\n";
+  Logtext=Logtext+"\\coordinate (C1) at ("+P(C1)+");\n";
+  Logtext=Logtext+"\\coordinate (C2) at ("+P(C2)+");\n";
+  Logtext=Logtext+"\\coordinate (C3) at ("+P(C3)+");\n";
+  Logtext=Logtext+"\\coordinate (P1) at ("+P(P1)+");\n";
+  Logtext=Logtext+"\\coordinate (P2) at ("+P(P2)+");\n";
+  Logtext=Logtext+"\\coordinate (P3) at ("+P(P3)+");\n";
+  Logtext=Logtext+"\\coordinate (Q1) at ("+P(Q1)+");\n";
+  Logtext=Logtext+"\\coordinate (Q2) at ("+P(Q2)+");\n";
+  Logtext=Logtext+"\\coordinate (Q3) at ("+P(Q3)+");\n";
+  
+  
+  Logtext=Logtext+"\\node[right] at (H) {H};\n";
+  Logtext=Logtext+"\\node[right] at (V) {V};\n";
+  Logtext=Logtext+"\\node[below left] at (A1) {A1};\n";
+  Logtext=Logtext+"\\node[above right] at (A2) {A2};\n";
+  Logtext=Logtext+"\\node[below riggt] at (A3) {A3};\n";
+  Logtext=Logtext+"\\node[above] at (B1) {B1};\n";
+  Logtext=Logtext+"\\node[above] at (B2) {B2};\n";
+  Logtext=Logtext+"\\node[above] at (B3) {B3};\n";
+  Logtext=Logtext+"\\node[below] at (C1) {C1};\n";
+  Logtext=Logtext+"\\node[below] at (C2) {C2};\n";
+  Logtext=Logtext+"\\node[below] at (C3) {C3};\n";
+  Logtext=Logtext+"\\node[above] at (P1) {P1};\n";
+  Logtext=Logtext+"\\node[above] at (P2) {P2};\n";
+  Logtext=Logtext+"\\node[above] at (P3) {P3};\n";
+  Logtext=Logtext+"\\node[above left] at (Q1) {Q1};\n";
+  Logtext=Logtext+"\\node[below] at (Q2) {Q2};\n";
+  Logtext=Logtext+"\\node[below] at (Q3) {Q3};\n";
+
 
 document.getElementById("Logfile").innerHTML=Logtext;
 
@@ -221,3 +327,52 @@ path3="M1335,0"+spunk(P3)+spunk(B3)+spunk(A3)+"h5h-10h5v5v-10v5"+spunk(C3)+spunk
   </script>
   </body>
   </html>
+
+<math>
+\begin{tikzpicture}
+\coordinate (H) at (0,0.20);
+\coordinate (V) at (13.35,0);
+\coordinate (A1) at (-0.41,-1.19);
+\coordinate (A2) at (0.00,-1.25);
+\coordinate (A3) at (0.41,-1.19);
+\coordinate (B1) at (-0.85,-0.98);
+\coordinate (B2) at (-0.01,-0.77);
+\coordinate (B3) at (0.85,-0.98);
+\coordinate (C1) at (0.85,-1.79);
+\coordinate (C2) at (0.02,-2.64);
+\coordinate (C3) at (-0.85,-1.79);
+\coordinate (P1) at (12.50,1.81);
+\coordinate (P2) at (13.35,2.00);
+\coordinate (P3) at (14.20,1.81);
+\coordinate (Q1) at (14.20,-1.81);
+\coordinate (Q2) at (13.35,-2.00);
+\coordinate (Q3) at (12.50,-1.81);
+\draw (H) circle[radius=1.6];
+\draw (V) circle[radius=1.6];
+\draw (P1) circle[radius=0.08] -- (Q1) circle[radius=0.08] (P2) circle[radius=0.08] -- (Q2) circle[radius=0.08] (P3) circle[radius=0.08] -- (Q3) circle[radius=0.08];
+\draw (H) -- (A3) circle[radius=0.08] (H) -- (A2) circle[radius=0.08] (H) -- (A1) circle[radius=0.08] ;
+
+\draw[blue,very thick] (P2) circle[radius=0.03] -- node[sloped,above] {L=X} (B2) circle[radius=0.06] -- (A2) circle[radius=0.03] -- (C2) circle[radius=0.06] -- node[sloped,below] {L=X2} (Q2) circle[radius=0.03] ;
+\draw[violet,very thick] (P3) circle[radius=0.03] -- (B3) circle[radius=0.06] -- (A3) circle[radius=0.03] -- (C3) circle[radius=0.06] -- (Q3) circle[radius=0.03] ;
+\draw[orange,very thin] (P1) circle[radius=0.03] -- (B1) circle[radius=0.06] -- (A1) circle[radius=0.03] -- (C1) circle[radius=0.06] -- (Q1) circle[radius=0.03] ;
+
+\node[right] at (H) {H};
+\node[right] at (V) {V};
+\node[below left,orange] at (A1) {A1};
+\node[above,blue] at (A2) {A2};
+\node[below right,violet] at (A3) {A3};
+\node[above,orange] at (B1) {B1};
+\node[above,blue] at (B2) {B2};
+\node[above,violet] at (B3) {B3};
+\node[below,orange] at (C1) {C1};
+\node[below,blue] at (C2) {C2};
+\node[below,violet] at (C3) {C3};
+\node[above,orange] at (P1) {P1};
+\node[above,blue] at (P2) {P2};
+\node[above,violet] at (P3) {P3};
+\node[below,orange] at (Q1) {Q1};
+\node[below,blue] at (Q2) {Q2};
+\node[above left,violet] at (Q3) {Q3};
+
+\end{tikzpicture}
+</math>
