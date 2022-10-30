@@ -42,7 +42,6 @@ Logtext=/*Logtext+TT+"<hr/>"+T.slice().sort().join("\n")+*/"<hr/>";
 
 for (var i=0;i<120;i++) {
   N=[0,1,2,3,4,5];
-  var NN=[];
   j=0;
   do {N=DREH(T[i],N); j=j+1} while (N.toString()!="0,1,2,3,4,5");
   ORD[i]=j;
@@ -86,10 +85,14 @@ y=+u-L+u=-L-R-L-L-R bis jetzt
 
 */
 var y=110;
+Logtext=Logtext+"<hr/>ausgewählt y="+y+" "+T[y]+"\n";
 var z=(TT.indexOf(DREH(T[y],DREH(T[x],[0,1,2,3,4,5]))).toString())/12;
-Logtext=Logtext+"<hr/>z=x+y="+T[z]+" "+z+"\n";
+Logtext=Logtext+"z=x+y="+T[z]+" "+z+"\n";
 Logtext=Logtext+"u+z= "+DREH(T[z],DREH(T[u],[0,1,2,3,4,5]))+"\n";
 Logtext=Logtext+"z+uq="+DREH(T[uq],DREH(T[z],[0,1,2,3,4,5]))+"\n";
+Logtext=Logtext+"0=5(u+y+z)="+DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],DREH(T[z],DREH(T[y],DREH(T[u],[0,1,2,3,4,5])))))))))))))))+"\n";
+Logtext=Logtext+"y =-R-R-L-R-L="+DREH(T[2],DREH(T[2],DREH(T[1],DREH(T[2],DREH(T[1],[0,1,2,3,4,5])))))+"\n";
+Logtext=Logtext+"-y=+L+R+L+R+R="+DREH(T[3],DREH(T[4],DREH(T[3],DREH(T[4],DREH(T[4],[0,1,2,3,4,5])))))+"\n";
 
 /*
 z    -R   -L   -R   -L   -R   -L   -R   -L   -R   -L
@@ -105,6 +108,47 @@ z-R-L +z
 345  035  043
 
 */
+
+var W=[[0,1,2,3,4,5]];
+var WW="0,1,2,3,4,5\n";
+var WWW=[[]];
+i=0;
+while (i<W.length) {
+  
+  N=DREH(W[i],T[u]); if (WW.indexOf(N.toString())==-1) {W.push(N); WWW.push([i,1]); WW=WW+N+"\n"}
+  N=DREH(W[i],T[x]); if (WW.indexOf(N.toString())==-1) {W.push(N); WWW.push([i,2]); WW=WW+N+"\n"}
+  i=i+1;
+  }
+
+i=0;
+while (i<W.length) {
+  
+  N=DREH(W[i],T[y]); if (WW.indexOf(N.toString())==-1) {W.push(N); WWW.push([i,3]); WW=WW+N+"\n"}
+  i=i+1;
+  }
+Logtext=Logtext+"<hr/>W=\n"+WW+"<hr/>"+W.slice().sort().join("\n")+"\nW.length="+W.length+"<hr/>";
+
+var WWWW=[];
+for (var i=0;i<120;i++) {
+  N=[0,1,2,3,4,5];
+  j=0;
+  do {N=DREH(W[i],N); j=j+1} while (N.toString()!="0,1,2,3,4,5");
+  WWWW[i]=j;
+  Logtext=Logtext+i+" "+WWW[i]+" "+W[i]+" "+j+"\n"; 
+  }
+
+Logtext=Logtext+"<hr/>-L=  u+u+u+x+x+y="+DREH(T[u],DREH(T[u],DREH(T[u],DREH(T[x],DREH(T[x],DREH(T[y],[0,1,2,3,4,5]))))))+"\n";
+Logtext=Logtext+"-R=x+u+u+u+x+x+y="+DREH(T[x],DREH(T[u],DREH(T[u],DREH(T[u],DREH(T[x],DREH(T[x],DREH(T[y],[0,1,2,3,4,5])))))))+"\n";
+Logtext=Logtext+"u+u+z=+L="+DREH(T[z],DREH(T[u],DREH(T[u],[0,1,2,3,4,5])))+"\n";
+Logtext=Logtext+"u+u+z=+L="+DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[u]),T[z])+"\n";
+Logtext=Logtext+"x+u=+R+R="+DREH(T[x],DREH(T[u],[0,1,2,3,4,5]))+"\n";
+Logtext=Logtext+"u=-L-R=T[6]="+T[6]+"="+DREH(DREH([0,1,2,3,4,5],T[1]),T[2])+"\n";
+Logtext=Logtext+"x=-R+L=T[10]="+T[10]+"="+DREH(DREH([0,1,2,3,4,5],T[2]),T[3])+"\n";
+Logtext=Logtext+"y=-R-R-L-R-L=T[110]="+T[110]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[2]),T[2]),T[1]),T[2]),T[1])+"\n";
+Logtext=Logtext+"z=-L-R-L-R-L=T[91]="+T[110]+"="+DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[2]),T[1]),T[2]),T[1])+"\n";
+Logtext=Logtext+"z=x+y=T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[y]),T[x])+"\n";
+
+
 document.getElementById("Logfile").innerHTML=Logtext;
   </script>
   </body>
