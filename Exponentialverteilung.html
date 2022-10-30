@@ -7,13 +7,15 @@
   </style>
 <body>
 <h1>Exponentialverteilung</h1>
-<svg fill="none" width="100%" style="background-color:gray"><line x1="0" y1="0" x2="100" y2="100" stroke="white"/>
-  <path id="path2" d="M0,0L70,100" stroke="blue"/>
-  <path id="path1" d="M0,0L50,100" stroke="red" stroke-dasharray="2 2"/>
+<svg fill="none" width="100%" style="background-color:gray"><line x1="0" y1="0" x2="10" y2="10" stroke="white"/>
+  <path id="path1" d="M0,0L70,100" stroke="blue"/>
+  <path id="path2" d="M0,0L50,100" stroke="red" stroke-dasharray="2 2"/>
   <path id="path3" d="M0,0L80,100" stroke="brown"/>
   <path id="path4" d="M0,0L80,100" stroke="yellow" stroke-dasharray="10 10"/>
   <path id="path5" d="M0,0L90,100" stroke="brown"/>
   <path id="path6" d="M0,0L110,100" stroke="yellow" stroke-dasharray="10 10"/>
+  <path id="path7" d="M0,0L120,100" stroke="blue" stroke-dasharray="2 2"/>
+  <path id="path8" d="M0,0L130,100" stroke="blue" stroke-dasharray="2 2"/>
   <path d="M0,102L1000,102" stroke="green"/>
   </svg>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
@@ -70,6 +72,8 @@ ZeichneFunktion(function(i) {return (1-lambda/(lambda+mue)*Math.exp(-mue*i))},"p
 var DDV=[]; for(var i=0;i<EV1.length;i++) DDV[i]=EV1[i]-EV2[i]-EV3[i];
 var AnfangspunktDDV=Zeichne(DDV,"path5");
 ZeichneFunktion(function(i) {return (1-lambda**2/(lambda+mue)**2*Math.exp(-mue*i))},"path6");
+ZeichneFunktion(function(i) {return (1-Math.exp(-mue*(i+Math.log1p(mue/lambda)/mue)))},"path7");
+ZeichneFunktion(function(i) {return (1-Math.exp(-mue*(i+2*Math.log1p(mue/lambda)/mue)))},"path8");
 
 Logtext=Logtext
   +AnfangspunktDV+"\n"+(1-lambda/(lambda+mue))+"\n\n"
