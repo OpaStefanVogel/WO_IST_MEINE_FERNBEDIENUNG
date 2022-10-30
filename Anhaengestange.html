@@ -131,6 +131,13 @@ R2=199.9999999992349;
 X2=1335.0014209562084;
 Y2=139.4138993171782;
 //dgesamt=1.7526422316362672e-18;
+R1=200;
+X1=1363.9457896840731;
+Y1=148.06773970630241;
+R2=10;
+X2=1335.0014209562084;
+Y2=239.4138993171782;
+//dgesamt=1.7526422316362672e-18;
 RSOLL=200;
 
 var A1=[-Math.sin(rad(16.5))*145,-Math.cos(rad(16.5))*145+20];
@@ -166,12 +173,18 @@ function allePunkte(R1,X1,Y1,R2,X2,Y2) {
   P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
   P2=[1335+0,R1];
   P3=[1335+Math.sin(rad(25))*R1,P1[1]];
-  Q1=[1335+Math.sin(rad(25))*R2,-Math.cos(rad(25))*R2];
-  Q2=[1335+0,-R2];
-  Q3=[1335-Math.sin(rad(25))*R2,Q1[1]];
-  C1=BestimmeCaus(Q1,A1,Y2,X2);
-  C2=BestimmeCaus(Q2,A2,Y2,X2);
-  C3=BestimmeCaus(Q3,A3,Y2,X2);
+  Q1=[1335+Math.sin(rad(25))*R2,-Math.cos(rad(25))*R2];//1
+  Q2=[1335+0,-R2];//1
+  Q3=[1335-Math.sin(rad(25))*R2,Q1[1]];//1
+//  Q1=[1335-Math.sin(rad(25))*R2,Math.cos(rad(25))*R2];//2
+//  Q2=[1335+0,R2];//2
+//  Q3=[1335+Math.sin(rad(25))*R2,Q1[1]];//2
+  C1=BestimmeCaus(Q1,A1,Y2,X2);//1
+  C2=BestimmeCaus(Q2,A2,Y2,X2);//1
+  C3=BestimmeCaus(Q3,A3,Y2,X2);//1
+//  C1=BestimmeCaus(A1,Q1,X2,Y2);//2
+//  C2=BestimmeCaus(A2,Q2,X2,Y2);//2
+//  C3=BestimmeCaus(A3,Q3,X2,Y2);//2
   //Logtext=Logtext+"P1="+P1+"\n";
   //Logtext=Logtext+"P2="+P2+"\n";
   //Logtext=Logtext+"P3="+P3+"\n";
@@ -204,7 +217,8 @@ function P(A) { return (A[0]/100).toFixed(2)+","+(A[1]/100).toFixed(2) }
 var dgesamt,gradient;
 var del=0.0000000001;
 var eps=0.01;
-for (var nr=0;nr<1000000*0+1;nr++) {
+for (var nr=0;nr<1000000*0+1;nr++) {//1
+//for (var nr=0;nr<1000*1+1;nr++) {//2
   //Logtext=Logtext+"nr="+nr+"\n";
   dgesamt=allePunkte(R1,X1,Y1,R2,X2,Y2);
   gradient=[
