@@ -10,7 +10,7 @@
 <path id="path3" d="M0,0L1350,291" stroke="brown"/>
   </svg>
 
-<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:120%">
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:150%">
   </div>
 <div id="Ausgabe">
   </div>
@@ -53,6 +53,7 @@ function BestimmeCaus(A,B,a,b) {
 
 var X2=1335;
 var Y2=97.445446;
+Y2=90;
 Logtext=Logtext+"X2="+X2+"\n";
 Logtext=Logtext+"Y2="+Y2+"\n";
 
@@ -63,46 +64,93 @@ Logtext=Logtext+"C1="+C1+"\n";
 Logtext=Logtext+"C2="+C2+"\n";
 Logtext=Logtext+"C3="+C3+"\n";
 
-var R1=258;
+var R1=258.13;
 var X1=1373;
-var Y1=80;
-for (var nr=0;nr<1;nr++) {
-  Logtext=Logtext+"nr="+nr+"\n";
-  R1=R1+1;
-  var P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
-  var P2=[1335+0,R1];
-  var P3=[1335+Math.sin(rad(25))*R1,P1[1]];
+var Y1=70;
+R1=258.24345390919314;
+X1=1372.7700420359224;
+Y1=79.75964448357098;
+R1=259.26508248828185;
+X1=1375.0198939256632;
+Y1=74.1115158590801;
+//dgesamt=0.0552687903346545
+//R2=97.445446;
+//X2=1335;
+//Y2=90;
+R1=258.20391498015636;
+X1=1374.8412681578366;
+Y1=73.61741275168276;
+//dgesamt=0.04723470121525537;
+
+
+
+var P1,P2,P3,B1,B2,B3,delta1,delta2,delta3,d1,d2,d3,dges;
+
+
+function allePunkte(R1,X1,Y1) {
+  P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
+  P2=[1335+0,R1];
+  P3=[1335+Math.sin(rad(25))*R1,P1[1]];
   //Logtext=Logtext+"P1="+P1+"\n";
   //Logtext=Logtext+"P2="+P2+"\n";
   //Logtext=Logtext+"P3="+P3+"\n";
-  var B1=BestimmeCaus(A1,P1,X1,Y1);
-  var B2=BestimmeCaus(A2,P2,X1,Y1);
-  var B3=BestimmeCaus(A3,P3,X1,Y1);
+  B1=BestimmeCaus(A1,P1,X1,Y1);
+  B2=BestimmeCaus(A2,P2,X1,Y1);
+  B3=BestimmeCaus(A3,P3,X1,Y1);
   //Logtext=Logtext+"B1="+B1+"\n";
   //Logtext=Logtext+"B2="+B2+"\n";
   //Logtext=Logtext+"B3="+B3+"\n";
   
-  var delta1=Math.atan2(B1[1]-C1[1],B1[0]-C1[0])-Math.atan2(B1[1]-A1[1],B1[0]-A1[0]);
-  var delta2=Math.atan2(B2[1]-C2[1],B2[0]-C2[0])-Math.atan2(B2[1]-A2[1],B2[0]-A2[0]);
-  var delta3=Math.atan2(B3[1]-C3[1],B3[0]-C3[0])-Math.atan2(B3[1]-A3[1],B3[0]-A3[0]);
-  var d1=Math.sin(delta1)*Math.sqrt((B1[1]-A1[1])**2+(B1[0]-A1[0])**2);
-  var d2=Math.sin(delta2)*Math.sqrt((B2[1]-A2[1])**2+(B2[0]-A2[0])**2);
-  var d3=Math.sin(delta3)*Math.sqrt((B3[1]-A3[1])**2+(B3[0]-A3[0])**2);
-  Logtext=Logtext+"d1="+d1+"\n";
+  delta1=Math.atan2(B1[1]-C1[1],B1[0]-C1[0])-Math.atan2(B1[1]-A1[1],B1[0]-A1[0]);
+  delta2=Math.atan2(B2[1]-C2[1],B2[0]-C2[0])-Math.atan2(B2[1]-A2[1],B2[0]-A2[0]);
+  delta3=Math.atan2(B3[1]-C3[1],B3[0]-C3[0])-Math.atan2(B3[1]-A3[1],B3[0]-A3[0]);
+  d1=Math.sin(delta1)*Math.sqrt((B1[1]-A1[1])**2+(B1[0]-A1[0])**2);
+  d2=Math.sin(delta2)*Math.sqrt((B2[1]-A2[1])**2+(B2[0]-A2[0])**2);
+  d3=Math.sin(delta3)*Math.sqrt((B3[1]-A3[1])**2+(B3[0]-A3[0])**2);
+  dges=d1*d1+d2*d2+d3*d3;
+/*  Logtext=Logtext+"d1="+d1+"\n";
   Logtext=Logtext+"d2="+d2+"\n";
   Logtext=Logtext+"d3="+d3+"\n";
+  Logtext=Logtext+"dges="+dges+"\n";*/
+  return dges;
   }
 
+var dgesamt,gradient;
+var del=0.1;
+var eps=0.01;
+for (var nr=0;nr<200;nr++) {
+  //Logtext=Logtext+"nr="+nr+"\n";
+  dgesamt=allePunkte(R1,X1,Y1);
+  gradient=[
+    (allePunkte(R1+del,X1,Y1)-dgesamt)/del,
+    (allePunkte(R1,X1+del,Y1)-dgesamt)/del,
+    (allePunkte(R1,X1,Y1+del)-dgesamt)/del
+    ];
+  R1=R1-gradient[0]*eps;
+  X1=X1-gradient[1]*eps;
+  Y1=Y1-gradient[2]*eps;
+  }
+
+  Logtext=Logtext+"gradient="+gradient+"\n";
+  Logtext=Logtext+"//R2="+R2+";\n";
+  Logtext=Logtext+"//X2="+X2+";\n";
+  Logtext=Logtext+"//Y2="+Y2+";\n";
+  Logtext=Logtext+"R1="+R1+";\n";
+  Logtext=Logtext+"X1="+X1+";\n";
+  Logtext=Logtext+"Y1="+Y1+";\n";
+  Logtext=Logtext+"//dgesamt="+dgesamt+";\n\n";
+
+document.getElementById("Logfile").innerHTML=Logtext;
+
   var path1="M1335,0"+spunk(P1)+spunk(B1)+spunk(A1)+"h5h-10h5v5v-10v5"+spunk(C1)+spunk(Q1)+"Z";
-path2="M1335,0"+spunk(P2)+spunk(B2)+spunk(A2)+"h5h-10h5v5v-10v5"+spunk(C2)+spunk(Q2)+"Z";
+path2="M1335,0"+spunk(P2)+spunk(B2)+spunk(A2)+"l4,4l-8,-8l4,4l4,-4l-8,8l4,-4"+spunk(C2)+spunk(Q2)+"Z";
 path3="M1335,0"+spunk(P3)+spunk(B3)+spunk(A3)+"h5h-10h5v5v-10v5"+spunk(C3)+spunk(Q3)+"Z";
   //alert(path1);
+
   document.getElementById("path1").setAttribute("d",path1);
-document.getElementById("Logfile").innerHTML=Logtext;
   document.getElementById("path2").setAttribute("d",path2);
-document.getElementById("Logfile").innerHTML=Logtext;
   document.getElementById("path3").setAttribute("d",path3);
-document.getElementById("Logfile").innerHTML=Logtext;
+
   </script>
   </body>
   </html>
