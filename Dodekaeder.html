@@ -7,6 +7,7 @@
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:110%">
   </div>
 <div id="Ausgabe">
+<a id="Ende">Ende</a>
   </div>
 
 <script>
@@ -50,14 +51,16 @@ for (var i=0;i<120;i++) {
 
 var u=6;
 var uq=8;
+//var u=43;
+//var uq=54;
 var x=0;
 var xq=0;
-Logtext=Logtext+"<hr/>Lösungen 2(x+u)=0 und Probe 5(u+x+x)=0:\nfür u="+u+" und uq="+uq+"\n";
+Logtext=Logtext+"<hr/>Lösungen 2(u+x)=0 und Probe 5(x+x+u)=0:\nfür u="+u+" und uq="+uq+"\n";
 
 for (var i=0;i<120;i++) {
   N=[0,1,2,3,4,5];
-  N=DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[u],[0,1,2,3,4,5]))));
-  if (N.toString()=="0,1,2,3,4,5") Logtext=Logtext+i+" "+T[i]+" "+ORD[i]+" "+DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],DREH(T[i],DREH(T[i],DREH(T[u],[0,1,2,3,4,5])))))))))))))))+"\n";
+  N=DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[u]),T[i]),T[u]),T[i]);
+  if (N.toString()=="0,1,2,3,4,5") Logtext=Logtext+i+" "+T[i]+" "+ORD[i]+" "+DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[i]),T[i]),T[u]),T[i]),T[i]),T[u]),T[i]),T[i]),T[u]),T[i]),T[i]),T[u]),T[i]),T[i]),T[u])+"\n";
   }
 
 x=10;
@@ -140,8 +143,131 @@ Logtext=Logtext+"z=x +y =T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[x]),T[y])+"
 Logtext=Logtext+"z=y +xq=T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[y]),T[xq])+"\n";
 Logtext=Logtext+"z=xq+yq=T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[xq]),T[yq])+"\n";
 Logtext=Logtext+"z=yq+x =T[91]="+T[91]+"="+DREH(DREH([0,1,2,3,4,5],T[yq]),T[x])+"\n";
+Logtext=Logtext+"+L+z-R+z="+DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[3]),T[z]),T[2]),T[z])+"\n";
+Logtext=Logtext+"+R-L+R-L+R-L="+DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[4]),T[1]),T[4]),T[1]),T[4]),T[1])+"\n";
+Logtext=Logtext+"-L+R-L+R-L+R="+DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[4]),T[1]),T[4]),T[1]),T[4])+"\n";
+Logtext=Logtext+"-R+L-R+L-R+L="+DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[2]),T[3]),T[2]),T[3]),T[2]),T[3])+"\n";
+Logtext=Logtext+"+L-R+L-R+L-R="+DREH(DREH(DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[3]),T[2]),T[3]),T[2]),T[3]),T[2])+"\n";
+Logtext=Logtext+"Lneu=u+z=T[10]="+T[10]+"="+DREH(DREH([0,1,2,3,4,5],T[u]),T[z])+"\n";
+Logtext=Logtext+"Rneu=z+u=T[10]="+T[10]+"="+DREH(DREH([0,1,2,3,4,5],T[z]),T[u])+"\n";
+Logtext=Logtext+"uneu=+R+z=T[43]="+T[43]+"="+DREH(DREH([0,1,2,3,4,5],T[4]),T[z])+"\n";
+Logtext=Logtext+"uqneu =+L+z=T[54]="+T[54]+"="+DREH(DREH([0,1,2,3,4,5],T[3]),T[z])+"\n";
+Logtext=Logtext+"uneu=-R-L-R-L=T[43]="+T[43]+"="+DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[1]),T[2]),T[1]),T[2])+"\n";
+Logtext=Logtext+"uqneu =-L-R-L-R=T[54]="+T[54]+"="+DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[2]),T[1]),T[2]),T[1])+"\n\n";
+
+Kreise=[
+  [1,2,3,4,5],
+  [2,7,13,8,3],
+  [3,8,14,9,4],
+  [4,9,15,10,5],
+  [5,10,11,6,1],
+  [1,6,12,7,2],
+  [6,11,16,17,12],
+  [7,12,17,18,13],
+  [8,13,18,19,14],
+  [9,14,19,20,15],
+  [10,15,20,16,11],
+  [16,20,19,18,17]];
+
+Logtext=Logtext+"Kreise=[\n  ["+Kreise.join("],\n  [")+"] ];\n";
+
+Kanten=[];
+for (var i=0;i<21;i++) Kanten[i]=[];
+
+for (var i=0;i<12;i++) {
+  for (var j=0;j<5;j++) {
+    Kanten[Kreise[i][j]][Kreise[i][(j+1)%5]]=["\n  k",i," x",Kreise[i][j],Kreise[i][(j+1)%5],
+    " y",Kreise[i][(j+4)%5],Kreise[i][(j+3)%5],
+    " z",Kreise[i][(j+2)%5],Kreise[i][(j+3)%5]];
+    }
+  }
+
+Kanten[1][2][11]=" v";
+Kanten[1][2][12]=[0,1,2,3,4,5];
+Kanten[1][2][13]=" w";
+Kanten[1][2][14]=[5,4,3,2,1,0];
+
+var N1,N2,N3,N4;
+
+for (k=0;k<4;k++) { //schon voll nach k<3, k=3 ist die Probe
+  for (var i=1;i<21;i++) {
+    for (var j=1;j<21;j++) if (Kanten[i][j]) {
+      
+      Kanten[i][j][15]="*";
+      if (Kanten[i][j][14]) {
+        N1=DREH(Kanten[i][j][14],T[3]);
+        N2=DREH(Kanten[i][j][12],T[4]);
+        N3=DREH(Kanten[i][j][14],T[4]);
+        N4=DREH(Kanten[i][j][12],T[3]);
+        //alert(Kanten[i][j][6]+" "+Kanten[i][j][7]+"\n"+N1+" "+N2+" "+N3+" "+N4);
+        if (!Kanten[Kanten[i][j][6]][Kanten[i][j][7]][11]) {
+          Kanten[Kanten[i][j][6]][Kanten[i][j][7]][11]=" v";
+          Kanten[Kanten[i][j][6]][Kanten[i][j][7]][12]=N1;
+          Kanten[Kanten[i][j][6]][Kanten[i][j][7]][13]=" w";
+          Kanten[Kanten[i][j][6]][Kanten[i][j][7]][14]=N2;
+          Kanten[Kanten[i][j][6]][Kanten[i][j][7]][17]="♦";
+          } else {
+            if (Kanten[Kanten[i][j][6]][Kanten[i][j][7]][12].toString()!=N1.toString()) alert([i,j]+"\nö"+Kanten[Kanten[i][j][6]][Kanten[i][j][7]][12]+"ü\nö"+N1+"ü");
+            }
+        if (!Kanten[Kanten[i][j][9]][Kanten[i][j][10]][11]) {
+          Kanten[Kanten[i][j][9]][Kanten[i][j][10]][11]=" v";
+          Kanten[Kanten[i][j][9]][Kanten[i][j][10]][12]=N3;
+          Kanten[Kanten[i][j][9]][Kanten[i][j][10]][13]=" w";
+          Kanten[Kanten[i][j][9]][Kanten[i][j][10]][14]=N4;
+          Kanten[Kanten[i][j][9]][Kanten[i][j][10]][17]="♥";
+          }
+        }
+      }
+    }
+  }
+
+Logtext=Logtext+"Kanten=[\n  ["+Kanten.join("],\n  [")+"] ];\n";
 
 document.getElementById("Logfile").innerHTML=Logtext;
+
+/*
+<math>
+\def\f{1.618}
+\def\g{0.618}
+\begin{tikzpicture}[scale=4,x={(0.9,-0.1)},y={(0.5,0.3)},z={(-1.46,3)},every node/.style={circle,draw,fill=white,minimum size=24}]
+\coordinate (1) at (1,1,1);
+\coordinate (2) at (\g,0,\f);
+\coordinate (3) at (1,-1,1);
+\coordinate (4) at (\f,-\g,0);
+\coordinate (5) at (\f,\g,0);
+\coordinate (6) at (0,\f,\g);
+\coordinate (7) at (-\g,0,\f);
+\coordinate (8) at (0,-\f,\g);
+\coordinate (9) at (1,-1,-1);
+\coordinate (10) at (1,1,-1);
+\coordinate (11) at (0,\f,-\g);
+\coordinate (12) at (-1,1,1);
+\coordinate (13) at (-1,-1,1);
+\coordinate (14) at (0,-\f,-\g);
+\coordinate (15) at (\g,0,-\f);
+\coordinate (16) at (-1,1,-1);
+\coordinate (17) at (-\f,\g,0);
+\coordinate (18) at (-\f,-\g,0);
+\coordinate (19) at (-1,-1,-1);
+\coordinate (20) at (-\g,0,-\f);
+
+\draw[very thick,yshift=-70] (0,0,0) -- (1,0,0) (0,0,0) -- (0,1,0) (0,0,0) -- (0,0,1);
+\draw[red] (-3,0) -- (-3,0.1);
+%\draw (1,1,1) -- (1,1,-1) -- (1,-1,-1) -- (1,-1,1) -- (1,1,1) -- (-1,1,1) -- (-1,1,-1) -- (-1,-1,-1) -- (-1,-1,1) -- (-1,1,1);
+\draw[green,dotted] (1) -- (6) ;
+\draw[green] (2) -- (7)  (3) -- (8) (4) -- (9) (5) -- (10);
+\draw[orange,dotted] (11) -- (16)  (12) -- (17) ;
+\draw[orange] (13) -- (18) (14) -- (19) (15) -- (20);
+\draw[red] (1) -- (2) node {2} -- (3) node {3} -- (4) node {4} -- (5) node {5} -- (1) node {1} ;
+\draw[blue,dotted] (10) -- (11) node {11} -- (6) node {6} -- (12) node {12} -- (7);
+\draw[blue] (7) node {7} -- (13) node {13} -- (8) node {8} -- (14) node {14} -- (9) node {9} -- (15) node {15} -- (10) node {10} ;
+\draw[black!80,dotted] (20) -- (16) node {16} -- (17) node {17} -- (18) ;
+\draw[black!80] (18) -- (19) node {19} -- (20) node {20} (18) node {18} ;
+\end{tikzpicture}
+</math>
+
+*/
+
   </script>
   </body>
   </html>
