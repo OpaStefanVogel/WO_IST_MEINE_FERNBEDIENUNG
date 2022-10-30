@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>Exponentialverteilung</title>
+<meta charset="utf-8"/>
+<style>
+  td {text-align:right}
+  </style>
+<body style="background-color:gray">
+<h1>Exponentialverteilung</h1>
+<svg fill="none" width="100%"><line x1="0" y1="0" x2="100" y2="100" stroke="white"/>
+  <path id="path1" d="M0,0L50,100" stroke="red"/>
+  <path id="path2" d="M0,0L70,100" stroke="blue"/>
+  <path id="path3" d="M0,0L80,100" stroke="brown"/>
+  <path id="path4" d="M0,0L80,100" stroke="yellow" stroke-dasharray="10 10"/>
+  <path d="M0,102L1000,102" stroke="green"/>
+  </svg>
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  <div>
+<div id="Ausgabe">
+  <div>
+<script>
+//[0,1] Gleichverteilung x Werte
+var lambda=10;
+var mue=8;
+var n=50000;
+var Logtext="";
+
+function Exponentialverteilung(lambda,n) {
+  var GV=[];
+  for (var i=0;i<n;i++) GV[i]=-Math.log1p(-Math.random())/lambda;
+  return GV;
+  }
+
+function Zeichne(GV,path) {
+  var G=GV.slice();
+  var n=GV.length;
+  G=G.sort();
+  var i=0;
+  var d="M0,0";
+  for (var k=0;k<1000;k++) {
+    while (G[i]&&G[i]<k/1000) i=i+1;
+    d=d+"L"+k+","+(i/n*100);
+    if (k==0) var Anfangspunkt=i/n;
+    }
+  //alert(d);
+  document.getElementById(path).setAttribute("d",d);
+  return Anfangspunkt;
+  }
+  
+var EV1=Exponentialverteilung(mue,n);
+var EV2=Exponentialverteilung(lambda,n);
+Zeichne(EV1,"path1");
+Zeichne(EV2,"path2");
+var DV=[]; for(var i=0;i<EV1.length;i++) DV[i]=EV1[i]-EV2[i];
+var AnfangspunktDV=Zeichne(DV,"path3");
+var FV=[]; for(var i=0;i<EV1.length;i++) FV[i]=(1-8/18*Math.exp(-10*i))*100;
+Zeichne(FV,"path4");
+
+Logtext=Logtext+AnfangspunktDV+"\n"+(1-lambda/(lambda+mue))+"\n\n"+DV.sort().reverse().join("\n");
+
+
+document.getElementById("Logfile").innerHTML=Logtext;
+  </script>
+  </body>
+  </html>
