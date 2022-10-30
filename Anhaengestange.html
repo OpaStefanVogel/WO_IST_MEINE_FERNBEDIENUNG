@@ -56,28 +56,34 @@ Logtext=Logtext+"C1="+C1+"\n";
 Logtext=Logtext+"C2="+C2+"\n";
 Logtext=Logtext+"C3="+C3+"\n";
 
-var R1=150;
-var X1=1420;
-var Y1=93;
-var P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
-var P2=[1335+0,R1];
-var P3=[1335+Math.sin(rad(25))*R1,P1[1]];
-Logtext=Logtext+"P1="+P1+"\n";
-Logtext=Logtext+"P2="+P2+"\n";
-Logtext=Logtext+"P3="+P3+"\n";
-var B1=BestimmeCaus(A1,P1,X1,Y1);
-var B2=BestimmeCaus(A2,P2,X1,Y1);
-var B3=BestimmeCaus(A3,P3,X1,Y1);
-Logtext=Logtext+"B1="+B1+"\n";
-Logtext=Logtext+"B2="+B2+"\n";
-Logtext=Logtext+"B3="+B3+"\n";
-var delta1=Math.atan2(B1[1]-C1[1],B1[0]-C1[0])-Math.atan2(B1[1]-A1[1],B1[0]-A1[0]);
-var delta2=Math.atan2(B2[1]-C2[1],B2[0]-C2[0])-Math.atan2(B2[1]-A2[1],B2[0]-A2[0]);
-var delta3=Math.atan2(B3[1]-C3[1],B3[0]-C3[0])-Math.atan2(B3[1]-A3[1],B3[0]-A3[0]);
-Logtext=Logtext+"delta1="+grad(delta1)+"\n";
-Logtext=Logtext+"delta2="+grad(delta2)+"\n";
-Logtext=Logtext+"delta3="+grad(delta3)+"\n";
-
+var R1=258;
+var X1=1373;
+var Y1=80;
+for (var nr=0;nr<100;nr++) {
+  Logtext=Logtext+"nr="+nr+"\n";
+  R1=R1+1;
+  var P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
+  var P2=[1335+0,R1];
+  var P3=[1335+Math.sin(rad(25))*R1,P1[1]];
+  //Logtext=Logtext+"P1="+P1+"\n";
+  //Logtext=Logtext+"P2="+P2+"\n";
+  //Logtext=Logtext+"P3="+P3+"\n";
+  var B1=BestimmeCaus(A1,P1,X1,Y1);
+  var B2=BestimmeCaus(A2,P2,X1,Y1);
+  var B3=BestimmeCaus(A3,P3,X1,Y1);
+  //Logtext=Logtext+"B1="+B1+"\n";
+  //Logtext=Logtext+"B2="+B2+"\n";
+  //Logtext=Logtext+"B3="+B3+"\n";
+  var delta1=Math.atan2(B1[1]-C1[1],B1[0]-C1[0])-Math.atan2(B1[1]-A1[1],B1[0]-A1[0]);
+  var delta2=Math.atan2(B2[1]-C2[1],B2[0]-C2[0])-Math.atan2(B2[1]-A2[1],B2[0]-A2[0]);
+  var delta3=Math.atan2(B3[1]-C3[1],B3[0]-C3[0])-Math.atan2(B3[1]-A3[1],B3[0]-A3[0]);
+  var d1=Math.sin(delta1)*Math.sqrt((B1[1]-A1[1])**2+(B1[0]-A1[0])**2);
+  var d2=Math.sin(delta2)*Math.sqrt((B2[1]-A2[1])**2+(B2[0]-A2[0])**2);
+  var d3=Math.sin(delta3)*Math.sqrt((B3[1]-A3[1])**2+(B3[0]-A3[0])**2);
+  Logtext=Logtext+"d1="+d1+"\n";
+  Logtext=Logtext+"d2="+d2+"\n";
+  Logtext=Logtext+"d3="+d3+"\n";
+  }
 document.getElementById("Logfile").innerHTML=Logtext;
   </script>
   </body>
