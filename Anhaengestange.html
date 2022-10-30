@@ -85,6 +85,13 @@ X2=1335.0014102730404;
 Y2=139.45;
 //dgesamt=6.107690857217977e-17;
 Y2=139.45;//so, daß C1[1]=Q3[1] bzw. R1,R2 minimal bzw. R=200
+R1=199.99999999930628;
+X1=1363.9457896840731;
+Y1=48.06773970630241;
+R2=199.9999999992349;
+X2=1335.0014209562084;
+Y2=139.4138993171782;
+//dgesamt=1.7526422316362672e-18;
 
 
 var A1=[-Math.sin(rad(16.5))*145,-Math.cos(rad(16.5))*145+20];
@@ -112,15 +119,11 @@ Logtext=Logtext+"X2="+X2+"\n";
 Logtext=Logtext+"Y2="+Y2+"\n";
 */
 
-var C1=BestimmeCaus(Q1,A1,Y2,X2);
-var C2=BestimmeCaus(Q2,A2,Y2,X2);
-var C3=BestimmeCaus(Q3,A3,Y2,X2);
+
+var P1,P2,P3,B1,B2,B3,C1,C2,C3,delta1,delta2,delta3,d1,d2,d3,dges;
 
 
-var P1,P2,P3,B1,B2,B3,delta1,delta2,delta3,d1,d2,d3,dges;
-
-
-function allePunkte(R1,X1,Y1,R2,X2) {
+function allePunkte(R1,X1,Y1,R2,X2,Y2) {
   P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
   P2=[1335+0,R1];
   P3=[1335+Math.sin(rad(25))*R1,P1[1]];
@@ -148,7 +151,8 @@ function allePunkte(R1,X1,Y1,R2,X2) {
   d3=Math.sin(delta3)*Math.sqrt((B3[1]-A3[1])**2+(B3[0]-A3[0])**2);
   d4=(R2-R1);
   d5=(C1[1]-C3[1]);
-  dges=d1*d1+d2*d2+d3*d3+d4*d4+d5*d5;
+  d6=(R1-200);
+  dges=d1*d1+d2*d2+d3*d3+d4*d4+d5*d5+d6*d6;
 /*  Logtext=Logtext+"d1="+d1+"\n";
   Logtext=Logtext+"d2="+d2+"\n";
   Logtext=Logtext+"d3="+d3+"\n";*/
@@ -161,20 +165,21 @@ var del=0.0000000001;
 var eps=0.01;
 for (var nr=0;nr<1000000;nr++) {
   //Logtext=Logtext+"nr="+nr+"\n";
-  dgesamt=allePunkte(R1,X1,Y1,R2,X2);
+  dgesamt=allePunkte(R1,X1,Y1,R2,X2,Y2);
   gradient=[
-    (allePunkte(R1+del,X1,Y1,R2,X2)-dgesamt)/del,
-    (allePunkte(R1,X1+del,Y1,R2,X2)-dgesamt)/del,
-    (allePunkte(R1,X1,Y1+del,R2,X2)-dgesamt)/del,
-    (allePunkte(R1,X1,Y1,R2+del,X2)-dgesamt)/del,
-    (allePunkte(R1,X1,Y1,R2,X2+del)-dgesamt)/del
-    
+    (allePunkte(R1+del,X1,Y1,R2,X2,Y2)-dgesamt)/del,
+    (allePunkte(R1,X1+del,Y1,R2,X2,Y2)-dgesamt)/del,
+    (allePunkte(R1,X1,Y1+del,R2,X2,Y2)-dgesamt)/del,
+    (allePunkte(R1,X1,Y1,R2+del,X2,Y2)-dgesamt)/del,
+    (allePunkte(R1,X1,Y1,R2,X2+del,Y2)-dgesamt)/del,
+    (allePunkte(R1,X1,Y1,R2,X2,Y2+del)-dgesamt)/del
     ];
   R1=R1-gradient[0]*eps;
   X1=X1-gradient[1]*eps;
   Y1=Y1-gradient[2]*eps;
   R2=R2-gradient[3]*eps;
   X2=X2-gradient[4]*eps;
+  Y2=Y2-gradient[5]*eps;
   //Logtext=Logtext+"dgesamt="+dgesamt+";\n";
   }
 
