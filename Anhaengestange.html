@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>Anhaengestange</title>
+<meta charset="utf-8"/>
+<body>
+<h1<Anhaengestange</h1>
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  </div>
+<div id="Ausgabe">
+  </div>
+
+<script src="INVERT.js" type="text/javascript"></script>
+
+<script>
+var Logtext="Anhaengestange\n\n";
+var cosgamma=(7*7+8*8-5*5)/2/7/8;
+var cneu=Math.sqrt(4*4+6*6-2*4*6*cosgamma);
+Logtext=Logtext+"cosgamma="+cosgamma+"\ncneu="+cneu+"\n\n";
+
+function rad(grad) { return grad/180*Math.PI }
+function grad(rad) { return rad*180/Math.PI }
+
+var A1=[-Math.sin(rad(16.5))*145,-Math.cos(rad(16.5))*145+20];
+var A2=[0,-145+20];
+var A3=[-A1[0],A1[1]];
+Logtext=Logtext+"A1="+A1+"\n";
+Logtext=Logtext+"A2="+A2+"\n";
+Logtext=Logtext+"A3="+A3+"\n";
+var R2=97.445446;
+var Q1=[1335+Math.sin(rad(25))*R2,-Math.cos(rad(25))*R2];
+var Q2=[1335+0,-R2];
+var Q3=[1335-Math.sin(rad(25))*R2,Q1[1]];
+Logtext=Logtext+"Q1="+Q1+"\n";
+Logtext=Logtext+"Q2="+Q2+"\n";
+Logtext=Logtext+"Q3="+Q3+"\n";
+
+function BestimmeCaus(A,B,a,b) {
+  var alpha=Math.atan2(B[1]-A[1],B[0]-A[0]);
+  var c=Math.sqrt((B[1]-A[1])**2+(B[0]-A[0])**2);
+  var beta=Math.acos((b*b+c*c-a*a)/2/b/c);
+  var gamma=alpha+beta;
+  var C=[A[0]+b*Math.cos(gamma),A[1]+b*Math.sin(gamma)];
+//  return a+" "+b+" "+c+" "+grad(alpha)+" "+grad(beta)+" "+grad(gamma)+" "+C;
+  return C;
+  }
+
+var X2=1335;
+var Y2=97.445446;
+Logtext=Logtext+"X2="+X2+"\n";
+Logtext=Logtext+"Y2="+Y2+"\n";
+
+var C1=BestimmeCaus(Q1,A1,Y2,X2);
+var C2=BestimmeCaus(Q2,A2,Y2,X2);
+var C3=BestimmeCaus(Q3,A3,Y2,X2);
+Logtext=Logtext+"C1="+C1+"\n";
+Logtext=Logtext+"C2="+C2+"\n";
+Logtext=Logtext+"C3="+C3+"\n";
+
+var R1=150;
+var X1=1420;
+var Y1=93;
+var P1=[1335-Math.sin(rad(25))*R1,Math.cos(rad(25))*R1];
+var P2=[1335+0,R1];
+var P3=[1335+Math.sin(rad(25))*R1,P1[1]];
+Logtext=Logtext+"P1="+P1+"\n";
+Logtext=Logtext+"P2="+P2+"\n";
+Logtext=Logtext+"P3="+P3+"\n";
+var B1=BestimmeCaus(A1,P1,X1,Y1);
+var B2=BestimmeCaus(A2,P2,X1,Y1);
+var B3=BestimmeCaus(A3,P3,X1,Y1);
+Logtext=Logtext+"B1="+B1+"\n";
+Logtext=Logtext+"B2="+B2+"\n";
+Logtext=Logtext+"B3="+B3+"\n";
+var delta1=Math.atan2(B1[1]-C1[1],B1[0]-C1[0])-Math.atan2(B1[1]-A1[1],B1[0]-A1[0]);
+var delta2=Math.atan2(B2[1]-C2[1],B2[0]-C2[0])-Math.atan2(B2[1]-A2[1],B2[0]-A2[0]);
+var delta3=Math.atan2(B3[1]-C3[1],B3[0]-C3[0])-Math.atan2(B3[1]-A3[1],B3[0]-A3[0]);
+Logtext=Logtext+"delta1="+grad(delta1)+"\n";
+Logtext=Logtext+"delta2="+grad(delta2)+"\n";
+Logtext=Logtext+"delta3="+grad(delta3)+"\n";
+
+document.getElementById("Logfile").innerHTML=Logtext;
+  </script>
+  </body>
+  </html>
