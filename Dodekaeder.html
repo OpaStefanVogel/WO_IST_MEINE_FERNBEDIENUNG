@@ -156,18 +156,18 @@ Logtext=Logtext+"uneu=-R-L-R-L=T[43]="+T[43]+"="+DREH(DREH(DREH(DREH([0,1,2,3,4,
 Logtext=Logtext+"uqneu =-L-R-L-R=T[54]="+T[54]+"="+DREH(DREH(DREH(DREH([0,1,2,3,4,5],T[2]),T[1]),T[2]),T[1])+"\n\n";
 
 Kreise=[
-  [1,2,3,4,5],
-  [2,7,13,8,3],
-  [3,8,14,9,4],
-  [4,9,15,10,5],
-  [5,10,11,6,1],
-  [1,6,12,7,2],
-  [6,11,16,17,12],
-  [7,12,17,18,13],
-  [8,13,18,19,14],
-  [9,14,19,20,15],
-  [10,15,20,16,11],
-  [16,20,19,18,17]];
+  [1,2,3,4,5,"A"],
+  [2,7,13,8,3,"B"],
+  [3,8,14,9,4,"C"],
+  [4,9,15,10,5,"D"],
+  [5,10,11,6,1,"E"],
+  [1,6,12,7,2,"F"],
+  [6,11,16,17,12,"c"],
+  [7,12,17,18,13,"d"],
+  [8,13,18,19,14,"e"],
+  [9,14,19,20,15,"f"],
+  [10,15,20,16,11,"b"],
+  [16,20,19,18,17,"a"]];
 
 Logtext=Logtext+"Kreise=[\n  ["+Kreise.join("],\n  [")+"] ];\n";
 
@@ -177,8 +177,13 @@ for (var i=0;i<21;i++) Kanten[i]=[];
 for (var i=0;i<12;i++) {
   for (var j=0;j<5;j++) {
     Kanten[Kreise[i][j]][Kreise[i][(j+1)%5]]=["\n  k",i," x",Kreise[i][j],Kreise[i][(j+1)%5],
-    " y",Kreise[i][(j+4)%5],Kreise[i][(j+3)%5],
-    " z",Kreise[i][(j+2)%5],Kreise[i][(j+3)%5]];
+//    " y",Kreise[i][(j+4)%5],Kreise[i][(j+3)%5],
+//    " z",Kreise[i][(j+2)%5],Kreise[i][(j+3)%5],
+//    " +R",Kreise[i][(j+3)%5],Kreise[i][(j+2)%5],
+//    " +L",Kreise[i][(j+3)%5],Kreise[i][(j+4)%5],
+    " -L",Kreise[i][(j+4)%5],Kreise[i][(j+3)%5],
+    " -R",Kreise[i][(j+2)%5],Kreise[i][(j+3)%5],,,,,,,,
+    Kreise[i][5]+(j+1)];
     }
   }
 
@@ -189,7 +194,7 @@ Kanten[1][2][14]=[5,4,3,2,1,0];
 
 var N1,N2,N3,N4;
 
-for (k=0;k<4;k++) { //schon voll nach k<3, k=3 ist die Probe
+for (k=0;k<4;k++) { //schon voll nah k<3, k=3 ist die Probe
   for (var i=1;i<21;i++) {
     for (var j=1;j<21;j++) if (Kanten[i][j]) {
       
@@ -200,6 +205,8 @@ for (k=0;k<4;k++) { //schon voll nach k<3, k=3 ist die Probe
         N3=DREH(Kanten[i][j][14],T[4]);
         N4=DREH(Kanten[i][j][12],T[3]);
         //alert(Kanten[i][j][6]+" "+Kanten[i][j][7]+"\n"+N1+" "+N2+" "+N3+" "+N4);
+        Kanten[i][j][21]=Kanten[Kanten[i][j][6]][Kanten[i][j][7]][18];
+        Kanten[Kanten[i][j][6]][Kanten[i][j][7]][22]=Kanten[i][j][18];
         if (!Kanten[Kanten[i][j][6]][Kanten[i][j][7]][11]) {
           Kanten[Kanten[i][j][6]][Kanten[i][j][7]][11]=" v";
           Kanten[Kanten[i][j][6]][Kanten[i][j][7]][12]=N1;
@@ -209,6 +216,8 @@ for (k=0;k<4;k++) { //schon voll nach k<3, k=3 ist die Probe
           } else {
             if (Kanten[Kanten[i][j][6]][Kanten[i][j][7]][12].toString()!=N1.toString()) alert([i,j]+"\nö"+Kanten[Kanten[i][j][6]][Kanten[i][j][7]][12]+"ü\nö"+N1+"ü");
             }
+        Kanten[i][j][19]=Kanten[Kanten[i][j][9]][Kanten[i][j][10]][18];
+        Kanten[Kanten[i][j][9]][Kanten[i][j][10]][20]=Kanten[i][j][18];
         if (!Kanten[Kanten[i][j][9]][Kanten[i][j][10]][11]) {
           Kanten[Kanten[i][j][9]][Kanten[i][j][10]][11]=" v";
           Kanten[Kanten[i][j][9]][Kanten[i][j][10]][12]=N3;
