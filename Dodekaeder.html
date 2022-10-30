@@ -286,6 +286,44 @@ for (var i=0;i<120;i++) Logtext=Logtext+"{}^{"+Isomorphietabelle[i][0].slice(0,3
 
 Logtext=Logtext+"\\end{array}\n\n";
 
+Logtext=Logtext+"Latex Isomorphietabelle_zurueck mehspaltig:\n\\begin{array}\n";
+
+for (var i=0;i<10;i++) { 
+  for (j=0;j<6;j++) {
+    var k=i+j*10;
+    Logtext=Logtext
+    +Isomorphietabelle_zurueck[k][0].replace("au","u")+"&=({}^{"
+    +Isomorphietabelle_zurueck[k][1].slice(0,3).join(" ")+"}_{"+Isomorphietabelle_zurueck[k][1].slice(3,6).join(" ")+"}) &";
+    }
+  Logtext=Logtext+ " \\\n";
+  }
+
+for (var i=0;i<10;i++) { 
+  for (j=0;j<6;j++) {
+    var k=i+j*10+60;
+    Logtext=Logtext
+    +Isomorphietabelle_zurueck[k][0].replace("au","u")+"&=({}^{"
+    +Isomorphietabelle_zurueck[k][1].slice(0,3).join(" ")+"}_{"+Isomorphietabelle_zurueck[k][1].slice(3,6).join(" ")+"}) &";
+    }
+  Logtext=Logtext+ " \\\\\n";
+  }
+
+Logtext=Logtext+"\\end{array}\n\n";
+
+Logtext=Logtext+"Latex Isomorphietabelle mehrspaltig:\n\\begin{array}\n";
+
+for (var i=0;i<20;i++) { 
+  for (j=0;j<6;j++) {
+    var k=i+j*20;
+    Logtext=Logtext
+    +Isomorphietabelle[k][1].replace("au","u")+"&=({}^{"
+    +Isomorphietabelle[k][0].slice(0,3).join(" ")+"}_{"+Isomorphietabelle[k][0].slice(3,6).join(" ")+"}) &";
+    }
+  Logtext=Logtext+ " \\\\\n";
+  }
+
+Logtext=Logtext+"\\end{array}\n\n";
+
 document.getElementById("Logfile").innerHTML=Logtext;
 
 /*
