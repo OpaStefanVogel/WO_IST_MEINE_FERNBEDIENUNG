@@ -1,21 +1,24 @@
-var MA=[];
-var DD=[];
-var DDMERK=[];
-var alterNenner=1;
-var neuerNenner=1;
-var imax=0;
-var jmax=0;
-var imaxmerk=0;
-var jmaxmerk=0;
-var Code="";
-var CodeX="";
-//var eps=0.000000000001;
-  var eps=0.000000000001;
-var Ableitungsmatrix="";
-var Basis_der_Loesungsmenge=[];
-var Bereiche_der_Einsetzkanten=[];
+var Matrix={
+  MA:[],
+  DD:[],
+  DDMERK:[],
+  alterNenner:1,
+  neuerNenner:1,
+  imax:0,
+  jmax:0,
+  imaxmerk:0,
+  jmaxmerk:0,
+  Code:"",
+  CodeX:"",
+//eps:0.000000000001,
+  eps:0.000000000001,
+  Ableitungsmatrix:"",
+  Basis_der_Loesungsmenge:[],
+  Bereiche_der_Einsetzkanten:[],
+  }
 
-function DELTA(i,j,d) {
+with (Matrix) {
+Matrix.DELTA=function(i,j,d) {
   Code=Code+"\nDELTA("+i+","+j+","+d+"):\n";
   var YY=[]; for (var k=0;k<imax;k++) YY[k]=MA[k][i];
   var ZZ=[]; for (var l=0;l<jmax;l++) ZZ[l]=MA[j][l];
@@ -27,7 +30,7 @@ function DELTA(i,j,d) {
   Code=Code+"A=\n"+MA.join("\n")+"\nNenner="+alterNenner+"\n";
   }
 
-function DOPPELDELTA(g,h,k,l,d01,d10) {
+Matrix.DOPPELDELTA=function(g,h,k,l,d01,d10) {
 //δ*D^-1+TBS = [[bhg-δ,bhk-δ*d01],[blg-δ*d10,blk-δ]]; 
 //p = det (...)
 //XX=(...)^-1 = [[blk-δ,-bhk+δ*d01],[-blg+δ*d10,bhg-δ]];
@@ -63,7 +66,7 @@ function DOPPELDELTA(g,h,k,l,d01,d10) {
   Code=Code+"A=\n"+MA.join("\n")+"\nNenner="+alterNenner+"\n";
   }
 
-function DDSUCH() {
+Matrix.DDSUCH=function() {
   var num=0;
   do {num=num+1;
     tfl=true;
@@ -116,7 +119,7 @@ function DDSUCH() {
     } while (tfl==false&&num<2000);
   }
 
-function INVERT_pur(gA) {
+Matrix.INVERT_pur=function(gA) {
   //MA=[ [ 1, 1, 1, 1 ], [ 2, 4, 8, 16 ], [ 3, 9, 27, 81 ], [ 4, 16, 64, 256]];
   //MA=[[1,2],[3,1]];
   //MA=[[0,1],[0,0]];
@@ -170,7 +173,7 @@ function INVERT_pur(gA) {
     }
   }
 
-function MMUL(A,B) {//Matrixmultiplikation
+Matrix.MMUL=function(A,B) {//Matrixmultiplikation
   var RET=[];
   for (var i=0;i<A.length;i++) {
     RET[i]=[];
@@ -181,9 +184,9 @@ function MMUL(A,B) {//Matrixmultiplikation
       }
     }
   return RET;
-  }
+  },
 
-function MADD(lambda,A,mue,B) {//Matrixmultiplikation
+Matrix.MADD=function(lambda,A,mue,B) {//Matrixaddition
   var RET=[];
   for (var i=0;i<A.length;i++) {
     RET[i]=[];
@@ -192,4 +195,5 @@ function MADD(lambda,A,mue,B) {//Matrixmultiplikation
   return RET;
   }
 
+}
 //alert(MMUL([[1,2],[2,3]],[[1,2],[2,3]]));
