@@ -195,5 +195,14 @@ Matrix.MADD=function(lambda,A,mue,B) {//Matrixaddition
   return RET;
   }
 
+Matrix.MSCAL=function(lambda,A) {//Matrixaddition
+  var RET=[];
+  for (var i=0;i<A.length;i++) {
+    RET[i]=[];
+    for (var j=0;j<A[0].length;j++) RET[i][j]=lambda*A[i][j];
+    }
+  return RET;
+  }
+
 }
 //alert(MMUL([[1,2],[2,3]],[[1,2],[2,3]]));
