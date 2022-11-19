@@ -1,0 +1,230 @@
+<html>
+<head>
+<title>Plus.html</title>
+<meta charset="utf-8"/>
+<style>
+  td {text-align:right; min-width:100}
+  .zulaessig {background-color:pink}
+  .fortschritt {background-color:aqua}
+  </style>
+<script>
+var Ausgangsmarix=[];
+var gemeinsamer_Nenner=1;
+var m=0;
+var n=0;
+var D=[];
+var B=[];
+var LCode="";
+var HCode="";
+var p=[];
+
+function Los() {
+  //alert(document.getElementById("input").value);
+  eval(document.getElementById("input").value);
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  LCode="m="+m+"\nn="+n+";\n";
+  D=[]; for (var j=0;j<n;j++) D[j]=j;
+  B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
+  p=suche_Pivot();
+  Ausgabe();
+  }
+
+function tausche(r,s) {
+  //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  //alert(m+" "+n);
+  var neueMatrix=[];
+  var neuerNenner=Ausgangsmatrix[r][s];
+  for (var i=0;i<m;i++) {
+    neueMatrix[i]=[];
+    for (var j=0;j<n;j++) {
+      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner;
+      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j];
+      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j];
+      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
+      }
+    }
+  if (neuerNenner<0) {
+    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
+    neuerNenner=-neuerNenner;
+    }
+  Ausgangsmatrix=neueMatrix;
+  gemeinsamer_Nenner=neuerNenner;
+  //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  }
+
+function t(r,s) {
+  p=[r,s,r,s];
+  var merk=B[p[2]];
+  B[p[2]]=D[p[3]];
+  D[p[3]]=merk;
+  tausche(p[2],p[3]);
+  p=suche_Pivot();
+  Ausgabe();
+  }
+
+function Ausgabe() {
+  LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n-------\n"+LCode;
+  HCode=Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  document.getElementById("HCode").innerHTML=HCode;  
+  }
+
+function alt(bi) { if (bi<0) return n-bi-2; else return bi; }
+function neu(bi) { if (bi<n) return bi; else return n-bi-2; }
+
+function suche_Pivot() {
+  var r=m+n-1; 
+  var s=r;
+  var v=0;
+  var ri=0;
+  var sj=0;
+  for (var i=1;i<m;i++) if (Ausgangsmatrix[i][0]<0&&alt(B[i])<r) {r=alt(B[i]); ri=i; v=1}
+  for (var j=1;j<n;j++) if (Ausgangsmatrix[0][j]>0&&alt(D[j])<s) {s=alt(D[j]); sj=j; v=2}
+  if (r<s) {
+    s=m+n-1; sj=0;
+    for (var j=1;j<n;j++) if (Ausgangsmatrix[ri][j]>0&&alt(D[j])<s) {s=alt(D[j]); sj=j; v=3}
+    } else {
+      r=m+n-1; ri=0;
+      for (var i=1;i<m;i++) if (Ausgangsmatrix[i][sj]<0&&alt(B[i])<r) {r=alt(B[i]); ri=i; v=4}  
+      }
+  //alert("suche_Pivot()\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner+"\n\nr="+r+"; s="+s+"; ri="+ri+"; sj="+sj+";\n");
+  //alert([r,s,ri,sj]);
+  return [r,s,ri,sj,v];
+  }
+
+function starte_Pivotverfahren() {
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  D=[0]; for (var j=1;j<n;j++) D[j]=j;
+  B=[0]; for (var i=1;i<m;i++) B[i]=n+i-1;
+  p=suche_Pivot();
+  LCode="Ausgangsmatrix und Ergebnis der ersten Pivotsuche:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  HCode="<p>Ausgangsmatrix und Ergebnis der ersten Pivotsuche:<p>"+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  while (p[2]>0&&p[3]>0) {
+    var merk=B[p[2]];
+    B[p[2]]=D[p[3]];
+    D[p[3]]=merk;
+    //alert("B=["+B+"]; D=["+D+"];");
+    tausche(p[2],p[3]);
+    p=suche_Pivot();
+    LCode=LCode+"\n\nZwischenergebnis und weitere Pivotsuche:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+    if (p[2]>0&&p[3]>0)
+      HCode=HCode+"<p>Zwischenergebnis und Ergebnis der nächsten Pivotsuche:<p>";
+      else HCode=HCode+"<p>letztes Ergebnis (kein Pivot mehr gefunden):<p>";
+    HCode=HCode+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+    }
+  LCode=LCode+"\n\nErgebnis:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  document.getElementById("HCode").innerHTML=HCode;
+  }
+
+function Zusatz(i,j) {
+  var merk=B[i];
+  B[i]=D[j];
+  D[j]=merk;
+  tausche(i,j);
+  p=suche_Pivot();
+  LCode=LCode+"\n\nZusatzschritt:\n\n[ ["+Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  HCode=HCode+"<p>Zusatzschritt:<p>";
+  HCode=HCode+Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  document.getElementById("HCode").innerHTML=HCode;
+  }
+
+function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  var T=Ausgangsmatrix.join("],\n  [")+"] ] / "
+    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
+    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  return T;
+  }
+
+function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  var T='<table style="font-style:italic;font-size:300%" border="1">\n';
+  var Nenner=gemeinsamer_Nenner;
+//  if (p[2]>0&&p[3]>0) Nenner=1;
+  T=T+"<tr>"+"<td>"+Nenner+"</td>";
+  for (var j=0;j<n;j++) {
+      T=T+"<td>";
+      if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
+        else T=T+"y<sub>"+(-1-D[j])+"</sub></td>";
+      }
+  for (var i=0;i<m;i++) {
+    T=T+"<tr>";
+    if (B[i]<0) T=T+"<td>y<sub>"+(-1-B[i])+"</sub></td>"; 
+      else T=T+"<td>x<sub>"+(B[i])+"</sub></td>";
+    for (var j=0;j<n;j++) {
+      if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
+        else T=T+"<td";
+      if (j>0&Ausgangsmatrix[i][0]<0&Ausgangsmatrix[i][j]>0) T=T+' class="zulaessig"';
+      if (j>0&Ausgangsmatrix[0][j]>0&Ausgangsmatrix[i][j]<0) T=T+' class="fortschritt"';
+      T=T+' onclick="t('+i+","+j+')">';
+      if (Ausgangsmatrix[i][j]>=0) T=T+"+";
+      T=T+(Ausgangsmatrix[i][j])+"</td>";
+      }
+    T=T+"</tr>";
+    }
+//  T=T+Ausgangsmatrix.join("],\n  [")+"] ] / "
+//    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
+//    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  T=T+"</table>";
+  //alert(T);
+  return T;
+  }
+  </script>
+<body onload="Los()">
+<p>Ein Programm zu <a href="https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens" target="_blank">https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens</a></p>
+
+<div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
+<textarea id="input" cols="40" rows="10" >Ausgangsmatrix=[ 
+  [  4, -1,  0,  0,  0, -1 ],
+  [ -1,  4, -1,  0,  0,  0 ],
+  [  0, -1,  4, -1,  0,  0 ],
+  [  0,  0, -1,  4, -1,  0 ],
+  [  0,  0,  0, -1,  4, -1 ],
+  [ -1,  0,  0,  0, -1,  4 ] 
+  ];
+
+gemeinsamer_Nenner=1;
+
+Ausgangsmatrix=[ 
+  [     0,  2,  4,  1,  1 ],
+  [     4, -1, -3,  0, -1 ],
+  [     3, -2, -1,  0,  0 ],
+  [     3,  0, -1, -4, -1 ] ] ;
+
+/*
+tausche(0,0);
+alert(Ausgangsmatrix.join("\n"));
+tausche(1,1);
+alert(Ausgangsmatrix.join("\n"));
+tausche(0,0);
+alert(Ausgangsmatrix.join("\n"));
+tausche(1,1);
+alert(Ausgangsmatrix.join("\n"));
+//tausche(1,2);
+//tausche(2,2);
+
+
+//tausche(1,1);
+//tausche(2,2);
+//tausche(3,3);
+//tausche(4,1);
+//tausche(2,2);
+//tausche(4,2);
+
+starte_Pivotverfahren();
+//Zusatz(1,1);
+*/
+</textarea>
+<button onclick="Los()">losrechnen</button>
+
+<div id="HCode"> </div>
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  <div>
+<div id="Ausgabe">
+  <div>
+  </body>
+  </html>
