@@ -17,6 +17,7 @@ var B=[];
 var LCode="";
 var HCode="";
 var p=[];
+var hist=[];
 
 function Los() {
   //alert(document.getElementById("input").value);
@@ -26,6 +27,7 @@ function Los() {
   LCode="m="+m+"\nn="+n+";\n";
   D=[]; for (var j=0;j<n;j++) D[j]=j;
   B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
+  hist=[];
   p=suche_Pivot();
   Ausgabe();
   }
@@ -56,12 +58,14 @@ function tausche(r,s) {
   }
 
 function t(r,s) {
+  hist.push([r,s]);
   p=[r,s,r,s];
   var merk=B[p[2]];
   B[p[2]]=D[p[3]];
   D[p[3]]=merk;
   tausche(p[2],p[3]);
   p=suche_Pivot();
+  //alert("p="+p+"\nr="+xy(p[0])+"; s="+xy(p[1])+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   Ausgabe();
   }
 
@@ -74,6 +78,7 @@ function Ausgabe() {
 
 function alt(bi) { if (bi<0) return n-bi-2; else return bi; }
 function neu(bi) { if (bi<n) return bi; else return n-bi-2; }
+function xy(bi) { if (bi<n) return "x"+bi; else if (bi<n+m-1) return "y"+(bi-n+1); else return 0;}
 
 function suche_Pivot() {
   var r=m+n-1; 
@@ -220,6 +225,9 @@ starte_Pivotverfahren();
 */
 </textarea>
 <button onclick="Los()">losrechnen</button>
+<button onclick="t(p[2],p[3])">weiter</button>
+<button onclick="for (var w=0;w<100;w++) if (p[2]>0 & p[3]>0) t(p[2],p[3])">100*weiter</button>
+<button onclick="p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
 
 <div id="HCode"> </div>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
