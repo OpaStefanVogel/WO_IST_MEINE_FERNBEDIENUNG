@@ -35,8 +35,12 @@ getUserMedia audio: <svg width="200" height="10"><rect id="audio_rect" fill="red
   <g>
   <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="-10" y="-20"/-->
   </g>
+  <path d="M300,200 L330,300 270,300 Z" fill="darkgray" stroke="none"/>
+  <circle cx="300" cy="200" r="10" stroke="yellow" stroke-width="2"/>
   <line id="Pos" x1="0" y1="0" x2="100" y2="100" stroke="yellow" stroke-width="4" stroke-linecap="round"/>
-  <path style="transform:translate(100,0)" id="Track" d="M600,200 L500,300 400,200" fill="none"/>
+  <g id="gTrack" transform="rotate(0)">
+    <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
+    </g>
   <circle id="Gipf" cx="80" cy="80" r="5"/>
   </svg>
   <!--/div-->
@@ -45,6 +49,8 @@ var x = document.getElementById("demo");
 var graph=document.getElementById("graph");
 var graphPos=document.getElementById("Pos");
 var graphGipf=document.getElementById("Gipf");
+var graphTrack=document.getElementById("Track");
+var gTrack=document.getElementById("gTrack");
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -54,7 +60,7 @@ function getLocation() {
     }
 
 function xyrech(lat,lon) {
-  return [965+(lon-12.88)*1498,-(lat-50.84)*2395+305];
+  return [200+965+(lon-12.88)*1498,-(lat-50.84)*2395+305];
   }
 
 function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2)*110/2270 }
@@ -64,7 +70,7 @@ var bisherige_Distanzmarkierung=-1;
 var alte_Distanzmarkierung=-1;
 var gipf=0;
 var bisheriger_Gipfel=0;
-var Geschwindigkeit=0;
+var Geschwindigkeit=1;
 var Richtung=0;
 var position_merk={coords:{latitude:50.2553,longitude:12.28,speed:3,altitude:548+46},timestamp:(new Date())};
 var pause=0;
@@ -90,9 +96,15 @@ function showPosition(position) {
     graphPos.setAttribute("x2",xy[0]);
 //    graph.appendChild(next);
     imin=mindist(xy[0],xy[1],TV);
+    imin[0]=2500;
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
     if (Verfahren==1&&imin[1]<0.04) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
     var neue_Distanzmarkierung=TV[imin[0]][11];
+    var Richtung=-90-Math.atan2(TV[imin[0]+10][13]*1-TV[imin[0]][13]*1,TV[imin[0]+10][12]*1-TV[imin[0]][12]*1)/Math.PI*180;
+    //alert(Richtung);
+    var tx="translate(0,0";
+    if (Geschwindigkeit>=1) tx="translate("+xy[0]+","+xy[1]+") scale(2) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
+    gTrack.setAttribute("transform",tx);
     gipf=imin[0]+1; //Rückzu -1
     while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
     var Gipfel_erreicht=false;
@@ -126,13 +138,13 @@ function showPosition(position) {
 function Vorsprung() {
   var ret="";
   var dat1=Date.now();
-  var dat2=Date.parse(TV[imin[0]][1]);
+  var dat2=Date.parse("2022T"+TV[imin[0]][1]);
   var diff=((dat2-dat1)%(60*60*1000))/1000;
   if (diff<0) diff=diff+3600;
   if (diff<30*60) ret=ret+"eher, "; else {diff=60*60-diff; ret=ret+"später, "}
   var minu=Math.floor(diff/60);
   var seku=Math.floor(diff-60*minu);
-  ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
+  ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
     var aktuelle_Zeit=new Date();
@@ -205,7 +217,7 @@ function Trackplot() {
     //alert("T=["+T+"]");
     TV.push(T);
     }
-  
+
   for (var i=2;i<Track.length;i++) if (Track[i].slice(0,1)=="W") {
     var T=[];
     var S=Track[i].split(",");
@@ -284,7 +296,7 @@ function Gipfel() {
     graphG.setAttribute("cx",TV[i][12]);
     graphG.setAttribute("cy",TV[i][13]);
     graphG.setAttribute("id","Gipfel-"+i);
-    graph.appendChild(graphG);
+    gTrack.appendChild(graphG);
     
     }
   document.getElementById("Gipfel").firstChild.nodeValue=gipf.join("\n");
