@@ -30,16 +30,18 @@ getUserMedia audio: <svg width="200" height="10"><rect id="audio_rect" fill="red
 <div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
 <div id="Gipfel" style="white-space:pre-wrap; font-family:monospace; font.size:80%">Gipfel</div>
 <div id="TV" style="display:flex; max-height:200px; overflow:auto; white-space:pre"> </div>
+<!--div style="display:flex; flex-direction:row; overflow:auto"-->
 <svg id="graph" width="100%" height="2200" stroke="blue" style="border:solid">
   <g>
-  <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="800"/-->
+  <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="-10" y="-20"/-->
   </g>
-  <line x1="0" y1="0" x2="100" y2="100" stroke="red"/>
+  <line id="Pos" x1="0" y1="0" x2="100" y2="100" stroke="red" stroke-width="4" stroke-linecap="round"/>
   <path style="transform:translate(100,0)" id="Track" d="M600,200 L500,300 400,200" fill="none"/>
   </svg>
+  <!--/div-->
 <script>
 var x = document.getElementById("demo");
-var graph=document.getElementById("graph");
+var graphPos=document.getElementById("Pos");
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -71,7 +73,7 @@ var Startzeit=new Date();
 var Zeitverschiebung=1;
 
 function showPosition(position) {
-    position_merk=position;
+  position_merk=position;
   if (position!=0) {
     x.innerHTML="Latitude: " + position.coords.latitude + 
     "<br>Longitude: " + position.coords.longitude+
@@ -80,10 +82,9 @@ function showPosition(position) {
     "<br>Heading: " + position.coords.heading + 
     "<br>Timestamp: " + new Date(position.timestamp).toTimeString();
     }
-//    var next=graph.firstElementChild.cloneNode(true);
     var xy=xyrech(position.coords.latitude,position.coords.longitude);
-//    next.setAttribute("y2",xy[1]);
-//    next.setAttribute("x2",xy[0]);
+    graphPos.setAttribute("y2",xy[1]);
+    graphPos.setAttribute("x2",xy[0]);
 //    graph.appendChild(next);
     imin=mindist(xy[0],xy[1],TV);
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
@@ -94,7 +95,10 @@ function showPosition(position) {
     var Gipfel_erreicht=false;
     if (gipf!=bisheriger_Gipfel) {
       if (bisheriger_Gipfel==-1) bisheriger_Gipfel=1;
-      Sprich("Vor deiner Nase liegt der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
+      if (TV[bisheriger_Gipfel][16].length!="geschafft") {
+        Sprich("Vor deiner Nase liegt der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
+        TV[bisheriger_Gipfel][16]="geschafft";
+        }
       bisheriger_Gipfel=gipf;
       Gipfel_erreicht=true;
       }
@@ -112,9 +116,9 @@ function showPosition(position) {
       if (pause!=0) clearTimeout(pause);
       pause=setTimeout(Pausenfunktion,88000);
       }
-   Gipfel_erreicht=false;
-    document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
-}
+  Gipfel_erreicht=false;
+  document.getElementById("nahestgelegener_Trackpunkt").firstChild.nodeValue=imin+" "+TV[imin[0]][0]+" "+neue_Distanzmarkierung;
+  }
 
 function Vorsprung() {
   var ret="";
@@ -193,7 +197,7 @@ function Trackplot() {
     T[3]=S[3]*1.0;
     T[5]=Math.floor(S[5]*1.0);
     T[16]=S[12];
-    if (S[13]) Zeitverschiebung=Zeitverschiebung+S[13]*1;
+    if (S[13]) Zeitverschiebung=eval(S[13]);
     T[1]=(new Date((Date.parse(S[1])+1000*60*60*1+1000*60*Zeitverschiebung))).toLocaleTimeString().slice(0,8);
     //alert("T=["+T+"]");
     TV.push(T);
@@ -323,7 +327,7 @@ Batterie:
   <div style="display:flex; overflow:auto">
     <img src="../../../../DCIM/Screenshots/Screenshot_20220206-232903_Maps.jpg" alt="Abzweig Waldesruh">
     </div>
-<div id="WPunkt" style="white-space:pre-wrap; font-family:monospace; font.size:60%">WPunkt</div>
+<div id="WPunkt" style="display:flex; max-height:200px; overflow:auto; white-space:pre">WPunkt</div>
 
 
 
