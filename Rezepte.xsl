@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--nach Änderungen Browsercache löschen-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:param name="Pfad" select="'Repositories/WO_IST_MEINE_FERNBEDIENUNG/'"/>
 <xsl:template match="/REZEPTE">
@@ -31,6 +31,10 @@
 var ZU=document.getElementsByClassName("ZUTATEN");
 for (var i=0;ZU.length>i;i++) {
   ZU[i].innerHTML=ZU[i].firstChild.nodeValue.split("\n").join("\n&lt;input type='checkbox'/> ");
+  }
+var ZU=document.getElementsByClassName("ZUBEREITUNG");
+for (var i=0;ZU.length>i;i++) {
+//  ZU[i].innerHTML=ZU[i].firstChild.nodeValue.split("\n").join("\n&lt;input type='checkbox'/> ");
   }
   </script>
   </body></html>
@@ -118,6 +122,8 @@ for (var i=0;ZU.length>i;i++) {
  <a><xsl:attribute name="href">#<xsl:value-of select="." /></xsl:attribute>
   <u><xsl:value-of select="." /></u></a>
  </xsl:template>
+
+<xsl:template match="c"><input type='checkbox'/></xsl:template>
 
 <xsl:template match="*">
  <xsl:copy-of select="." />
