@@ -30,8 +30,70 @@ getUserMedia audio: <svg width="200" height="10"><rect id="audio_rect" fill="red
 <div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
 <div id="Gipfel" style="white-space:pre-wrap; font-family:monospace; font.size:80%">Gipfel</div>
 <div id="TV" style="display:flex; max-height:200px; overflow:auto; white-space:pre"> </div>
+
+
+Batterie: 
+  <div id="charging">(charging state unknown)</div>
+  <div id="level">(battery level unknown)</div>
+  <div id="dischargingTime">(discharging time unknown)</div>
+  <div style="display:flex; overflow:auto">
+    <img src="../../../../DCIM/Screenshots/Screenshot_20220210-222600_Maps.jpg" alt="Abzweig Bahnhof Mittelbach">
+    </div>
+  <div style="display:flex; overflow:auto">
+    <img src="../../../../DCIM/Screenshots/Screenshot_20220206-232903_Maps.jpg" alt="Abzweig Waldesruh">
+    </div>
+<div id="WPunkt" style="display:flex; max-height:200px; overflow:auto; white-space:pre">WPunkt</div>
+
+
+
+<div id="container">
+
+    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>Audio stream volume</span>
+    </h1>
+
+    <p>Measure the volume of a local media stream using WebAudio.</p>
+
+    <div id="meters">
+        <div id="instant">
+            <div class="label">Instant:</div>
+            <meter high="0.25" max="1" value="0"></meter>
+            <div class="value"></div>
+        </div>
+        <div id="slow">
+            <div class="label">Slow:</div>
+            <meter high="0.25" max="1" value="0"></meter>
+            <div class="value"></div>
+        </div>
+        <div id="clip">
+            <div class="label">Clip:</div>
+            <meter max="1" value="0"></meter>
+            <div class="value"></div>
+        </div>
+    </div>
+
+    <div>
+        <button type="button" id="startButton">Start</button> 
+        <button type="button" id="stopButton" disabled>Stop</button>
+    <div>
+
+    <p>The 'instant' volume changes approximately every 50ms; the 'slow' volume approximates the average volume over
+        about a second.</p>
+    <p>Note that you will not hear your own voice; use the <a href="../audio">local audio rendering demo</a> for that.
+    </p>
+    <p>The <code>audioContext</code>, <code>stream</code> and <code>soundMeter</code> variables are in global scope, so
+        you can inspect them from the console.</p>
+
+    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/volume"
+       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+
+</div>
+
+
+
+
+
 <!--div style="display:flex; flex-direction:row; overflow:auto"-->
-<svg id="graph" width="100%" height="2200" stroke="white" fill="none" style="border:solid; background-color:black">
+<svg id="graph" width="100%" height="2200" stroke="white" fill="none" style="border:solid; background-color:black" ondblclick="event.target.requestFullscreen();" onclick="document.exitFullscreen()" >
   <g>
   <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="-10" y="-20"/-->
   </g>
@@ -70,7 +132,7 @@ var bisherige_Distanzmarkierung=-1;
 var alte_Distanzmarkierung=-1;
 var gipf=0;
 var bisheriger_Gipfel=0;
-var Geschwindigkeit=1;
+var Geschwindigkeit=0;
 var Richtung=0;
 var position_merk={coords:{latitude:50.2553,longitude:12.28,speed:3,altitude:548+46},timestamp:(new Date())};
 var pause=0;
@@ -96,7 +158,7 @@ function showPosition(position) {
     graphPos.setAttribute("x2",xy[0]);
 //    graph.appendChild(next);
     imin=mindist(xy[0],xy[1],TV);
-    imin[0]=2500;
+//    imin[0]=2500;
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
     if (Verfahren==1&&imin[1]<0.04) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
     var neue_Distanzmarkierung=TV[imin[0]][11];
@@ -338,61 +400,6 @@ function InitBatteryStatus() {
       });
     }
   </script>
-Batterie: 
-  <div id="charging">(charging state unknown)</div>
-  <div id="level">(battery level unknown)</div>
-  <div id="dischargingTime">(discharging time unknown)</div>
-  <div style="display:flex; overflow:auto">
-    <img src="../../../../DCIM/Screenshots/Screenshot_20220210-222600_Maps.jpg" alt="Abzweig Bahnhof Mittelbach">
-    </div>
-  <div style="display:flex; overflow:auto">
-    <img src="../../../../DCIM/Screenshots/Screenshot_20220206-232903_Maps.jpg" alt="Abzweig Waldesruh">
-    </div>
-<div id="WPunkt" style="display:flex; max-height:200px; overflow:auto; white-space:pre">WPunkt</div>
-
-
-
-<div id="container">
-
-    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>Audio stream volume</span>
-    </h1>
-
-    <p>Measure the volume of a local media stream using WebAudio.</p>
-
-    <div id="meters">
-        <div id="instant">
-            <div class="label">Instant:</div>
-            <meter high="0.25" max="1" value="0"></meter>
-            <div class="value"></div>
-        </div>
-        <div id="slow">
-            <div class="label">Slow:</div>
-            <meter high="0.25" max="1" value="0"></meter>
-            <div class="value"></div>
-        </div>
-        <div id="clip">
-            <div class="label">Clip:</div>
-            <meter max="1" value="0"></meter>
-            <div class="value"></div>
-        </div>
-    </div>
-
-    <div>
-        <button type="button" id="startButton">Start</button> 
-        <button type="button" id="stopButton" disabled>Stop</button>
-    <div>
-
-    <p>The 'instant' volume changes approximately every 50ms; the 'slow' volume approximates the average volume over
-        about a second.</p>
-    <p>Note that you will not hear your own voice; use the <a href="../audio">local audio rendering demo</a> for that.
-    </p>
-    <p>The <code>audioContext</code>, <code>stream</code> and <code>soundMeter</code> variables are in global scope, so
-        you can inspect them from the console.</p>
-
-    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/volume"
-       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
-
-</div>
 
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
