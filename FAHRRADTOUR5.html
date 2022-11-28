@@ -68,6 +68,7 @@ var Verfahren=0;
 var Batterielevel=100;
 var Batterielevel_vorher=100;
 var Startzeit=new Date();
+var Zeitverschiebung=1;
 
 function showPosition(position) {
     position_merk=position;
@@ -192,11 +193,11 @@ function Trackplot() {
     T[3]=S[3]*1.0;
     T[5]=Math.floor(S[5]*1.0);
     T[16]=S[12];
-    T[1]=(new Date((Date.parse(S[1])+1000*60*60*1))).toLocaleTimeString().slice(0,8);
+    if (S[13]) Zeitverschiebung=Zeitverschiebung+S[13]*1;
+    T[1]=(new Date((Date.parse(S[1])+1000*60*60*1+1000*60*Zeitverschiebung))).toLocaleTimeString().slice(0,8);
     //alert("T=["+T+"]");
     TV.push(T);
     }
-//alert((new Date((Date.parse(TV[70][1])+60000*60*8))).toTimeString().slice(0,8));
   
   for (var i=2;i<Track.length;i++) if (Track[i].slice(0,1)=="W") {
     var T=[];
