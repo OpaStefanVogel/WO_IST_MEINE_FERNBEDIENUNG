@@ -97,8 +97,8 @@ Batterie:
   <g>
   <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="-10" y="-20"/-->
   </g>
-  <path d="M300,200 L330,300 270,300 Z" fill="darkgray" stroke="none"/>
-  <circle cx="300" cy="200" r="10" stroke="yellow" stroke-width="2"/>
+  <path d="M300,300 L330,400 270,400 Z" fill="darkgray" stroke="none"/>
+  <circle cx="300" cy="300" r="20" stroke="yellow" stroke-width="4"/>
   <line id="Pos" x1="0" y1="0" x2="100" y2="100" stroke="yellow" stroke-width="4" stroke-linecap="round"/>
   <g id="gTrack" transform="rotate(0)">
     <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
@@ -165,7 +165,8 @@ function showPosition(position) {
     var Richtung=-90-Math.atan2(TV[imin[0]+10][13]*1-TV[imin[0]][13]*1,TV[imin[0]+10][12]*1-TV[imin[0]][12]*1)/Math.PI*180;
     //alert(Richtung);
     var tx="translate(0,0";
-    if (Geschwindigkeit>=1) tx="translate("+xy[0]+","+xy[1]+") scale(2) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
+    //if (Geschwindigkeit>=1) tx="translate("+xy[0]+","+xy[1]+") scale(2) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
+    if (Geschwindigkeit>=1) tx="translate(300,300) scale(4) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
     gTrack.setAttribute("transform",tx);
     gipf=imin[0]+1; //Rückzu -1
     while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
@@ -173,7 +174,7 @@ function showPosition(position) {
     if (gipf!=bisheriger_Gipfel) {
       if (bisheriger_Gipfel==-1) bisheriger_Gipfel=1;
       if (TV[bisheriger_Gipfel][16].length!="geschafft") {
-        Sprich("Vor deiner Nase liegt der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+". ");
+        Sprich("Vor deiner Nase liegt der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+", ");
         TV[bisheriger_Gipfel][16]="geschafft";
         }
       bisheriger_Gipfel=gipf;
@@ -188,7 +189,7 @@ function showPosition(position) {
       Sprich("Geschafft "+neue_Distanzmarkierung+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung());
       if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
         var dat=new Date();
-        Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse(TV[gipf][1])-Date.parse(TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
+        Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
       if (pause!=0) clearTimeout(pause);
       pause=setTimeout(Pausenfunktion,88000);
@@ -206,11 +207,11 @@ function Vorsprung() {
   if (diff<30*60) ret=ret+"eher, "; else {diff=60*60-diff; ret=ret+"später, "}
   var minu=Math.floor(diff/60);
   var seku=Math.floor(diff-60*minu);
-  ret=ret+" "+minu+" zu "+seku+", noch "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
+  ret=ret+" "+minu+" zu "+seku+", noch "+(TV[gipf][11]-TV[imin[0]][11]).toFixed(1)+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
     var aktuelle_Zeit=new Date();
-    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, übrig bleiben "
+    ret=ret+"Batterie "+Math.floor(Batterielevel*100)+" Prozent, übrig bleiben, "
       //+Math.floor(100-80*bisherige_Distanzmarkierung/120)
       +(Math.floor(Batterielevel*100)+20-Math.floor(100-(aktuelle_Zeit.valueOf()-Startzeit.valueOf())/1000/60/60*8))
       +". ";
