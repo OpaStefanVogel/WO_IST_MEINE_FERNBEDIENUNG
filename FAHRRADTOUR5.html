@@ -158,7 +158,7 @@ function showPosition(position) {
     graphPos.setAttribute("x2",xy[0]);
 //    graph.appendChild(next);
     imin=mindist(xy[0],xy[1],TV);
-//    imin[0]=2500;
+    //imin[0]=7500;
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
     if (Verfahren==1&&imin[1]<0.04) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
     var neue_Distanzmarkierung=TV[imin[0]][11];
@@ -186,10 +186,13 @@ function showPosition(position) {
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
       if (Geschwindigkeit>20) {Sprich("schnell "+Geschwindigkeit+" ."+Vorsprung());return}
       Richtung=Math.floor(position.coords.heading);
-      Sprich("Geschafft "+neue_Distanzmarkierung+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung());
+      var text=TV[imin[0]][9];
+      if (text<0) text="Nicht geschafft "+text.slice(1); else text="Geschafft "+text;
+      text=text+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
+      Sprich(text);
       if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
         var dat=new Date();
-        Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(TV[gipf][11])+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
+        Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(Math.abs(TV[gipf][9]))+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
       if (pause!=0) clearTimeout(pause);
       pause=setTimeout(Pausenfunktion,88000);
@@ -320,12 +323,14 @@ function Trackplot() {
     }
   //alert(sum);
   //alert(TV.join("\n"));
+  var Kilometer_max=TV[TV.length-1][0].toFixed(1);
   var Kilometer_0=0;
-  if (TV[TV.length-1][16]=="Kilometer 0") Kilometer_0=TV[TV.length-1][0].toFixed(1);
+  if (TV[TV.length-1][16]=="Kilometer 0") Kilometer_0=Kilometer_max;
   for (var i=0;i<TV.length;i++) {
     var ti=TV[i];
     ti[10]=Math.floor(ti[0]);
-    if (Kilometer_0!=0) ti[11]=(Kilometer_0-ti[0]).toFixed(1); else ti[11]=ti[0].toFixed(1); 
+    if (Kilometer_0!=0) ti[11]=(Kilometer_0-ti[0]).toFixed(1); else ti[11]=ti[0].toFixed(1);
+    if (ti[11]*1<Kilometer_max/2) ti[9]=ti[11]; else ti[9]=(ti[11]*1-Kilometer_max).toFixed(1);
     }
   //alert(TV.slice(0).join("\n"));
   document.getElementById("TV").firstChild.nodeValue=TV.slice(0,-1).join("\n");
