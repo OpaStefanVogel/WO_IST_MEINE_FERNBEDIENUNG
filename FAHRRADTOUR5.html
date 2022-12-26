@@ -93,17 +93,21 @@ Batterie:
 
 
 <!--div style="display:flex; flex-direction:row; overflow:auto"-->
-<svg id="graph" width="100%" height="2200" stroke="white" fill="none" style="border:solid; background-color:black" ondblclick="event.target.requestFullscreen();" onclick="document.exitFullscreen()" >
+<svg id="graph" width="100%" height="2200" stroke="white" fill="none" style="border:solid; background-color:black" ondblclick="window.scrollTo({top: 100000, left: 0, behavior: 'smooth'});event.target.requestFullscreen()" onclick="document.exitFullscreen()" >
   <g>
   <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="-10" y="-20"/-->
   </g>
-  <path d="M300,300 L330,400 270,400 Z" fill="darkgray" stroke="none"/>
-  <circle cx="300" cy="300" r="20" stroke="yellow" stroke-width="4"/>
   <line id="Pos" x1="0" y1="0" x2="100" y2="100" stroke="yellow" stroke-width="4" stroke-linecap="round"/>
   <g id="gTrack" transform="rotate(0)">
     <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
     </g>
   <circle id="Gipf" cx="80" cy="80" r="5"/>
+  <path d="M400,300 L500,330 500,270 Z" fill="darkgray" stroke="none"/>
+  <circle cx="400" cy="300" r="16" stroke="darkgray" stroke-width="4"/>
+  <path d="M0,0 v20h128v-20h128v20h128v-20h128v20h128v-20h128v20h128v-20h128v20h128v-20h128v20h128"/>
+  <g id="Meterpfeil" transform="translate(1280)">
+    <path d="M20,20 L10,70 30,70Z" fill="white"/>
+    </g>
   </svg>
   <!--/div-->
 <script>
@@ -113,6 +117,7 @@ var graphPos=document.getElementById("Pos");
 var graphGipf=document.getElementById("Gipf");
 var graphTrack=document.getElementById("Track");
 var gTrack=document.getElementById("gTrack");
+var Meterpfeil=document.getElementById("Meterpfeil");
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -158,16 +163,19 @@ function showPosition(position) {
     graphPos.setAttribute("x2",xy[0]);
 //    graph.appendChild(next);
     imin=mindist(xy[0],xy[1],TV);
-    //imin[0]=7500;
+    //imin[0]=190;
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
     if (Verfahren==1&&imin[1]<0.04) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
     var neue_Distanzmarkierung=TV[imin[0]][11];
+    
     var Richtung=-90-Math.atan2(TV[imin[0]+10][13]*1-TV[imin[0]][13]*1,TV[imin[0]+10][12]*1-TV[imin[0]][12]*1)/Math.PI*180;
     //alert(Richtung);
-    var tx="translate(0,0";
+    var tx="translate(0,0)";
     //if (Geschwindigkeit>=1) tx="translate("+xy[0]+","+xy[1]+") scale(2) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
-    if (Geschwindigkeit>=1) tx="translate(300,300) scale(4) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
+    if (Geschwindigkeit>=0.3) tx="translate(400,300) scale(4) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
     gTrack.setAttribute("transform",tx);
+    Meterpfeil.setAttribute("transform","translate("+((TV[imin[0]][0]+0.05-Math.floor(neue_Distanzmarkierung*1))*1280)+")");
+    
     gipf=imin[0]+1; //Rückzu -1
     while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
     var Gipfel_erreicht=false;
