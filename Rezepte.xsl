@@ -11,6 +11,7 @@
    <style>button {font-size:100%}</style> 
    </head>
 <body class="REZEPT">
+  <iframe style="position:fixed; bottom:2; right:2" src="Repositories/RADIOPI/Waage.html#Miniscreen" width="260" height="50"/>
   <xsl:for-each select="//TITEL">
     <a>
       <xsl:attribute name="href">#<xsl:value-of select="." /></xsl:attribute>
