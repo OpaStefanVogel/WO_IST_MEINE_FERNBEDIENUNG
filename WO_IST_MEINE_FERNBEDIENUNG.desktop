@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=lxterminal -e "ls;git pull;gitk --all &pcmanfm .&mousepad WO_IST_MEINE_FERNBEDIENUNG.desktop plus1.html&bash"
 Type=Application
-Path=/home/pi/Desktop/CLONE/Repositories/WO_IST_MEINE_FERNBEDIENUNG
+Path=/home/pi/Desktop/CLONE/WO_IST_MEINE_FERNBEDIENUNG
 Terminal=false
 StartupNotify=true
 Icon=
