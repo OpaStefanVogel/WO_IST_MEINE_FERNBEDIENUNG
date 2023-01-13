@@ -175,7 +175,8 @@ function showPosition(position) {
     if (Geschwindigkeit>=0.3) tx="translate(400,300) scale(4) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
     gTrack.setAttribute("transform",tx);
     Meterpfeil.setAttribute("transform","translate("+((TV[imin[0]][0]+0.05-Math.floor(neue_Distanzmarkierung*1))*1280)+")");
-    
+    //Math.floor((TV[gipf][11]-TV[imin[0]][11])*10)
+
     gipf=imin[0]+1; //Rückzu -1
     while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
     var Gipfel_erreicht=false;
@@ -192,17 +193,17 @@ function showPosition(position) {
       alte_Distanzmarkierung=bisherige_Distanzmarkierung;
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
-      if (Geschwindigkeit>20) {Sprich("schnell "+Geschwindigkeit+" ."+Vorsprung());return}
+      if (pause!=0) clearTimeout(pause);
+      if (Geschwindigkeit>20) {Sprich(Math.round((TV[gipf][11]-TV[imin[0]][11])*10)+", "+"schnell "+Geschwindigkeit+" ."+Vorsprung());return}
       Richtung=Math.floor(position.coords.heading);
       var text=TV[imin[0]][9];
       if (text<0) text="Nicht geschafft "+text.slice(1); else text="Geschafft "+text;
-      text=text+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
+      text=Math.round((TV[gipf][11]-TV[imin[0]][11])*10)+", "+text+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
       Sprich(text);
       if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
         var dat=new Date();
         Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(Math.abs(TV[gipf][9]))+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
-      if (pause!=0) clearTimeout(pause);
       pause=setTimeout(Pausenfunktion,88000);
       }
   Gipfel_erreicht=false;
@@ -218,7 +219,7 @@ function Vorsprung() {
   if (diff<30*60) ret=ret+"eher, "; else {diff=60*60-diff; ret=ret+"später, "}
   var minu=Math.floor(diff/60);
   var seku=Math.floor(diff-60*minu);
-  ret=ret+" "+minu+" zu "+seku+", noch "+(TV[gipf][11]-TV[imin[0]][11]).toFixed(1)+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
+  ret=ret+" "+minu+" zu "+seku+", noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10)+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
     var aktuelle_Zeit=new Date();

@@ -10,6 +10,12 @@
   animation: textwelle 1s infinite;
   min-width: 225px;
   }
+.LosAein2 {
+  background-color:green;
+  border-radius: 120px;
+  animation: textwelle 1s infinite;
+  min-width: 225px;
+  }
 .LosAaus {
   background-color:white;
   border-radius: 120px;
@@ -39,7 +45,8 @@ function Sprich(was) {
   window.speechSynthesis.speak(worte);
   }
 
-Sprich("huhuu, es kann losgehen. Hast du schon den Quarkkäulchenteig fertig nach Rezept vorbereitet? Dann heize die Kochplatte vor auf Stufe 5,5 dann hinein mit den ersten Portionen Quarkkäulchen und dann drücke Button los");
+Sprich("huhuu, es kann losgehen. Hast du schon den Quarkkäulchenteig fertig nach Rezept vorbereitet?");
+Sprich("Dann heize die Kochplatte vor auf Stufe 5,5 dann hinein mit den ersten Portionen Quarkkäulchen und dann drücke Buhton los");
 
 var naechsterButton;
 function los(i) {
@@ -115,8 +122,8 @@ function naechsterButtonClick() {
   if (nB=="Los"||nB=="Weiter") 
     nA.setAttribute("class","LosAaus");
     else {
-      if (nB=="Wenden") nA.firstChild.nodeValue=nA.firstChild.nodeValue*1+1;
-      nA.setAttribute("class","LosAein");
+      if (nB=="Wenden") {nA.firstChild.nodeValue=nA.firstChild.nodeValue*1+1; nA.setAttribute("class","LosAein")}
+        else nA.setAttribute("class","LosAein2");
       
       }
   }
@@ -130,8 +137,8 @@ function naechsterButtonClick() {
   </span>
   </div>
 <div style="min-height:220px"> </div>
-<a href="../../Rezepte.xml" target="_blank">Rezepte.xml</a> (
-<a href="../../Rezepte.xml#Eierkuchen" target="_blank">Eierkuchen</a>/<a href="../../Rezepte.xml#Quarkkäulchen" target="_blank">Quarkkäulchen</a>/<a href="../../Rezepte.xml#Baumkuchen" target="_blank">Baumkuchen</a>)
+<a href="../Rezepte.xml" target="_blank">Rezepte.xml</a> (
+<a href="../Rezepte.xml#Eierkuchen" target="_blank">Eierkuchen</a>/<a href="../Rezepte.xml#Quarkkäulchen" target="_blank">Quarkkäulchen</a>/<a href="../Rezepte.xml#Baumkuchen" target="_blank">Baumkuchen</a>)
 <div id="defs" style="display:none">
   <button style="font-size:100%" onclick="los(1,'los')">Los</button>
   <span class="Stoppuhr" Seite="1" style="display:none">0:00</span>
