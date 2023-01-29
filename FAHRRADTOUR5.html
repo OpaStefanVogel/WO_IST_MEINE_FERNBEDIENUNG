@@ -93,7 +93,7 @@ Batterie:
 
 
 <!--div style="display:flex; flex-direction:row; overflow:auto"-->
-<svg id="graph" width="100%" height="2200" stroke="white" fill="none" style="border:solid; background-color:black" ondblclick="window.scrollTo({top: 100000, left: 0, behavior: 'smooth'});event.target.requestFullscreen()" onclick="document.exitFullscreen()" >
+<svg id="graph" width="100%" height="2200" stroke="white" fill="none" style="border:solid; background-color:black" ondblclick="window.scrollTo({top: 100000, left: 100, behavior: 'smooth'});rFs=true;event.target.requestFullscreen()" onclick="document.exitFullscreen();rFs=false" >
   <g>
   <!--image href="../../Screenshot_20220101-195407_Maps.jpg" width="100%" height="100%" x="-10" y="-20"/-->
   </g>
@@ -118,6 +118,7 @@ var graphGipf=document.getElementById("Gipf");
 var graphTrack=document.getElementById("Track");
 var gTrack=document.getElementById("gTrack");
 var Meterpfeil=document.getElementById("Meterpfeil");
+var rFs=true;//requestFullscreen
 
 function getLocation() {
     if (navigator.geolocation) {//alert(navigator.geolocation.watchPosition);
@@ -165,20 +166,24 @@ function showPosition(position) {
     imin=mindist(xy[0],xy[1],TV);
     //imin[0]=190;
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
-    if (Verfahren==1&&imin[1]<0.04) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
+    if (Verfahren==1&&imin[1]<0.02) {Sprich("Hallo Stefan, du bist wieder auf dem richtigen Weg."); Verfahren=0}
     var neue_Distanzmarkierung=TV[imin[0]][11];
     
     var Richtung=-90-Math.atan2(TV[imin[0]+10][13]*1-TV[imin[0]][13]*1,TV[imin[0]+10][12]*1-TV[imin[0]][12]*1)/Math.PI*180;
     //alert(Richtung);
     var tx="translate(0,0)";
     //if (Geschwindigkeit>=1) tx="translate("+xy[0]+","+xy[1]+") scale(2) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
-    if (Geschwindigkeit>=0.3) tx="translate(400,300) scale(4) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
+    if (rFs==true||Geschwindigkeit>=0.3) tx="translate(400,300) scale(4) rotate("+Richtung+") translate(-"+TV[imin[0]][12]+",-"+TV[imin[0]][13]+")";
     gTrack.setAttribute("transform",tx);
-    Meterpfeil.setAttribute("transform","translate("+((TV[imin[0]][0]+0.05-Math.floor(neue_Distanzmarkierung*1))*1280)+")");
-    //Math.floor((TV[gipf][11]-TV[imin[0]][11])*10)
 
     gipf=imin[0]+1; //Rückzu -1
     while (!TV[gipf][16]) gipf=gipf+1; //Rückzu -1
+
+    //alert(1-(TV[gipf][0]-TV[imin[0]][0])%1);
+    //Meterpfeil.setAttribute("transform","translate("+((TV[imin[0]][0]+0.05-Math.floor(neue_Distanzmarkierung*1))*1280)+")");
+    Meterpfeil.setAttribute("transform","translate("+((1-(TV[gipf][0]-TV[imin[0]][0])%1)*1280)+")");
+    //Math.floor((TV[gipf][11]-TV[imin[0]][11])*10)
+
     var Gipfel_erreicht=false;
     if (gipf!=bisheriger_Gipfel) {
       if (bisheriger_Gipfel==-1) bisheriger_Gipfel=1;
@@ -194,13 +199,14 @@ function showPosition(position) {
       bisherige_Distanzmarkierung=neue_Distanzmarkierung;
       Geschwindigkeit=Math.floor(position.coords.speed*3.6);
       if (pause!=0) clearTimeout(pause);
-      if (Geschwindigkeit>20) {Sprich(Math.round((TV[gipf][11]-TV[imin[0]][11])*10)+", "+"schnell "+Geschwindigkeit+" ."+Vorsprung());return}
+      if (Geschwindigkeit>20) {Sprich(Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+", "+"schnell "+Geschwindigkeit+" ."+Vorsprung());return}
       Richtung=Math.floor(position.coords.heading);
       var text=TV[imin[0]][9];
       if (text<0) text="Nicht geschafft "+text.slice(1); else text="Geschafft "+text;
-      text=Math.round((TV[gipf][11]-TV[imin[0]][11])*10)+", "+text+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
+      text=Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+", "+text+", schnell "+Geschwindigkeit+", Höhe"+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
       Sprich(text);
-      if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
+      //if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
+      if ((Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)%10==3)||Gipfel_erreicht) {
         var dat=new Date();
         Sprich("Nächster Berggipfel "+TV[gipf][16]+", bei Höhe "+(TV[gipf][5])+", und Kilometer "+(Math.abs(TV[gipf][9]))+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+" Minuten. Uhrzeit "+dat.getHours()+" Uhr "+dat.getMinutes()+".");
         }
@@ -219,7 +225,7 @@ function Vorsprung() {
   if (diff<30*60) ret=ret+"eher, "; else {diff=60*60-diff; ret=ret+"später, "}
   var minu=Math.floor(diff/60);
   var seku=Math.floor(diff-60*minu);
-  ret=ret+" "+minu+" zu "+seku+", noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10)+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+" . ";
+  ret=ret+" "+minu+" zu "+seku+", in "+Math.floor((Date.parse("2022T"+TV[gipf][1])-Date.parse("2022T"+TV[imin[0]][1]))/1000/60)+", und "+Math.floor(TV[gipf][5]-TV[imin[0]][5])+", noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+" . ";
   if (Batterielevel!=Batterielevel_vorher) {
     Batterielevel_vorher=Batterielevel;
     var aktuelle_Zeit=new Date();
