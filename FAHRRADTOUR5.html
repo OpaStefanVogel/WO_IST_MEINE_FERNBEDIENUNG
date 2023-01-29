@@ -20,7 +20,9 @@
 </head>
 <body onload='getLocation();InitBatteryStatus();Trackplot();Gipfel();Sprich("Es kann losgehen")'>
 <button onclick='Sprich("Es geht los")'>Los</button>
-<button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>, <button onclick="onl()">Starte</button>
+<button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>, 
+<button onclick="Simulator()">Simulator</button>
+<button onclick="onl()">Starte</button>
 getUserMedia audio: <svg width="200" height="10"><rect id="audio_rect" fill="red" width="20" height="10"/></svg> <span id="audiotest"> </span>
 
 <div>50.84 12.88 Altendorf<div>
@@ -244,6 +246,27 @@ function Pausenfunktion() {
   Sprich(Vorsprung());
   if (Verfahren==1) Sprich("irgendwie Verfahren");
   pause=setTimeout(Pausenfunktion,60000);
+  }
+</script>
+
+<script>
+var isim=20;
+function Simulator() {
+  var position = {
+    "coords" : {
+      "latitude":TV[isim][2],
+      "longitude":TV[isim][3],
+      "speed":3,
+      "altitude":TV[isim][5],
+      "heading":180
+      },
+      
+    "timestamp":(new Date())
+    }
+  //alert(JSON.stringify(position));
+  showPosition(position);
+  isim=isim+1;
+  setTimeout(Simulator,3000);
   }
 </script>
 
