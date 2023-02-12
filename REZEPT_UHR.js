@@ -26,6 +26,7 @@ function Kartoffeluhr(){
       NOCHZEIT=new Date(DIFFERENZ);
       if (NOCHZEIT.getSeconds()<10) {TB=":0"} else { TB = ":" };
       node.lastChild.nodeValue=((NOCHZEIT.getHours()-1)*60+NOCHZEIT.getMinutes())+TB+NOCHZEIT.getSeconds();
+      if (NOCHZEIT.getSeconds()==59) {Sprich(node.getAttribute("Sprich")+" noch "+NOCHZEIT.getMinutes()+"Minuten")};
       }
     }
   }
@@ -97,4 +98,11 @@ function CLICKTIME() {
   alert(CLICKTIMEOBJ.toString());
   }
 
+//Sprich
+function Sprich(was) {
+  var worte = new SpeechSynthesisUtterance(was.slice(0,150));
+  worte.lang = "de-DE";
+  window.speechSynthesis.speak(worte);
+  }
 
+Sprich("Rezepte");

@@ -48,7 +48,11 @@ for (var i=0;ZU.length>i;i++) {
   <img>
     <xsl:attribute name="src"><xsl:value-of select="$Pfad" />REZEPT_UHR.svg</xsl:attribute>
     </img>
-  <button angehalten="ja"><xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute><xsl:value-of select="." /></button>
+  <button angehalten="ja">
+    <xsl:attribute name="Anfangszeit"><xsl:value-of select="." /></xsl:attribute>
+    <xsl:attribute name="Sprich"><xsl:value-of select="@Sprich" /></xsl:attribute>
+    <xsl:value-of select="." />
+    </button>
   </span>
 </xsl:template>
 
