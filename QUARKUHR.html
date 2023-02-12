@@ -77,10 +77,10 @@ function los(i) {
     event.target.nextElementSibling.setAttribute("Zwischenzeit",0);
     naechsterButton=event.target.nextElementSibling.nextElementSibling;
     }
-  if (i==1) Sprich("Los");
+  if (i==1) {Pfanne=Pfanne+1;Sprich("Los mit Pfanne "+Pfanne)};
   if (i==2) Sprich("Wenden");
   if (i==3) Sprich("Weiter");
-  if (i==0) Sprich("Fertig. Willst du noch eine Pfanne machen, dann drücke Los in der nächsten Zeile");
+  if (i==0) Sprich("Fertig. Willst du noch eine Pfanne "+(Pfanne+1)+" machen, dann drücke Los in der nächsten Zeile");
   event.target.removeAttribute("onclick")
   window.scrollTo({
     top: 100000,
@@ -114,6 +114,7 @@ function Quarkuhr() {
 
 setInterval(Quarkuhr,1000);
 
+var Pfanne=0;
 function naechsterButtonClick() {
   naechsterButton.click();
   var nA=document.getElementById("LosA");
@@ -122,7 +123,7 @@ function naechsterButtonClick() {
   if (nB=="Los"||nB=="Weiter") 
     nA.setAttribute("class","LosAaus");
     else {
-      if (nB=="Wenden") {nA.firstChild.nodeValue=nA.firstChild.nodeValue*1+1; nA.setAttribute("class","LosAein")}
+      if (nB=="Wenden") {nA.firstChild.nodeValue=Pfanne; nA.setAttribute("class","LosAein")}
         else nA.setAttribute("class","LosAein2");
       
       }
