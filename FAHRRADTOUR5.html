@@ -102,6 +102,7 @@ Batterie:
   <line id="Pos" x1="0" y1="0" x2="100" y2="100" stroke="yellow" stroke-width="4" stroke-linecap="round"/>
   <g id="gTrack" transform="rotate(0)">
     <path id="Track" d="M600,200 L500,300 400,200" fill="none"/>
+    <circle id="Pos2" cx="80" cy="80" r="1" stroke="red"/>
     </g>
   <circle id="Gipf" cx="80" cy="80" r="5"/>
   <path d="M400,300 L500,330 500,270 Z" fill="darkgray" stroke="none"/>
@@ -116,6 +117,7 @@ Batterie:
 var x = document.getElementById("demo");
 var graph=document.getElementById("graph");
 var graphPos=document.getElementById("Pos");
+var graphPos2=document.getElementById("Pos2");
 var graphGipf=document.getElementById("Gipf");
 var graphTrack=document.getElementById("Track");
 var gTrack=document.getElementById("gTrack");
@@ -164,7 +166,10 @@ function showPosition(position) {
     var xy=xyrech(position.coords.latitude,position.coords.longitude);
     graphPos.setAttribute("y2",xy[1]);
     graphPos.setAttribute("x2",xy[0]);
-//    graph.appendChild(next);
+    if (Verfahren!=0) {
+      graphPos2.setAttribute("cy",xy[1]);
+      graphPos2.setAttribute("cx",xy[0]);
+      }
     imin=mindist(xy[0],xy[1],TV);
     //imin[0]=190;
     if (Verfahren==0&&imin[1]>0.04) {Sprich("Hallo Stefan, du bist vom rechten Weg abgekommen."); Verfahren=1}
@@ -266,7 +271,8 @@ function Simulator() {
   //alert(JSON.stringify(position));
   showPosition(position);
   isim=isim+1;
-  setTimeout(Simulator,3000);
+  if (isim>=25&isim<=35) Verfahren=2; else Verfahren=0;
+  setTimeout(Simulator,6000);
   }
 </script>
 
