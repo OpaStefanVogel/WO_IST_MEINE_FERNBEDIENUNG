@@ -18,7 +18,9 @@ function Kartoffeluhr(){
     if (node.getAttribute("angehalten")=="nein") {
       ZIELZEIT=node.getAttribute("Zielzeit");
       DIFFERENZ=ZIELZEIT-AKTUELLE_ZEIT;
+      var sign=1;
       if (DIFFERENZ<0) {
+        sign=-1;
         DIFFERENZ=-DIFFERENZ;
 //        node.setAttribute("angehalten","ja");
         node.setAttribute("style","background:blue");
@@ -26,7 +28,18 @@ function Kartoffeluhr(){
       NOCHZEIT=new Date(DIFFERENZ);
       if (NOCHZEIT.getSeconds()<10) {TB=":0"} else { TB = ":" };
       node.lastChild.nodeValue=((NOCHZEIT.getHours()-1)*60+NOCHZEIT.getMinutes())+TB+NOCHZEIT.getSeconds();
-      if (NOCHZEIT.getSeconds()==59) {Sprich(node.getAttribute("Sprich")+" noch "+NOCHZEIT.getMinutes()+"Minuten")};
+      let nz=NOCHZEIT.getMinutes();
+      let nn=NOCHZEIT.getSeconds();
+      if (nz==0&&nn==0) {Sprich("Dingdong "+node.getAttribute("Sprich")+" fertig");return}
+      if (nn==59) {
+        let Sprechtext=node.getAttribute("Sprich");
+        if (sign==1) Sprechtext=Sprechtext+" noch";
+        if (nz==0) 
+          Sprechtext=Sprechtext+" eine Minute";
+          else Sprechtext=Sprechtext+" "+(nz+1)+"Minuten";
+        if (sign==-1) Sprechtext=Sprechtext+" über die Zeit";
+        Sprich(Sprechtext);
+        };
       }
     }
   }
