@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Baumkuchen</title>
+<meta charset="utf-8"/>
+<style>
+  </style>
+<script>
+let r=400;
+let T=[
+  ["M",0,0],
+  ["L",0,r],
+  ["A",r,r,0,0,0,...rot(30,0,r)],
+  ];
+
+function rot(p,x,y) {
+  let c=Math.cos(p/180*Math.PI);
+  let s=Math.sin(p/180*Math.PI);
+  return [c*x+s*y,-s*x+c*y];
+  }
+
+function zeichne_die_Tabelle(T) {
+  let d="";
+  let xy=[0,0];
+  for (let p=0;p<360;p=p+30) {
+    for (let i=0;i<T.length;i++) {
+      if ("ML ".indexOf(T[i][0])>-1) {
+        xy=rot(p,T[i][1],T[i][2]);
+        d=d+T[i][0]+xy[0]+","+xy[1]+" ";
+        }
+      if (T[i][0]=="A") {
+        d=d+T[i][0]+T[i][1]+","+T[i][2]+" ";
+        d=d+T[i][3]+" "+T[i][4]+","+T[i][5]+" ";
+        xy=rot(p,T[i][6],T[i][7]);
+        d=d+xy[0]+","+xy[1]+" ";
+        }
+      }
+    }
+  screen2.requestFullscreen();
+  path_Baumkuchen.setAttribute("d",d);
+  }
+  </script>
+<body onload="zeichne_die_Tabelle(T)">
+
+<div id="screen2">
+<svg id="svg_svg" width="800" height="800" style="border:solid 0.1px lightgrey">
+<g id="g_Baumkuchen" transform="scale(1) translate(400,400)" fill="none" stroke="black" stroke-width="0.2">
+<!--line x1="0" y1="0" x2="100" y2="100"/-->
+<path id="path_Baumkuchen" d="M0,0 L200,100 300,100 400,50"/>
+  </g>
+  </svg>
+  </div>
+<!--
+<textarea id="Input" onkeydown="Keycode(event)" cols="80" rows="8" style="border:solid; border-color:orange">
+
+
+</textarea>
+<button onclick="zeichne_die_Tabelle(T)">neu zeichnen</button>
+-->
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  <div>
+  </body>
+  </html>
