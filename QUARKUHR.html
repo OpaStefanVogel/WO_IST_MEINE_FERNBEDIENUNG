@@ -19,22 +19,22 @@
 .LosAaus {
   background-color:white;
   border-radius: 120px;
-  opacity: 0;
+  opacity: 0.2;
   min-width: 225px;
   }
 
 @keyframes textwelle {
   0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }  
-  50% {
     transform: scale(1);
     opacity: 1;
+  }  
+  50% {
+    transform: scale(0.5);
+    opacity: 0.2;
   }
   100% {
-    transform: scale(0.5);
-    opacity: 0;	
+    transform: scale(1);
+    opacity: 1;	
   }
 }
   </style>
@@ -80,8 +80,8 @@ function los(i) {
   if (i==1) {Pfanne=Pfanne+1;Sprich("Los mit Pfanne "+Pfanne)};
   if (i==2) Sprich("Wenden");
   if (i==3) Sprich("Weiter");
-  if (i==0) Sprich("Fertig. Willst du noch eine Pfanne "+(Pfanne+1)+" machen, dann drücke Los in der nächsten Zeile");
-  event.target.removeAttribute("onclick")
+  if (i==0) Sprich("Fertig. Willst du noch eine Pfanne machen, dann drücke Los in der nächsten Zeile. Das wird dann Pfanne "+(Pfanne+1));
+  event.target.removeAttribute("onclick");
   window.scrollTo({
     top: 100000,
     left: 0,
