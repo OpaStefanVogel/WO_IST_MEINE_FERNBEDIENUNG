@@ -160,7 +160,8 @@ function onButtonClick3() {
 let manuServiceUuid          = '00001800-0000-1000-8000-00805f9b34fb';
 let manuCharacteristicUuid   = '00002a00-0000-1000-8000-00805f9b34fb';
 let sensorServiceUuid        = 'af237777-879d-6186-1f49-deca0e85d9c1';
-let sensorCharacteristicUUID = 'af230006-879d-6186-1f49-deca0e85d9c1';
+let sensorCharacteristicUuid = 'af230006-879d-6186-1f49-deca0e85d9c1';
+let motorCharacteristicUuid  = 'af230002-879d-6186-1f49-deca0e85d9c1';
 let serviceUuid         = sensorServiceUuid;
 let characteristicUuid  = sensorCharacteristicUuid;
 
@@ -199,6 +200,8 @@ async function characteristic__service_getCharacteristic() {
   alert('Characteristic...'+characteristic);
   }
 
+
+
 function display_value(value) {
   let a = [];
   for (let i = 0; i < value.byteLength; i++) a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
@@ -229,11 +232,34 @@ function handleNotifications(event) {
   for (let i = 0; i < value.byteLength; i++) {
     a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
     }
-  alert('> ' + a.join(' '));
+  //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
+  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
   }
+//alert(1);</script><script>
+/*
+a[6] von links kommt was näher
+a[7] von rechts kommt was näher
+a[8] von hinten nähert sich was
+
+a[18:19]
+*/
   </script>
 
+
+
 <!--
+function drive(driveSpeed, turningSpeed) {
+  var driveSpeed = parseInt(driveSpeed);
+  var turningSpeed = parseInt(turningSpeed);
+  var data = new Uint8Array(4);
+  data[0] = 2;
+  if (driveSpeed < 0) driveSpeed = driveSpeed + 0x800;
+  if (turningSpeed < 0) turningSpeed = turningSpeed + 0x800;
+  data[1] = driveSpeed & 0xff;
+9  data[2] = turningSpeed & 0xff;
+  data[3] = ((driveSpeed & 0xff00) >> 8) | ((turningSpeed & 0xff00) >> 5);
+  command.setValue(data);
+  
 try {
     log('Requesting Bluetooth Device...');
     const device = await navigator.bluetooth.requestDevice({
@@ -510,9 +536,11 @@ function handleNotifications(event) {
   </tr>
 <tr>
   <td><button onclick="flag__characteristic_startNotifications()">flag=characteristic.startNotifications()</button></td>
-  </tr>
   
+  </tr>
   </table>
+
+<div id="div_notification" style="font-family:Courier,monospace">notification</div>  
 
 <!--
  
