@@ -424,6 +424,7 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE);
     await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
     log('> writeValue() geschafft'); 
     }
+//  alert('durch');
   }
   
 async function einzelne_Tage_voreinstellen() {
@@ -434,8 +435,9 @@ async function einzelne_Tage_voreinstellen() {
       let t=inputs[2*i+1].value.split(':');
       arr.push(inputs[2*i].value*2,Math.floor((t[0]*60+t[1]*1)/10));
       }
-    Test(arr);
+    await Test(arr);
     }
+  await Wochenprogramm_auslesen();
   }
 
 function display_value2(value) {
@@ -493,7 +495,9 @@ function CC_RT_BLE_handleNotifications(val) {//alert(event);
       let li_Di;
       let li_Mi=li_Mo.cloneNode(true);
       let li_Do=li_Mo.parentNode;
+      log('Einlesen noch nicht komplett fert');
       while (li_Do.hasChildNodes()) li_Do.removeChild(li_Do.firstChild);
+      li_Do.appendChild(li_Mi);
       for (let i=0;i<7;i++) if (Wochentabelle[i][0]!=0) {
         li_Di=li_Mi.cloneNode(true);
         li_Di.removeAttribute('id');
@@ -520,6 +524,16 @@ function CC_RT_BLE_handleNotifications(val) {//alert(event);
       }
     }
   }
+
+async function Wochenprogramm_auslesen() {
+  for (let i=0;i<7;i++) {
+    let x=[0x20,i];
+    log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])'); 
+    for (let i=0;i<x.length;i++) CC_RT_BLE.value3.setUint8(i,x[i]); 
+    await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
+    log('> writeValue() geschafft'); 
+    }
+    }
 
 
   </script>
@@ -855,7 +869,7 @@ DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button>
     <span><button id='button_Offset' onclick='Test([0x41,2*input_Offset.value])'>einstellen</button></span> (irgendwas zwischen -3.5 und 3.5 °C).
     </li>
   <li>Modus 'offenes Fenster' mit <i>t<sub>Fenst</sub>=<input id='input_Offenes_Fenster_Temperatur' size="3" value='13'> °C</i> für <input id='input_Offenes_Fenster_Dauer' size="3" value='15'><span> Minuten <button id='button_Offenes_Fenster' onclick='Test([0x14,2*input_Offenes_Fenster_Temperatur.value,Math.round(input_Offenes_Fenster_Dauer.value/5)])'>voreinstellen</button></span> (aktivieren mit: Fenster öffnen).</li>
-  <li>Wochenprogramm (Modus Auto) <span><button id='button_Wochenprogramm_auslesen' onclick='for (let i=0;i<7;i++) Test([0x20,i]);'>auslesen</button></span> und dann bei Bedarf neu einstellen:
+  <li>Wochenprogramm (Modus Auto) <span><button id='button_Wochenprogramm_auslesen' onclick='Wochenprogramm_auslesen()'>auslesen</button></span> und dann bei Bedarf neu einstellen:
     <ul>
       <li id='li_Mo' style='display:none'>Ab 0 Uhr mit
         <ul>
