@@ -223,7 +223,7 @@ async function flag__characteristic_startNotifications() {
   characteristic.addEventListener('characteristicvaluechanged',handleNotifications);
   }
   
-function handleNotifications(event) {alert(event);
+function handleNotifications(event) {//alert(event);
   let value = event.target.value;
   let a = [];
   // Convert raw data bytes to hex values just for the sake of showing something.
@@ -235,6 +235,19 @@ function handleNotifications(event) {alert(event);
   //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
   document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
   }
+
+function handleNotifications2(event) {//alert(event);
+  let value = event.target.value;
+  let a = [];
+  // Convert raw data bytes to hex values just for the sake of showing something.
+  // In the "real" world, you_d use data.getUint8, data.getUint16 or even
+  // TextDecoder to process raw data bytes.
+  for (let i = 0; i < value.byteLength; i++) {
+    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+    }
+  document.getElementById("div_notification2").innerHTML='> ' + a.join(' ');
+  }
+
 //alert(1);</script><script>
 
 
@@ -261,7 +274,7 @@ ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
 COMMAND1_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
 SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')
 SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
-COMMAND2_CHAR_UUID = uuid.UUID('AF230000-879D-6186-1F49-DECA0E85D9C1')
+COMMAND2_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
 INFO_CHAR_UUID = uuid.UUID('AF230001-879D-6186-1F49-DECA0E85D9C1')
 
 
@@ -273,7 +286,10 @@ a[18:19]
 */
   </script>
 
-<script>
+ <script>
+let DASH={};
+let CC_RT_BLE={};
+
 async function device_request() {
   log();
   let options={};
@@ -291,8 +307,9 @@ async function device_request() {
   log('> Name:             ' + RET.device.name);
   log('> Id:               ' + RET.device.id);
   log('> Connected:        ' + RET.device.gatt.connected);
-  if (RET.device.name=='Robi') kopple_Robi(RET);
-  if (RET.device.name=='CC-RT-BLE') kopple_CC_RT_BLE(RET);
+  if (RET.device.name=='Robi') DASH= await kopple_Robi(RET);
+  if (RET.device.name=='CC-RT-BLE') CC_RT_BLE= await kopple_CC_RT_BLE(RET);
+  return RET;
   }  
 
 function log(text) {
@@ -308,18 +325,38 @@ async function kopple_Robi(dev) {
   log('Connecting to GATT Server...');
   dev.server=await dev.device.gatt.connect();
   log('> Connected:        ' + dev.device.gatt.connected);
-  log('Getting Service...');
-  dev.service = await dev.device.server.getPrimaryService('af237777-879d-6186-1f49-deca0e85d9c1');
-  log('Service...'+dev.service.uuid);  
+
+  log('Getting Service...'+dev.server);
+  dev.service = await dev.server.getPrimaryService('af237777-879d-6186-1f49-deca0e85d9c1');
+  log('> Service...'+dev.service.uuid);  
 
   log('Getting Characteristic...');
   dev.char6 = await dev.service.getCharacteristic('af230006-879d-6186-1f49-deca0e85d9c1');
-  log('Characteristic...'+dev.char6);
+  log('> Characteristic...'+dev.char6.uuid);
   
   log('Starting Notifications...');
   dev.notify=await dev.char6.startNotifications();
-  log('return flag='+dev.notify);
+  log('|return flag='+dev.notify);
   dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
+
+  log('Getting Characteristic...');
+  dev.char3 = await dev.service.getCharacteristic('af230003-879d-6186-1f49-deca0e85d9c1');
+  log('> Characteristic...'+dev.char3.uuid);
+  
+  log('Starting Notifications...');
+  dev.notify=await dev.char3.startNotifications();
+  log('|return flag='+dev.notify);
+  dev.char3.addEventListener('characteristicvaluechanged',handleNotifications2);
+
+  log('Getting Characteristic...');
+  dev.char2 = await dev.service.getCharacteristic('af230002-879d-6186-1f49-deca0e85d9c1');
+  log('> Characteristic.uuid '+dev.char2.uuid);
+  log('> Characteristic.properties '+JSON.stringify(dev.char2.properties));
+  log('Getting Characteristic.readValue()...');
+  await dev.char2.readValue();
+  dev.value2=dev.char2.value;
+  log('> Characteristic.value '+display_value(dev.value2));
+
   return dev;
   }
 
@@ -357,13 +394,22 @@ async function kopple_CC_RT_BLE(dev) {
   await dev.char3.readValue();
   dev.value3=dev.char3.value;
   log('> Characteristic.value '+display_value(dev.char3.value));
-  
+  log(dev);
+  log(dev.value3);
 
   return dev;
   }
 
-  </script>
+async function Test(x) {alert(1);alert(CC_RT_BLE);
+  log(CC_RT_BLE); 
+  CC_RT_BLE.value3.setUint8(1,x); 
+  log('Starte writeValue'); 
+  await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3); 
+  log('> writeValue() geschafft'); 
+  
+  }
 
+  </script>
 
 <!--
 function drive(driveSpeed, turningSpeed) {
@@ -660,11 +706,20 @@ function handleNotifications(event) {
   </table>
 
 <div id="div_notification" style="font-family:Courier,monospace">notification</div>
+<div id="div_notification2" style="font-family:Courier,monospace">notification</div>
 
 <span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
 <div style="border:solid">
-<div id="div_log" style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
-</div>
+  <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
+  </div>
+<div><span><button id='button_device_request' onclick="DASH.value2.setUint8(0,2);DASH.value2.setUint8(1,64);DASH.value2.setUint8(2,0);DASH.value2.setUint8(3,0);
+DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button></span>
+  </div>
+<div>
+  <span><button id='button_device_request' onclick="Test(0x40)">CC_RT_BLE.char3.writeValue(0x4040)</button></span>
+  <span><button id='button_device_request' onclick="Test(0x00)">CC_RT_BLE.char3.writeValue(0x4000)</button></span>
+  </div>
+
 
 <!--
  
