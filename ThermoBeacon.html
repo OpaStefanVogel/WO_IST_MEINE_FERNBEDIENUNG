@@ -382,7 +382,7 @@ async function kopple_CC_RT_BLE(dev) {
   log('Starting Notifications...');
   dev.notify=await dev.char6.startNotifications();
   log('> return flag='+dev.notify);
-  dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
+  dev.char6.addEventListener('characteristicvaluechanged',CC_RT_BLE_handleNotifications);
   
   log('Getting Characteristic...');
   dev.char3 = await dev.service.getCharacteristic('3fa4585a-ce4a-3bad-db4b-b8df8179ea09');
@@ -418,7 +418,7 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE);
   log(CC_RT_BLE); 
   */
   log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])'); 
-  if (CC_RT_BLE) {
+  if (CC_RT_BLE.device) {
     for (let i=0;i<x.length;i++) CC_RT_BLE.value3.setUint8(i,x[i]); 
     await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
     log('> writeValue() geschafft'); 
@@ -436,6 +436,82 @@ async function einzelne_Tage_voreinstellen() {
     Test(arr);
     }
   }
+
+function display_value2(value) {
+  let a = [];
+  for (let i = 0; i < value.length; i++) a.push('0x' + ('00' + value[i].toString(16)).slice(-2));
+  return a.join(' ');    
+  }
+
+let Wochentabelle=[
+  [0x21,0x00,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
+  [0x21,0x01,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
+  [0x21,0x02,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
+  [0x21,0x03,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
+  [0x21,0x04,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
+  [0x21,0x05,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
+  [0x21,0x06,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]
+  ];
+
+function CC_RT_BLE_handleNotifications(val) {//alert(event);
+  //alert((new Date()).toTimeString());
+  log('notification=['+display_value2(val)+']');
+  let value = [];
+  let a = [];
+  let b = [];
+  if (CC_RT_BLE.device) {
+    value = event.target.value;
+    for (let i = 0; i < value.byteLength; i++) b[i]=value.getUint8(i);
+    } else b=val;
+  for (let i = 0; i < b.length; i++) a.push('0x' + ('00' + b[i].toString(16)).slice(-2));
+  //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
+  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
+  if ((b[0]==2)&&(b[1]==1)) {
+    Ausgabe_Uhrzeit.innerHTML=(new Date()).toTimeString().slice(0,5);
+    Ausgabe_Solltemperatur.innerHTML=(b[5]/2).toFixed(1);
+    Ausgabe_Ventilstellung.innerHTML=b[3];
+    Ausgabe_Batterie.innerHTML=b[4];
+    let Modus='???';
+    if ((b[2]&0x0F)==0x08) Modus='Auto';
+    if ((b[2]&0x0F)==0x09) Modus='Manu';
+    if ((b[2]&0x0F)==0x0A) Modus='Holiday';
+    if ((b[2]&0x0F)==0x0C) Modus='Boost→Auto';
+    if ((b[2]&0x0F)==0x0D) Modus='Boost→Manu';
+    if ((b[2]&0x0F)==0x0E) Modus='Boost→Holiday';
+    Ausgabe_Modus.innerHTML=Modus;
+    }
+  if (b[0]==0x21) {
+    Wochentabelle[b[1]]=b;
+    if (b[1]==6) {
+      log('Einlesen noch nicht komplett fertig');
+      let li_Di;
+      for (let i=0;i<7;i++) if (Wochentabelle[i][0]!=0) {
+        li_Di=li_Mo.cloneNode(true);
+        li_Di.removeAttribute('id');
+        li_Di.removeAttribute('style');
+        li_inputs=li_Di.getElementsByTagName('input');
+        for (let j=0;j<7;j++) {
+          li_inputs[j+14].removeAttribute('checked');
+          li_inputs[2*j].value=(Wochentabelle[i][2*j+2]/2).toFixed(1);
+          let k=Wochentabelle[i][2*j+3]*10;
+          let h=Math.floor(k/60);
+          let m=k%60;
+          li_inputs[2*j+1].value=h+':'+('0'+m).slice(-2);
+          
+          }
+        li_inputs[i+14].setAttribute('checked','checked');
+        for (let j=i+1;j<7;j++) {
+          if ((Wochentabelle[j][0]!=0)&&(Wochentabelle[j].slice(2).toString()==Wochentabelle[i].slice(2).toString())) {
+            Wochentabelle[j][0]=0;
+            li_inputs[j+14].setAttribute('checked','checked');
+            }
+          }
+        li_Mo.parentNode.appendChild(li_Di);
+        }
+      }
+    }
+  }
+
 
   </script>
 
@@ -743,12 +819,19 @@ function handleNotifications(event) {
 <div><span><button id='button_device_request' onclick="DASH.value2.setUint8(0,2);DASH.value2.setUint8(1,64);DASH.value2.setUint8(2,0);DASH.value2.setUint8(3,0);
 DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button></span>
   </div>
-CC-RT-BLE: <a href='https://reverse-engineering-ble-devices.readthedocs.io/en/latest/protocol_description/00_protocol_description.html#eq3-eqiva-protocol'>Reverse Engineering BLE Devices Documentation Sergio Alberti</a>
-<div>Was man alles voreinstellen und aktivieren kann:</div>
+CC-RT-BLE: <a href='https://reverse-engineering-ble-devices.readthedocs.io/en/latest/protocol_description/00_protocol_description.html#eq3-eqiva-protocol'>Reverse Engineering BLE Devices Documentation Sergio Alberti</a> und <a href='https://github.com/Heckie75/eQ-3-radiator-thermostat'>https://github.com/Heckie75/eQ-3-radiator-thermostat</a>
+<style>.Ausgabe {font-family:Courier,monospace; font-size:200%; color:red; border:solid}</style>
+<div>aktuell um <span id='Ausgabe_Uhrzeit'>??:??</span> Uhr:
+  Solltemperatur <span id='Ausgabe_Solltemperatur' class='Ausgabe'>0</span> °C,
+  Ventil <span id='Ausgabe_Ventilstellung' class='Ausgabe'>0</span> % geschlossen,
+  Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>0</span> % voll,
+  Modus <span id='Ausgabe_Modus' class='Ausgabe'>-</span>.
+  </div>
 <ul>
+  <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>.</li>
   <li>Datum und Uhrzeit <span><button id='button_Manu' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
-  <li>Manu Modus <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span>.</li>
-  <li>Auto Modus <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
+  <li>Modus Manu <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span>.</li>
+  <li>Modus Auto <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
   <li>Reduzierte Temperatur <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='18'> °C.</i>
       und Komfort Temperatur <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='21'> °C.</i>
       <span><button id='button_Auto' onclick='Test([0x11,2*input_reduzierte_Temperatur.value,2*input_Komfort_Temperatur.value])'>voreinstellen</button></span>, aktivieren mit:
@@ -768,9 +851,9 @@ CC-RT-BLE: <a href='https://reverse-engineering-ble-devices.readthedocs.io/en/la
     <span><button id='button_Offset' onclick='Test([0x41,2*input_Offset.value])'>einstellen</button></span> (irgendwas zwischen -3.5 und 3.5 °C).
     </li>
   <li>Offenes Fenster Modus mit <i>t<sub>Fenst</sub>=<input id='input_Offenes_Fenster_Temperatur' size="3" value='13'> °C</i> für <input id='input_Offenes_Fenster_Dauer' size="3" value='15'><span> Minuten <button id='button_Offenes_Fenster' onclick='Test([0x14,2*input_Offenes_Fenster_Temperatur.value,Math.round(input_Offenes_Fenster_Dauer.value/5)])'>voreinstellen</button></span> (aktivieren mit: Fenster öffnen).</li>
-  <li>einzelne Tage vorprogrammieren:
+  <li>Wochenprogramm (Modus Auto) <span><button onclick='for (let i=0;i<7;i++) Test([0x20,i]);'>auslesen</button></span> und dann bei Bedarf neu einstellen:
     <ul>
-      <li>Ab 0 Uhr mit
+      <li id='li_Mo' style='display:none'>Ab 0 Uhr mit
         <ul>
           <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='5:00'> Uhr, dann</li>
           <li><i><input size="3" value='19'> °C</i> bis <input size="3" value='7:00'> Uhr, dann</li>
@@ -787,11 +870,23 @@ CC-RT-BLE: <a href='https://reverse-engineering-ble-devices.readthedocs.io/en/la
         <input type="checkbox" checked="checked">Mi
         <input type="checkbox" checked="checked">Do
         <input type="checkbox" checked="checked">Fr</span>
-        <span><button onclick='einzelne_Tage_voreinstellen()'>voreinstellen</button></span>.
+        <span><button onclick='einzelne_Tage_voreinstellen()'>neu einstellen</button></span>.
         </li>
       </ul>
     </li>
-  <li>♦ gespeicherte Daten zurücklesen fehlt noch</li>
+  <li>♦ gespeicherte Daten zurücklesen fehlt noch <span><button onclick='
+    CC_RT_BLE_handleNotifications([0x02,0x01,0x09,0x50,0x04,0x1e,0x00,0x00,0x00,0x00,0x18,0x03,0x2a,0x22,0x07]);
+    '>Test1</button></span> und <span><button onclick='
+    CC_RT_BLE_handleNotifications([0x02,0x01,0x2A,0x50,0x04,0x24,0x0e,0x10,0x25,0x0c,0x18,0x03,0x2a,0x22,0x07]);
+    '>Test2</button></span> und <span><button onclick='
+    CC_RT_BLE_handleNotifications([0x21,0x00,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    CC_RT_BLE_handleNotifications([0x21,0x01,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    CC_RT_BLE_handleNotifications([0x21,0x02,0x22,0x1e,0x24,0x2c,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    CC_RT_BLE_handleNotifications([0x21,0x03,0x22,0x1e,0x24,0x2c,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    CC_RT_BLE_handleNotifications([0x21,0x04,0x22,0x1e,0x26,0x2f,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    CC_RT_BLE_handleNotifications([0x21,0x05,0x22,0x1e,0x28,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    CC_RT_BLE_handleNotifications([0x21,0x06,0x22,0x1e,0x28,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
+    '>Test3</button></span></li>
   </ul>
 
 
