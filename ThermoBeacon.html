@@ -346,8 +346,18 @@ async function kopple_CC_RT_BLE(dev) {
   dev.char3 = await dev.service.getCharacteristic('3fa4585a-ce4a-3bad-db4b-b8df8179ea09');
   log('> Characteristic.uuid '+dev.char3.uuid);
   log('> Characteristic.properties '+JSON.stringify(dev.char3.properties));
+  log('Getting Characteristic.readValue()...');
   await dev.char3.readValue();
+  dev.value3=dev.char3.value;
   log('> Characteristic.value '+display_value(dev.char3.value));
+  dev.value3.setUint8(1,64);
+  log('Getting Characteristic.writeValue()...');
+  await dev.char3.writeValue(dev.value3);
+  log('Getting Characteristic.readValue()...');
+  await dev.char3.readValue();
+  dev.value3=dev.char3.value;
+  log('> Characteristic.value '+display_value(dev.char3.value));
+  
 
   return dev;
   }
