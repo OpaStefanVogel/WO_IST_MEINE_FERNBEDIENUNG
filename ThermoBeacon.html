@@ -303,6 +303,10 @@ async function device_request() {
   log('Requesting Bluetooth Device...');
   log('with options=' + JSON.stringify(options));
   let RET={};
+  log("navigator.bluetooth="+navigator.bluetooth);
+  log("navigator.bluetooth.getDevices="+navigator.bluetooth.getDevices);
+  log("navigator.bluetooth.requestDevice="+navigator.bluetooth.requestDevice);
+  //RET.devices=navigator.bluetooth.getDevices();
   RET.device=await navigator.bluetooth.requestDevice(options);
   log('> Name:             ' + RET.device.name);
   log('> Id:               ' + RET.device.id);
@@ -315,6 +319,7 @@ async function device_request() {
 function log(text) {
   if (text) {
     div_log.innerHTML=div_log.innerHTML+'<div>'+text+'</div>';
+    div_log.scrollTo({top:100000,left: 0,behavior: 'smooth'});
     } else {
       div_log.innerHTML='Neustart: '+Date();
       }
@@ -400,13 +405,36 @@ async function kopple_CC_RT_BLE(dev) {
   return dev;
   }
 
-async function Test(x) {alert(1);alert(CC_RT_BLE);
+async function Test(x) {//alert(1);alert(CC_RT_BLE);
+/*  let data = new Uint8Array(4);
+  log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
+  data[0] = 2;
+  log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
+  alert(DataView);
+  let dat=new DataView([7,8,9]);
+  log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
+  dat.setUint8(1,3);
+  log('dat=['+[dat[0],dat[1],dat[2],dat[3]]+'] ');
   log(CC_RT_BLE); 
-  CC_RT_BLE.value3.setUint8(1,x); 
-  log('Starte writeValue'); 
-  await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3); 
-  log('> writeValue() geschafft'); 
+  */
+  log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])'); 
+  if (CC_RT_BLE) {
+    for (let i=0;i<x.length;i++) CC_RT_BLE.value3.setUint8(i,x[i]); 
+    await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
+    log('> writeValue() geschafft'); 
+    }
+  }
   
+async function einzelne_Tage_voreinstellen() {
+  let inputs=event.target.parentNode.parentNode.getElementsByTagName('input');
+  for (let j=0;j<7;j++) if (inputs[j+14].checked) {
+    let arr=[0x10,j];
+    for (let i=0;i<7;i++) {
+      let t=inputs[2*i+1].value.split(':');
+      arr.push(inputs[2*i].value*2,Math.floor((t[0]*60+t[1]*1)/10));
+      }
+    Test(arr);
+    }
   }
 
   </script>
@@ -710,15 +738,61 @@ function handleNotifications(event) {
 
 <span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
 <div style="border:solid">
-  <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
+  <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
 <div><span><button id='button_device_request' onclick="DASH.value2.setUint8(0,2);DASH.value2.setUint8(1,64);DASH.value2.setUint8(2,0);DASH.value2.setUint8(3,0);
 DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button></span>
   </div>
-<div>
-  <span><button id='button_device_request' onclick="Test(0x40)">CC_RT_BLE.char3.writeValue(0x4040)</button></span>
-  <span><button id='button_device_request' onclick="Test(0x00)">CC_RT_BLE.char3.writeValue(0x4000)</button></span>
-  </div>
+CC-RT-BLE: <a href='https://reverse-engineering-ble-devices.readthedocs.io/en/latest/protocol_description/00_protocol_description.html#eq3-eqiva-protocol'>Reverse Engineering BLE Devices Documentation Sergio Alberti</a>
+<div>Was man alles voreinstellen und aktivieren kann:</div>
+<ul>
+  <li>Datum und Uhrzeit <span><button id='button_Manu' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
+  <li>Manu Modus <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span>.</li>
+  <li>Auto Modus <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
+  <li>Reduzierte Temperatur <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='18'> °C.</i>
+      und Komfort Temperatur <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='21'> °C.</i>
+      <span><button id='button_Auto' onclick='Test([0x11,2*input_reduzierte_Temperatur.value,2*input_Komfort_Temperatur.value])'>voreinstellen</button></span>, aktivieren mit:
+      </li>
+  <li>Reduzierte Temperatur <span><button id='button_Reduzierte_Temperatur' onclick='Test([0x44])'>aktivieren</button></span>.</li>
+  <li>Komfort Temperatur <span><button id='button_Komfort_Temperatur' onclick='Test([0x43])'>aktivieren</button></span>.</li>
+  <li>oder Temperatur auf <i>t=<input id='input_Temperatur1' size="3" value='17'> °C</i>
+    <span><button id='button_Temperatur1' onclick='Test([0x41,2*input_Temperatur1.value])'>aktivieren</button></span>.
+    </li>
+  <li>oder Temperatur auf <i>t=<input id='input_Temperatur2' size="3" value='19'> °C</i>
+    <span><button id='button_Temperatur2' onclick='Test([0x41,2*input_Temperatur2.value])'>aktivieren</button></span>.
+    </li>
+  <li>Boost Mode <span><button id='button_Boost_Start' onclick='Test([0x45,0x01])'>Start</button></span> und <span><button id='button_Boost_Stop' onclick='Test([0x45,0x00])'>Stopp</button></span>.</li>
+  <li>Holiday Mode mit <i>t<sub>hol</sub>=<input id='input_Holiday_Temperatur' size="3" value='12'> °C</i> für <input id='input_Holiday_Dauer' size="3" value='5'><span> Tage <button id='button_Holiday_Start' onclick='let jj=new Date(Date.now()+input_Holiday_Dauer.value*24*60*60*1000); Test([0x40,2*input_Holiday_Temperatur.value+128,jj.getDate(),jj.getFullYear()%100,jj.getHours()*2+Math.floor(jj.getMinutes()/30),jj.getMonth()+1])'>starten</button></span>.</li>
+  <li>Tasten am Ventil <span><button id='button_Lock' onclick='Test([0x80,0x01])'>sperren (lock)</button></span> oder <span><button id='button_Unlock' onclick='Test([0x80,0x00])'>freigeben (unlock)</button></span>.</li>
+  <li>Temperatur Offset <i>Δt=<input id='input_Offset' size="3" value='0'> °C</i>
+    <span><button id='button_Offset' onclick='Test([0x41,2*input_Offset.value])'>einstellen</button></span> (irgendwas zwischen -3.5 und 3.5 °C).
+    </li>
+  <li>Offenes Fenster Modus mit <i>t<sub>Fenst</sub>=<input id='input_Offenes_Fenster_Temperatur' size="3" value='13'> °C</i> für <input id='input_Offenes_Fenster_Dauer' size="3" value='15'><span> Minuten <button id='button_Offenes_Fenster' onclick='Test([0x14,2*input_Offenes_Fenster_Temperatur.value,Math.round(input_Offenes_Fenster_Dauer.value/5)])'>voreinstellen</button></span> (aktivieren mit: Fenster öffnen).</li>
+  <li>einzelne Tage vorprogrammieren:
+    <ul>
+      <li>Ab 0 Uhr mit
+        <ul>
+          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='5:00'> Uhr, dann</li>
+          <li><i><input size="3" value='19'> °C</i> bis <input size="3" value='7:00'> Uhr, dann</li>
+          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='19:00'> Uhr, dann</li>
+          <li><i><input size="3" value='19'> °C</i> bis <input size="3" value='20:00'> Uhr, dann</li>
+          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='24:00'> Uhr, dann</li>
+          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='24:00'> Uhr, dann</li>
+          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='24:00'> Uhr</li>
+          </ul>
+        für <span><input type="checkbox" checked="checked">Sa
+        <input type="checkbox" checked="checked">So
+        <input type="checkbox" checked="checked">Mo
+        <input type="checkbox" checked="checked">Di
+        <input type="checkbox" checked="checked">Mi
+        <input type="checkbox" checked="checked">Do
+        <input type="checkbox" checked="checked">Fr</span>
+        <span><button onclick='einzelne_Tage_voreinstellen()'>voreinstellen</button></span>.
+        </li>
+      </ul>
+    </li>
+  <li>♦ gespeicherte Daten zurücklesen fehlt noch</li>
+  </ul>
 
 
 <!--
