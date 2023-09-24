@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <style>
   </style>
-<script>7
+<script>
 function onButtonClick() {
   let filters = [];
 
@@ -48,11 +48,77 @@ function onButtonClick() {
 }
 
 
-function onButtonClick() {
+function onButtonClick2() {
+  let filters = [];
+
+
+  let filterService = document.querySelector('#service').value;
+  if (filterService&&filterService.startsWith('0x')) {
+    filterService = parseInt(filterService);
+  }
+  if (filterService) {
+    filters.push({services: [filterService]});
+  }
+
+  let filterName = document.querySelector('#name').value;
+  if (filterName) {
+    filters.push({name: filterName});
+  }
+
+  let filterNamePrefix = document.querySelector('#namePrefix').value;
+  if (filterNamePrefix) {
+    filters.push({namePrefix: filterNamePrefix});
+  }
+
+  let options = {};
+  if (document.querySelector('#allDevices').checked) {
+    options.acceptAllDevices = true;
+    options.optionalServices = ['00001800-0000-1000-8000-00805f9b34fb'] ;
+  } else {
+    options.filters = filters;
+  }
+//alert(options);
   alert('Requesting Bluetooth Device...');
-  navigator.bluetooth.requestDevice(
-    {filters: [{services: ['0000fff0-0000-1000-8000-00805f9b34fb']}], optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']})
-//    {acceptAllDevices:true, optionalServices: ['00001800-0000-1000-8000-00805f9b34fb'] })
+  alert('with ' + JSON.stringify(options));
+  navigator.bluetooth.requestDevice(options)
+  .then(device => {
+    alert('> Name:             ' + device.name);
+    alert('> Id:               ' + device.id);
+    alert('> Connected:        ' + device.gatt.connected);
+    alert('Connecting to GATT Server...');
+    return device.gatt.connect();
+  })
+  .then(server => {
+    alert('Getting Battery Service...');
+    return server.getPrimaryService('00001800-0000-1000-8000-00805f9b34fb');
+  })
+  .then(service => {
+    alert('Getting Battery Level Characteristic...');
+    return service.getCharacteristic('00002a00-0000-1000-8000-00805f9b34fb');
+  })
+  .then(characteristic => {
+    alert('Reading Battery Level...');
+    return characteristic.readValue();
+  })
+  .then(value => {
+    let a = [];
+    for (let i = 0; i < value.byteLength; i++) a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+    alert('> ' + a.join(' '));    
+  })
+  .then(characteristic => {alert("durch");
+  })
+  .catch(error => {
+    alert('Argh! ' + error);
+  });
+}
+
+
+function onButtonClick3() {
+  let options = {filters: [{services: ['0000fff0-0000-1000-8000-00805f9b34fb']}], optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']};
+//    {acceptAllDevices:true, optionalServices: ['00001800-0000-1000-8000-00805f9b34fb'] };
+  alert('Requesting Bluetooth Device...');
+  alert('with ' + JSON.stringify(options));
+  navigator.bluetooth.requestDevice(options)
   .then(device => {
     alert('Connecting to GATT Server...');
     return device.gatt.connect();
@@ -81,7 +147,7 @@ function onButtonClick() {
 </script>
 </head>
 <body>
-<button onclick="onButtonClick()">click</button> <input id="service" value=""/> <input id="name" value=""/> <input id="namePrefix" value=""/> <input type="checkbox" checked="checked" id="allDevices" value=""/>all Devices
+<button onclick="onButtonClick()">click</button> <button onclick="onButtonClick2()">click2</button> <input id="service" value=""/> <input id="name" value=""/> <input id="namePrefix" value=""/> <input type="checkbox" checked="checked" id="allDevices" value=""/>all Devices
 
 <form>
   <input id="service" type="text" list="services" autofocus="" placeholder="Bluetooth Service">
@@ -288,6 +354,53 @@ function onButtonClick() {
   <option value="weight_scale_feature">weight_scale_feature</option>
   <option value="wind_chill">wind_chill</option>
 </datalist>
-
+<!--
+ 
+struct(15): {
+  .Name = string[12]: "ThermoBeacon"
+  .Trusted = bool: false
+  .Adapter = int: 0
+  .LegacyPairing = bool: false
+  .Paired = bool: false
+  .ServicesResolved = bool: false
+  .Alias = string[12]: "ThermoBeacon"
+  .Connected = bool: false
+  .ManufacturerData = array(1): {
+                        [0] struct(2): {
+                              .Value = array(20): {
+                                         [0] int: 0
+                                         [1] int: 0
+                                         [2] int: 140
+                                         [3] int: 7
+                                         [4] int: 0
+                                         [5] int: 0
+                                         [6] int: 71
+                                         [7] int: 233
+                                         [8] int: 126
+                                         [9] int: 1
+                                         [10] int: 238
+                                         [11] int: 13
+                                         [12] int: 0
+                                         [13] int: 0
+                                         [14] int: 252
+                                         [15] int: 0
+                                         [16] int: 167
+                                         [17] int: 140
+                                         [18] int: 0
+                                         [19] int: 0
+                                       }
+                              .Key = int: 17
+                            }
+                      }
+  .Address = string[17]: "E9:47:00:00:07:8C"
+  .Blocked = bool: false
+  .RSSI = int: -68
+  .Addresstype = string[6]: "public"
+  .UUIDs = array(1): {
+             [0] string[36]: "0000fff0-0000-1000-8000-00805f9b34fb"
+           }
+  .TxPower = int: 0
+}
+-->
    </body>
    </html>
