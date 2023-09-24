@@ -73,7 +73,7 @@ function onButtonClick2() {
   let options = {};
   if (document.querySelector('#allDevices').checked) {
     options.acceptAllDevices = true;
-    options.optionalServices = ['00001800-0000-1000-8000-00805f9b34fb'] ;
+    options.optionalServices = ['af237777-879d-6186-1f49-deca0e85d9c1']; //['00001800-0000-1000-8000-00805f9b34fb'] ;
   } else {
     options.filters = filters;
   }
@@ -90,11 +90,11 @@ function onButtonClick2() {
   })
   .then(server => {
     alert('Getting Battery Service...');
-    return server.getPrimaryService('00001800-0000-1000-8000-00805f9b34fb');
+    return server.getPrimaryService('af237777-879d-6186-1f49-deca0e85d9c1');//'00001800-0000-1000-8000-00805f9b34fb');
   })
   .then(service => {
     alert('Getting Battery Level Characteristic...');
-    return service.getCharacteristic('00002a00-0000-1000-8000-00805f9b34fb');
+    return service.getCharacteristic('af230006-879d-6186-1f49-deca0e85d9c1');//'00002a00-0000-1000-8000-00805f9b34fb');
   })
   .then(characteristic => {
     alert('Reading Battery Level...');
@@ -145,6 +145,144 @@ function onButtonClick3() {
   });
 }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+let manuServiceUuid          = '00001800-0000-1000-8000-00805f9b34fb';
+let manuCharacteristicUuid   = '00002a00-0000-1000-8000-00805f9b34fb';
+let sensorServiceUuid        = 'af237777-879d-6186-1f49-deca0e85d9c1';
+let sensorCharacteristicUUID = 'af230006-879d-6186-1f49-deca0e85d9c1';
+let serviceUuid         = sensorServiceUuid;
+let characteristicUuid  = sensorCharacteristicUuid;
+
+let options = {};
+options.acceptAllDevices = true;
+options.optionalServices = [serviceUuid] ;
+
+let device=0;
+async function device__bluetooth_requestDevice() {
+  alert('Requesting Bluetooth Device...\nwith options=' + JSON.stringify(options));
+  device=await navigator.bluetooth.requestDevice(options);
+  alert('> Name:             ' + device.name
+    + '\n> Id:               ' + device.id
+    + '\n> Connected:        ' + device.gatt.connected);
+  }
+
+let server=0;
+async function server__device_gatt_connect() {
+  alert('Connecting to GATT Server...');
+  server=await device.gatt.connect();
+  alert('> Connected:        ' + device.gatt.connected);
+  }
+
+let service=0;
+async function service__server_getPrimaryService() {
+  alert('Getting Service...');
+  service = await server.getPrimaryService(serviceUuid);
+  alert('Service...'+service.uuid);  
+  }
+
+
+let characteristic=0;
+async function characteristic__service_getCharacteristic() {
+  alert('Getting Characteristic...');
+  characteristic = await service.getCharacteristic(characteristicUuid);
+  alert('Characteristic...'+characteristic);
+  }
+
+function display_value(value) {
+  let a = [];
+  for (let i = 0; i < value.byteLength; i++) a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+  return a.join(' ');    
+  }
+
+let value=0;
+async function value__characteristic_readValue() {
+  alert('Reading value...');
+  value=await characteristic.readValue();
+  alert('value='+display_value(value));
+  }
+
+let flag=0;
+async function flag__characteristic_startNotifications() {
+  alert('Starting Notifications...');
+  flag=await characteristic.startNotifications();
+  alert('return flag='+flag);
+  characteristic.addEventListener('characteristicvaluechanged',handleNotifications);
+  }
+  
+function handleNotifications(event) {
+  let value = event.target.value;
+  let a = [];
+  // Convert raw data bytes to hex values just for the sake of showing something.
+  // In the "real" world, you_d use data.getUint8, data.getUint16 or even
+  // TextDecoder to process raw data bytes.
+  for (let i = 0; i < value.byteLength; i++) {
+    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+    }
+  alert('> ' + a.join(' '));
+  }
+  </script>
+
+<!--
+try {
+    log('Requesting Bluetooth Device...');
+    const device = await navigator.bluetooth.requestDevice({
+        filters: [{services: [serviceUuid]}]});
+
+    log('Connecting to GATT Server...');
+    const server = await device.gatt.connect();
+
+    log('Getting Service...');
+    const service = await server.getPrimaryService(serviceUuid);
+
+    log('Getting Characteristic...');
+    myCharacteristic = await service.getCharacteristic(characteristicUuid);
+
+    await myCharacteristic.startNotifications();
+
+    log('> Notifications started');
+    myCharacteristic.addEventListener('characteristicvaluechanged',
+        handleNotifications);
+  } catch(error) {
+    log('Argh! ' + error);
+  }
+}
+
+async function onStopButtonClick() {
+  if (myCharacteristic) {
+    try {
+      await myCharacteristic.stopNotifications();
+      log('> Notifications stopped');
+      myCharacteristic.removeEventListener('characteristicvaluechanged',
+          handleNotifications);
+    } catch(error) {
+      log('Argh! ' + error);
+    }
+  }
+}
+
+function handleNotifications(event) {
+  let value = event.target.value;
+  let a = [];
+  // Convert raw data bytes to hex values just for the sake of showing something.
+  // In the "real" world, you'd use data.getUint8, data.getUint16 or even
+  // TextDecoder to process raw data bytes.
+  for (let i = 0; i < value.byteLength; i++) {
+    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+  }
+  log('> ' + a.join(' '));
+}
+-->
 </head>
 <body>
 <button onclick="onButtonClick()">click</button> <button onclick="onButtonClick2()">click2</button> <input id="service" value=""/> <input id="name" value=""/> <input id="namePrefix" value=""/> <input type="checkbox" checked="checked" id="allDevices" value=""/>all Devices
@@ -354,6 +492,28 @@ function onButtonClick3() {
   <option value="weight_scale_feature">weight_scale_feature</option>
   <option value="wind_chill">wind_chill</option>
 </datalist>
+<table>
+<tr>
+  <td><button onclick="device__bluetooth_requestDevice()">device=navigator.bluetooth.requestDevice(options)</button></td>
+  </tr>
+<tr>
+  <td><button onclick="server__device_gatt_connect()">server=device.gatt.connect()</button></td>
+  </tr>
+<tr>
+  <td><button onclick="service__server_getPrimaryService()">service=server.getPrimaryService(serviceUuid)</button></td>
+  </tr>
+<tr>
+  <td><button onclick="characteristic__service_getCharacteristic()">characteristic=service.getCharacteristic(characteristicUuid)</button></td>
+  </tr>
+<tr>
+  <td><button onclick="value__characteristic_readValue()">value=characteristic.readValue();</button></td>
+  </tr>
+<tr>
+  <td><button onclick="flag__characteristic_startNotifications()">flag=characteristic.startNotifications()</button></td>
+  </tr>
+  
+  </table>
+
 <!--
  
 struct(15): {
