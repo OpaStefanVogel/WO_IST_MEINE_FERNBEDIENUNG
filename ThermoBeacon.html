@@ -365,9 +365,16 @@ async function kopple_Robi(dev) {
   return dev;
   }
 
+function onDisconnected() {
+  Ausgabe_Kopplung.innerHTML='disconnected';
+  alert('disconnected\nwegen Button "trennen"\noder weil 90 sek inaktiv');
+  }
+
 async function kopple_CC_RT_BLE(dev) {
+  Ausgabe_Kopplung.innerHTML='versuche zu verbinden (nach 5 sek erneut versuchen)';
   log('kopple_CC_RT_BLE(device)');
   log('Connecting to GATT Server...');
+  dev.device.addEventListener('gattserverdisconnected', onDisconnected);
   dev.server=await dev.device.gatt.connect();
   log('> Connected:        ' + dev.device.gatt.connected);
 
@@ -391,22 +398,24 @@ async function kopple_CC_RT_BLE(dev) {
   log('Getting Characteristic.readValue()...');
   await dev.char3.readValue();
   dev.value3=dev.char3.value;
-  log('> Characteristic.value '+display_value(dev.char3.value));
+  log('> Characteristic.value '+display_value(dev.value3));
+//  dev.value3.setUint8(0,64);
 //  dev.value3.setUint8(1,64);
-//  log('Getting Characteristic.writeValue()...');
+//  log('Getting Characteristic.writeValue(64,64)...');
 //  await dev.char3.writeValue(dev.value3);
 //  log('Getting Characteristic.readValue()...');
 //  await dev.char3.readValue();
 //  dev.value3=dev.char3.value;
-//  log('> Characteristic.value '+display_value(dev.char3.value));
+//  log('> Characteristic.value '+display_value(dev.value3));
 //  log(dev);
 //  log(dev.value3);
-
-  Ausgabe_Kopplung='verbunden';
+  Ausgabe_Kopplung.innerHTML='verbunden, button_aktualisieren()';
+  setTimeout(function() {Ausgabe_Kopplung.innerHTML='verbunden';button_aktualisieren.click()},500);
   return dev;
   }
 
-async function Test(x) {//alert(1);alert(CC_RT_BLE);
+async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
+  //if ((CC_RR_BLE.device!=undefined)&&CC_RT_BLE.device.gatt.connected) ; else alert('erst koppeln');
 /*  let data = new Uint8Array(4);
   log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
   data[0] = 2;
@@ -842,20 +851,20 @@ DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button>
 <div>aktuell um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
   Modus <span id='Ausgabe_Modus' class='Ausgabe'>?</span>,
   Solltemperatur <span id='Ausgabe_Solltemperatur' class='Ausgabe'>?</span> <i>°C</i>,
-  Ventil <span id='Ausgabe_Ventilstellung' class='Ausgabe'>?</span> <i>%</i> geschlossen,
+  Ventil <span id='Ausgabe_Ventilstellung' class='Ausgabe'>?</span> <i>%</i> geöffnet,
   Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>?</span> <i>%</i> voll.
   </div>
 <ul>
-  <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span></li>
-  <li>Ausgabe <span><button id='button_Manu' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
+  <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span>, <span><button id='button_device_request' onclick="CC_RT_BLE.device.gatt.disconnect()">trennen</button></span></li>
+  <li>Ausgabe <span><button id='button_aktualisieren' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
   <li>Modus Manu <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span>.</li>
   <li>Modus Auto <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
-  <li>Reduzierte Temperatur <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='18'> °C.</i>
-      und Komfort Temperatur <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='21'> °C.</i>
+  <li>Tagestemperatur mit ☀️ <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='16'> °C.</i>
+      und ohne Sonnenschein 🌛 <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='18'> °C.</i>
       <span><button id='button_Auto' onclick='Test([0x11,2*input_reduzierte_Temperatur.value,2*input_Komfort_Temperatur.value])'>voreinstellen</button></span>, aktivieren mit:
       </li>
-  <li>Reduzierte Temperatur <span><button id='button_Reduzierte_Temperatur' onclick='Test([0x44])'>aktivieren</button></span>.</li>
-  <li>Komfort Temperatur <span><button id='button_Komfort_Temperatur' onclick='Test([0x43])'>aktivieren</button></span>.</li>
+  <li>Temperatur mit Sonnenschein ☀️ <span><button id='button_Reduzierte_Temperatur' onclick='Test([0x43])'>aktivieren</button></span>.</li>
+  <li>Tempemperatur ohne Sonnenschein🌛 <span><button id='button_Komfort_Temperatur' onclick='Test([0x44])'>aktivieren</button></span>.</li>
   <li>oder Temperatur auf <i>t=<input id='input_Temperatur1' size="3" value='17'> °C</i>
     <span><button id='button_Temperatur1' onclick='Test([0x41,2*input_Temperatur1.value])'>aktivieren</button></span>.
     </li>
@@ -892,7 +901,7 @@ DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button>
         </li>
       </ul>
     </li>
-  <li>♦ gespeicherte Daten zurücklesen fehlt noch <span><button onclick='
+  <!--li>♦ gespeicherte Daten zurücklesen fehlt noch <span><button onclick='
     CC_RT_BLE_handleNotifications([0x02,0x01,0x09,0x50,0x04,0x1e,0x00,0x00,0x00,0x00,0x18,0x03,0x2a,0x22,0x07]);
     '>Test1</button></span> und <span><button onclick='
     CC_RT_BLE_handleNotifications([0x02,0x01,0x2A,0x50,0x04,0x24,0x0e,0x10,0x25,0x0c,0x18,0x03,0x2a,0x22,0x07]);
@@ -904,7 +913,7 @@ DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button>
     CC_RT_BLE_handleNotifications([0x21,0x04,0x22,0x1e,0x26,0x2f,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
     CC_RT_BLE_handleNotifications([0x21,0x05,0x22,0x1e,0x28,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
     CC_RT_BLE_handleNotifications([0x21,0x06,0x22,0x1e,0x28,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    '>Test3</button></span></li>
+    '>Test3</button></span></li-->
   </ul>
 
 <div style="border:solid">
