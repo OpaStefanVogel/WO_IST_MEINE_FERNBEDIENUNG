@@ -157,21 +157,20 @@ function onButtonClick3() {
 
 
 <script>
-let manuServiceUuid          = '00001800-0000-1000-8000-00805f9b34fb';
-let manuCharacteristicUuid   = '00002a00-0000-1000-8000-00805f9b34fb';
-let sensorServiceUuid        = 'af237777-879d-6186-1f49-deca0e85d9c1';
-let sensorCharacteristicUuid = 'af230006-879d-6186-1f49-deca0e85d9c1';
-let motorCharacteristicUuid  = 'af230002-879d-6186-1f49-deca0e85d9c1';
-let serviceUuid         = sensorServiceUuid;
-let characteristicUuid  = sensorCharacteristicUuid;
+let manuServiceUuid           = '00001800-0000-1000-8000-00805f9b34fb';
+let manuCharacteristicUuid    = '00002a00-0000-1000-8000-00805f9b34fb';
+let robiServiceUuid = 'af237777-879d-6186-1f49-deca0e85d9c1';
+let robiSensorChar6 = 'af230006-879d-6186-1f49-deca0e85d9c1';
+let robiSensorChar3 = 'af230003-879d-6186-1f49-deca0e85d9c1';
+let robiCommandChar = 'af230002-879d-6186-1f49-deca0e85d9c1';
 
 let options = {};
 options.acceptAllDevices = true;
-options.optionalServices = [serviceUuid] ;
+options.optionalServices = [robiServiceUuid] ;
 
 let device=0;
 async function device__bluetooth_requestDevice() {
-  alert('Requesting Bluetooth Device...\nwith options=' + JSON.stringify(options));
+  td_device__bluetooth_requestDevice.firstChild.nodeValue='Requesting Bluetooth Device...\nwith options=' + JSON.stringify(options);
   device=await navigator.bluetooth.requestDevice(options);
   alert('> Name:             ' + device.name
     + '\n> Id:               ' + device.id
@@ -196,8 +195,9 @@ async function service__server_getPrimaryService() {
 let characteristic=0;
 async function characteristic__service_getCharacteristic() {
   alert('Getting Characteristic...');
-  characteristic = await service.getCharacteristic(characteristicUuid);
+  let characteristic = await service.getCharacteristic(characteristicUuid);
   alert('Characteristic...'+characteristic);
+  return characteristic;
   }
 
 
@@ -223,7 +223,7 @@ async function flag__characteristic_startNotifications() {
   characteristic.addEventListener('characteristicvaluechanged',handleNotifications);
   }
   
-function handleNotifications(event) {
+function handleNotifications(event) {alert(event);
   let value = event.target.value;
   let a = [];
   // Convert raw data bytes to hex values just for the sake of showing something.
@@ -236,7 +236,35 @@ function handleNotifications(event) {
   document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
   }
 //alert(1);</script><script>
+
+
 /*
+EQ-3-CC-RT:
+service:    3e135142-654f-9090-134a-a6ff5bb77046
+charSend:   3fa4585a-ce4a-3bad-db4b-b8df8179ea09
+charNotify: d0e8434d-cd29-0996-af41-6c90f4e0eb2a
+
+
+aus WonderPy-master/WonderPy/core/wwBTLEMgr.py:
+# Define service and characteristic UUIDs used by the WW devices.
+WW_SERVICE_UUID_D1     = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')   # dash and dot
+WW_SERVICE_UUID_D2     = uuid.UUID('AF237778-879D-6186-1F49-DECA0E85D9C1')   # cue
+WW_SERVICE_IDS         = [WW_SERVICE_UUID_D1, WW_SERVICE_UUID_D2]
+
+CHAR_UUID_CMD          = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')   # command channel
+CHAR_UUID_SENSOR0      = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')   # sensor channel 0 (all robots)
+CHAR_UUID_SENSOR1      = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')   # sensor channel 1 (dash and cue)
+
+
+aus RobotControl-master/robot.py:
+ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
+COMMAND1_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
+SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')
+SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
+COMMAND2_CHAR_UUID = uuid.UUID('AF230000-879D-6186-1F49-DECA0E85D9C1')
+INFO_CHAR_UUID = uuid.UUID('AF230001-879D-6186-1F49-DECA0E85D9C1')
+
+
 a[6] von links kommt was näher
 a[7] von rechts kommt was näher
 a[8] von hinten nähert sich was
@@ -245,6 +273,86 @@ a[18:19]
 */
   </script>
 
+<script>
+async function device_request() {
+  log();
+  let options={};
+  options.acceptAllDevices = true;
+  options.optionalServices = [
+    '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
+    'af237777-879d-6186-1f49-deca0e85d9c1', //robi
+    '3e135142-654f-9090-134a-a6ff5bb77046', //cc-rt-ble (eq-3)
+    '0000fff0-0000-1000-8000-00805f9b34fb', //ThermoBeacon
+    ] ;
+  log('Requesting Bluetooth Device...');
+  log('with options=' + JSON.stringify(options));
+  let RET={};
+  RET.device=await navigator.bluetooth.requestDevice(options);
+  log('> Name:             ' + RET.device.name);
+  log('> Id:               ' + RET.device.id);
+  log('> Connected:        ' + RET.device.gatt.connected);
+  if (RET.device.name=='Robi') kopple_Robi(RET);
+  if (RET.device.name=='CC-RT-BLE') kopple_CC_RT_BLE(RET);
+  }  
+
+function log(text) {
+  if (text) {
+    div_log.innerHTML=div_log.innerHTML+'<div>'+text+'</div>';
+    } else {
+      div_log.innerHTML='Neustart: '+Date();
+      }
+  }
+
+async function kopple_Robi(dev) {
+  log('kopple_Robi(device)');
+  log('Connecting to GATT Server...');
+  dev.server=await dev.device.gatt.connect();
+  log('> Connected:        ' + dev.device.gatt.connected);
+  log('Getting Service...');
+  dev.service = await dev.device.server.getPrimaryService('af237777-879d-6186-1f49-deca0e85d9c1');
+  log('Service...'+dev.service.uuid);  
+
+  log('Getting Characteristic...');
+  dev.char6 = await dev.service.getCharacteristic('af230006-879d-6186-1f49-deca0e85d9c1');
+  log('Characteristic...'+dev.char6);
+  
+  log('Starting Notifications...');
+  dev.notify=await dev.char6.startNotifications();
+  log('return flag='+dev.notify);
+  dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
+  return dev;
+  }
+
+async function kopple_CC_RT_BLE(dev) {
+  log('kopple_CC_RT_BLE(device)');
+  log('Connecting to GATT Server...');
+  dev.server=await dev.device.gatt.connect();
+  log('> Connected:        ' + dev.device.gatt.connected);
+
+  log('Getting Service...'+dev.server);
+  dev.service = await dev.server.getPrimaryService('3e135142-654f-9090-134a-a6ff5bb77046');
+  log('> Service...'+dev.service.uuid);  
+
+  log('Getting Characteristic...');
+  dev.char6 = await dev.service.getCharacteristic('d0e8434d-cd29-0996-af41-6c90f4e0eb2a');
+  log('> Characteristic...'+dev.char6.uuid);
+
+  log('Starting Notifications...');
+  dev.notify=await dev.char6.startNotifications();
+  log('> return flag='+dev.notify);
+  dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
+  
+  log('Getting Characteristic...');
+  dev.char3 = await dev.service.getCharacteristic('3fa4585a-ce4a-3bad-db4b-b8df8179ea09');
+  log('> Characteristic.uuid '+dev.char3.uuid);
+  log('> Characteristic.properties '+JSON.stringify(dev.char3.properties));
+  await dev.char3.readValue();
+  log('> Characteristic.value '+display_value(dev.char3.value));
+
+  return dev;
+  }
+
+  </script>
 
 
 <!--
@@ -256,7 +364,7 @@ function drive(driveSpeed, turningSpeed) {
   if (driveSpeed < 0) driveSpeed = driveSpeed + 0x800;
   if (turningSpeed < 0) turningSpeed = turningSpeed + 0x800;
   data[1] = driveSpeed & 0xff;
-9  data[2] = turningSpeed & 0xff;
+  data[2] = turningSpeed & 0xff;
   data[3] = ((driveSpeed & 0xff00) >> 8) | ((turningSpeed & 0xff00) >> 5);
   command.setValue(data);
   
@@ -520,7 +628,8 @@ function handleNotifications(event) {
 </datalist>
 <table>
 <tr>
-  <td><button onclick="device__bluetooth_requestDevice()">device=navigator.bluetooth.requestDevice(options)</button></td>
+  <td><button onclick="device__bluetooth_requestDevice()">device_requestDevice()</button></td>
+  <td id='td_device__bluetooth_requestDevice'> </td>
   </tr>
 <tr>
   <td><button onclick="server__device_gatt_connect()">server=device.gatt.connect()</button></td>
@@ -540,7 +649,12 @@ function handleNotifications(event) {
   </tr>
   </table>
 
-<div id="div_notification" style="font-family:Courier,monospace">notification</div>  
+<div id="div_notification" style="font-family:Courier,monospace">notification</div>
+
+<span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
+<div style="border:solid">
+<div id="div_log" style="display:flex; flex-direction:column; overflow:auto; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
+</div>
 
 <!--
  
@@ -589,6 +703,178 @@ struct(15): {
            }
   .TxPower = int: 0
 }
+
+-----------------------------------------CC-RT-BLE------------------
+
+Disconnect
+Forget
+
+Name:
+CC-RT-BLE
+Address:
+00:1A:22:0B:F9:D1
+GATT Connected:
+Connected
+Latest RSSI:
+-67
+Services:
+00001800-0000-1000-8000-00805f9b34fb, 00001801-0000-1000-8000-00805f9b34fb, 0000180a-0000-1000-8000-00805f9b34fb, 3e135142-654f-9090-134a-a6ff5bb77046, 9e5d1e47-5c13-43a0-8635-82ad38a1386f
+Manufacturer Data:
+Service:
+3e135142-654f-9090-134a-a6ff5bb77046
+Service Info
+
+ID:
+00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024
+UUID:
+3e135142-654f-9090-134a-a6ff5bb77046
+Type:
+Primary
+Characteristics
+Characteristic:
+3fa4585a-ce4a-3bad-db4b-b8df8179ea09
+Characteristic Info
+
+ID:
+00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024/3fa4585a-ce4a-3bad-db4b-b8df8179ea09,1041
+UUID:
+3fa4585a-ce4a-3bad-db4b-b8df8179ea09
+Properties
+
+Read:
+Write:
+Value
+0x00000000000000000000000000000000
+
+Hexadecimal
+Read
+Write
+Descriptors
+Characteristic:
+d0e8434d-cd29-0996-af41-6c90f4e0eb2a
+Characteristic Info
+
+ID:
+00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024/d0e8434d-cd29-0996-af41-6c90f4e0eb2a,1057
+UUID:
+d0e8434d-cd29-0996-af41-6c90f4e0eb2a
+Properties
+
+Read:
+Write:
+Notify:
+Value
+0x00000000000000000000000000000000
+
+Hexadecimal
+Read
+Write
+Descriptors
+Descriptor:
+00002902-0000-1000-8000-00805f9b34fb
+Descriptor Info
+
+ID:
+00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024/d0e8434d-cd29-0996-af41-6c90f4e0eb2a,1057/00002902-0000-1000-8000-00805f9b34fb;0
+UUID:
+00002902-0000-1000-8000-00805f9b34fb
+Value
+0x0100
+
+Hexadecimal
+Read
+Write
+Service:
+0000180a-0000-1000-8000-00805f9b34fb
+Service:
+9e5d1e47-5c13-43a0-8635-82ad38a1386f
+Service Info
+
+ID:
+00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280
+UUID:
+9e5d1e47-5c13-43a0-8635-82ad38a1386f
+Type:
+Primary
+Characteristics
+Characteristic:
+347f7608-2e2d-47eb-913b-75d4edc4de3b
+Characteristic Info
+
+ID:
+00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/347f7608-2e2d-47eb-913b-75d4edc4de3b,65287
+UUID:
+347f7608-2e2d-47eb-913b-75d4edc4de3b
+Properties
+
+Read:
+Value
+0x00100200
+
+Hexadecimal
+Read
+Descriptors
+Characteristic:
+92e86c7a-d961-4091-b74f-2409e72efe36
+Characteristic Info
+
+ID:
+00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/92e86c7a-d961-4091-b74f-2409e72efe36,65285
+UUID:
+92e86c7a-d961-4091-b74f-2409e72efe36
+Properties
+
+Write:
+Value
+
+Hexadecimal
+Write
+Descriptors
+Characteristic:
+e3dd50bf-f7a7-4e99-838e-570a086c666b
+Characteristic Info
+
+ID:
+00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/e3dd50bf-f7a7-4e99-838e-570a086c666b,65282
+UUID:
+e3dd50bf-f7a7-4e99-838e-570a086c666b
+Properties
+
+Write:
+Notify:
+Indicate:
+Value
+
+Hexadecimal
+Write
+Descriptors
+Descriptor:
+00002902-0000-1000-8000-00805f9b34fb
+Descriptor Info
+
+ID:
+00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/e3dd50bf-f7a7-4e99-838e-570a086c666b,65282/00002902-0000-1000-8000-00805f9b34fb;0
+UUID:
+00002902-0000-1000-8000-00805f9b34fb
+Value
+0x0000
+
+Hexadecimal
+Read
+Write
+Service:
+00001801-0000-1000-8000-00805f9b34fb
+Service:
+00001800-0000-1000-8000-00805f9b34fb
+Adapter
+Devices
+Debug Logs
+ThermoBeacon
+CC-RT-BLE
+
+
+
+
 -->
    </body>
    </html>
