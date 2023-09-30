@@ -115,7 +115,8 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
   log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])'); 
   if (CC_RT_BLE.device) {
     for (let i=0;i<x.length;i++) CC_RT_BLE.value3.setUint8(i,x[i]); 
-    await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
+    //await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x:
+    await CC_RT_BLE.char3.writeValue(Uint8Array.of(...x));
     log('> writeValue() geschafft'); 
     }
 //  alert('durch');

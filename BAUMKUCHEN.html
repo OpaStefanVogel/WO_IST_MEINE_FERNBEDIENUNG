@@ -23,7 +23,7 @@ function rot(p,x,y) {
 function zeichne_die_Tabelle(T) {
   let d="";
   let xy=[0,0];
-  for (let p=15;p<375;p=p+30) {
+  for (let p=0;p<0*60+1*375;p=p+30) {
     for (let i=0;i<T.length;i++) {
       if ("ML ".indexOf(T[i][0])>-1) {
         xy=rot(p,T[i][1],T[i][2]);
@@ -44,14 +44,17 @@ function zeichne_die_Tabelle(T) {
 function tstart() {
   T.push(["M",(event.targetTouches.item(0).clientX-820)/2,event.targetTouches.item(0).clientY/2]);
   zeichne_die_Tabelle(T);
+  event.preventDefault();
   }
 
 function tmove() {
   T.push(["L",(event.targetTouches.item(0).clientX-820)/2,event.targetTouches.item(0).clientY/2]);  
   zeichne_die_Tabelle(T);
+  event.preventDefault();
   }
 function tend() {
   event.target.parentNode.requestFullscreen();
+  event.preventDefault();
   //alert(T.join("\n"));
   }
   </script>
