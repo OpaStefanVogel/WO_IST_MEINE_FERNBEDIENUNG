@@ -287,7 +287,7 @@ a[18:19]
   </script>
 
  <script>
-let DASH={value2:(new DataView(new ArrayBuffer(8)))};
+let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {log(value)}}};
 let CC_RT_BLE={};
 
 async function device_request() {
@@ -386,12 +386,23 @@ function tstart() {
   //log("ontouchstart x="+tar.x+" "+tar.y);
   }
 
-function tmove() {
+let nicht_warten=true;
+async function tmove() {
   event.preventDefault();
   let tou=event.touches[0];
   delx=Math.round(tou.pageX-toux);
   dely=-Math.round(tou.pageY-touy);
   span_del.innerHTML=delx+" "+dely;
+  if (nicht_warten) {
+    nicht_warten=false;
+    //log('await writeValue');
+    DASH.value2.setUint8(0,2);
+    DASH.value2.setUint8(1,dely&0xFF);
+    DASH.value2.setUint8(2,delx&0xFF);
+    DASH.value2.setUint8(3,((dely&0xFF00)>>8)|((delx&0xFF00)>>5));
+    await DASH.char2.writeValue(DASH.value2);
+    nicht_warten=true;
+    }
   //log("ontouchmove");
   
   }
