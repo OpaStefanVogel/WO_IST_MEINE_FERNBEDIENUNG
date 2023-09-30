@@ -287,7 +287,7 @@ a[18:19]
   </script>
 
  <script>
-let DASH={};
+let DASH={value2:(new DataView(new ArrayBuffer(8)))};
 let CC_RT_BLE={};
 
 async function device_request() {
@@ -365,186 +365,41 @@ async function kopple_Robi(dev) {
   return dev;
   }
 
-function onDisconnected() {
-  Ausgabe_Kopplung.innerHTML='disconnected';
-  alert('disconnected\nwegen Button "trennen"\noder weil 90 sek inaktiv');
-  }
-
-async function kopple_CC_RT_BLE(dev) {
-  Ausgabe_Kopplung.innerHTML='versuche zu verbinden (nach 5 sek erneut versuchen)';
-  log('kopple_CC_RT_BLE(device)');
-  log('Connecting to GATT Server...');
-  dev.device.addEventListener('gattserverdisconnected', onDisconnected);
-  dev.server=await dev.device.gatt.connect();
-  log('> Connected:        ' + dev.device.gatt.connected);
-
-  log('Getting Service...'+dev.server);
-  dev.service = await dev.server.getPrimaryService('3e135142-654f-9090-134a-a6ff5bb77046');
-  log('> Service...'+dev.service.uuid);
-
-  log('Getting Characteristic...');
-  dev.char6 = await dev.service.getCharacteristic('d0e8434d-cd29-0996-af41-6c90f4e0eb2a');
-  log('> Characteristic...'+dev.char6.uuid);
-
-  log('Starting Notifications...');
-  dev.notify=await dev.char6.startNotifications();
-  log('> return flag='+dev.notify);
-  dev.char6.addEventListener('characteristicvaluechanged',CC_RT_BLE_handleNotifications);
+  </script>
   
-  log('Getting Characteristic...');
-  dev.char3 = await dev.service.getCharacteristic('3fa4585a-ce4a-3bad-db4b-b8df8179ea09');
-  log('> Characteristic.uuid '+dev.char3.uuid);
-  log('> Characteristic.properties '+JSON.stringify(dev.char3.properties));
-  log('Getting Characteristic.readValue()...');
-  await dev.char3.readValue();
-  dev.value3=dev.char3.value;
-  log('> Characteristic.value '+display_value(dev.value3));
-//  dev.value3.setUint8(0,64);
-//  dev.value3.setUint8(1,64);
-//  log('Getting Characteristic.writeValue(64,64)...');
-//  await dev.char3.writeValue(dev.value3);
-//  log('Getting Characteristic.readValue()...');
-//  await dev.char3.readValue();
-//  dev.value3=dev.char3.value;
-//  log('> Characteristic.value '+display_value(dev.value3));
-//  log(dev);
-//  log(dev.value3);
-  Ausgabe_Kopplung.innerHTML='verbunden, button_aktualisieren()';
-  setTimeout(function() {Ausgabe_Kopplung.innerHTML='verbunden';button_aktualisieren.click()},500);
-  return dev;
+<script>
+let toux=0;
+let touy=0;
+let delx=0;
+let dely=0;
+
+function tstart() {
+  event.preventDefault();
+  log(event.touches[0]);
+  //for (var i in event.touches[0]) alert(i);
+  //for (var i in event.target) alert(i);
+  let tou=event.touches[0];
+  toux=tou.pageX;
+  touy=tou.pageY;
+  //let tar=event.target;
+  log("ontouchstart x="+tou.clientX+" "+tou.screenX+" "+tou.pageX+" y="+tou.clientY+" "+tou.screenY+" "+tou.pageY);
+  //log("ontouchstart x="+tar.x+" "+tar.y);
   }
 
-async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
-  //if ((CC_RR_BLE.device!=undefined)&&CC_RT_BLE.device.gatt.connected) ; else alert('erst koppeln');
-/*  let data = new Uint8Array(4);
-  log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
-  data[0] = 2;
-  log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
-  alert(DataView);
-  let dat=new DataView([7,8,9]);
-  log('data=['+[data[0],data[1],data[2],data[3]]+'] ');
-  dat.setUint8(1,3);
-  log('dat=['+[dat[0],dat[1],dat[2],dat[3]]+'] ');
-  log(CC_RT_BLE); 
-  */
-  log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])'); 
-  if (CC_RT_BLE.device) {
-    for (let i=0;i<x.length;i++) CC_RT_BLE.value3.setUint8(i,x[i]); 
-    await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
-    log('> writeValue() geschafft'); 
-    }
-//  alert('durch');
-  }
+function tmove() {
+  event.preventDefault();
+  let tou=event.touches[0];
+  delx=Math.round(tou.pageX-toux);
+  dely=-Math.round(tou.pageY-touy);
+  span_del.innerHTML=delx+" "+dely;
+  //log("ontouchmove");
   
-async function einzelne_Tage_voreinstellen() {
-  let inputs=event.target.parentNode.parentNode.getElementsByTagName('input');
-  for (let j=0;j<7;j++) if (inputs[j+14].checked) {
-    let arr=[0x10,j];
-    for (let i=0;i<7;i++) {
-      let t=inputs[2*i+1].value.split(':');
-      arr.push(inputs[2*i].value*2,Math.floor((t[0]*60+t[1]*1)/10));
-      }
-    await Test(arr);
-    }
-  await Wochenprogramm_auslesen();
   }
-
-function display_value2(value) {
-  let a = [];
-  for (let i = 0; i < value.length; i++) a.push('0x' + ('00' + value[i].toString(16)).slice(-2));
-  return a.join(' ');    
+function tend() {
+//  event.preventDefault(); //nicht, sonst klappt Tastatur auf
+  log("ontouchend");
+  
   }
-
-let Wochentabelle=[
-  [0x21,0x00,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
-  [0x21,0x01,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
-  [0x21,0x02,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
-  [0x21,0x03,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
-  [0x21,0x04,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
-  [0x21,0x05,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90],
-  [0x21,0x06,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]
-  ];
-
-function CC_RT_BLE_handleNotifications(val) {//alert(event);
-  //alert((new Date()).toTimeString());
-  let value = [];
-  let a = [];
-  let b = [];
-  if (CC_RT_BLE.device) {
-    value = event.target.value;
-    for (let i = 0; i < value.byteLength; i++) b[i]=value.getUint8(i);
-    } else b=val;
-  for (let i = 0; i < b.length; i++) a.push('0x' + ('00' + b[i].toString(16)).slice(-2));
-  log('notification=['+a+']');
-  //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
-  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
-  if ((b[0]==2)&&(b[1]==1)) {
-    Ausgabe_Uhrzeit.innerHTML=(new Date()).toTimeString().slice(0,5);
-    Ausgabe_Solltemperatur.innerHTML=(b[5]/2).toFixed(1);
-    Ausgabe_Ventilstellung.innerHTML=b[3];
-    Ausgabe_Batterie.innerHTML=b[4];
-    let Modus='???';
-    if ((b[2]&0x0F)==0x08) Modus='Auto';
-    if ((b[2]&0x0F)==0x09) Modus='Manu';
-    if ((b[2]&0x0F)==0x0A) Modus='Holiday';
-    if ((b[2]&0x0F)==0x0C) Modus='Boost→Auto';
-    if ((b[2]&0x0F)==0x0D) Modus='Boost→Manu';
-    if ((b[2]&0x0F)==0x0E) Modus='Boost→Holiday';
-    Ausgabe_Modus.innerHTML=Modus;
-    Ausgabe_Tasten_Lock.innerHTML=a[2];
-    if ((b[2]&0x30)==0x00) Ausgabe_Tasten_Lock.innerHTML='unlocked';
-    if ((b[2]&0x30)==0x10) Ausgabe_Tasten_Lock.innerHTML='locked (Tasten gesperrt)';
-    if ((b[2]&0x30)==0x20) Ausgabe_Tasten_Lock.innerHTML='locked (wegen Fenster auf)';
-    if ((b[2]&0x30)==0x30) Ausgabe_Tasten_Lock.innerHTML='locked (wegen Fenster auf und Tasten gesperrt)';
-    }
-  if (b[0]==0x21) {
-    Wochentabelle[b[1]]=b;
-    if (b[1]==6) {
-      log('Einlesen noch nicht komplett fertig');
-      let li_Di;
-      let li_Mi=li_Mo.cloneNode(true);
-      let li_Do=li_Mo.parentNode;
-      log('Einlesen noch nicht komplett fert');
-      while (li_Do.hasChildNodes()) li_Do.removeChild(li_Do.firstChild);
-      li_Do.appendChild(li_Mi);
-      for (let i=0;i<7;i++) if (Wochentabelle[i][0]!=0) {
-        li_Di=li_Mi.cloneNode(true);
-        li_Di.removeAttribute('id');
-        li_Di.removeAttribute('style');
-        li_inputs=li_Di.getElementsByTagName('input');
-        for (let j=0;j<7;j++) {
-          li_inputs[j+14].removeAttribute('checked');
-          li_inputs[2*j].value=(Wochentabelle[i][2*j+2]/2).toFixed(1);
-          let k=Wochentabelle[i][2*j+3]*10;
-          let h=Math.floor(k/60);
-          let m=k%60;
-          li_inputs[2*j+1].value=h+':'+('0'+m).slice(-2);
-          
-          }
-        li_inputs[i+14].setAttribute('checked','checked');
-        for (let j=i+1;j<7;j++) {
-          if ((Wochentabelle[j][0]!=0)&&(Wochentabelle[j].slice(2).toString()==Wochentabelle[i].slice(2).toString())) {
-            Wochentabelle[j][0]=0;
-            li_inputs[j+14].setAttribute('checked','checked');
-            }
-          }
-        li_Do.appendChild(li_Di);
-        }
-      }
-    }
-  }
-
-async function Wochenprogramm_auslesen() {
-  for (let i=0;i<7;i++) {
-    let x=[0x20,i];
-    log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])'); 
-    for (let i=0;i<x.length;i++) CC_RT_BLE.value3.setUint8(i,x[i]); 
-    await CC_RT_BLE.char3.writeValue(CC_RT_BLE.value3);//oder direkt x
-    log('> writeValue() geschafft'); 
-    }
-    }
-
-
   </script>
 
 <!--
@@ -611,7 +466,6 @@ function handleNotifications(event) {
 -->
 </head>
 <body>
-<!--
 <button onclick="onButtonClick()">click</button> <button onclick="onButtonClick2()">click2</button> <input id="service" value=""/> <input id="name" value=""/> <input id="namePrefix" value=""/> <input type="checkbox" checked="checked" id="allDevices" value=""/>all Devices
 
 <form>
@@ -843,88 +697,36 @@ function handleNotifications(event) {
   </table>
 
 <span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
-<div><span><button id='button_device_request' onclick="DASH.value2.setUint8(0,2);DASH.value2.setUint8(1,64);DASH.value2.setUint8(2,0);DASH.value2.setUint8(3,0);
-DASH.char2.writeValue(DASH.value2);">DASH.char2.writeValue(DASH.value2)</button></span>
+<div><span><button id='button_device_request' onclick='log(DASH.value2);
+  DASH.value2.setUint8(0,2);log(DASH.value2);
+  DASH.value2.setUint8(1,200);log(DASH.value2);
+  DASH.value2.setUint8(2,0);log(DASH.value2);
+  DASH.value2.setUint8(3,0);log(DASH.value2);
+  log("[2,200,0,0]")
+  DASH.char2.writeValue(DASH.value2);
+  log("> gesendet")
+  '>[2,200,0,0]</button></span>
   </div>
--->
-<style>.Ausgabe {font-family:Courier,monospace; font-size:100%; color:red; border:solid}</style>
-<div>aktuell um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
-  Modus <span id='Ausgabe_Modus' class='Ausgabe'>?</span>,
-  Solltemperatur <span id='Ausgabe_Solltemperatur' class='Ausgabe'>?</span> <i>°C</i>,
-  Ventil <span id='Ausgabe_Ventilstellung' class='Ausgabe'>?</span> <i>%</i> geöffnet,
-  Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>?</span> <i>%</i> voll.
+<div><span><button id='button_device_request' onclick='
+  DASH.value2.setUint8(0,2);
+  DASH.value2.setUint8(1,0);
+  DASH.value2.setUint8(2,0);
+  DASH.value2.setUint8(3,0);
+  log("[2,200,0,0]")
+  DASH.char2.writeValue(DASH.value2);
+  log("> gesendet")
+  '>[2,0,0,0]</button></span>
   </div>
-<ul>
-  <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span>, <span><button id='button_device_request' onclick="CC_RT_BLE.device.gatt.disconnect()">trennen</button></span></li>
-  <li>Ausgabe <span><button id='button_aktualisieren' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
-  <li>Modus Manu <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span>.</li>
-  <li>Modus Auto <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
-  <li>Tagestemperatur mit ☀️ <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='16'> °C.</i>
-      und ohne Sonnenschein 🌛 <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='18'> °C.</i>
-      <span><button id='button_Auto' onclick='Test([0x11,2*input_reduzierte_Temperatur.value,2*input_Komfort_Temperatur.value])'>voreinstellen</button></span>, aktivieren mit:
-      </li>
-  <li>Temperatur mit Sonnenschein ☀️ <span><button id='button_Reduzierte_Temperatur' onclick='Test([0x43])'>aktivieren</button></span>.</li>
-  <li>Tempemperatur ohne Sonnenschein🌛 <span><button id='button_Komfort_Temperatur' onclick='Test([0x44])'>aktivieren</button></span>.</li>
-  <li>oder Temperatur auf <i>t=<input id='input_Temperatur1' size="3" value='17'> °C</i>
-    <span><button id='button_Temperatur1' onclick='Test([0x41,2*input_Temperatur1.value])'>aktivieren</button></span>.
-    </li>
-  <li>oder Temperatur auf <i>t=<input id='input_Temperatur2' size="3" value='19'> °C</i>
-    <span><button id='button_Temperatur2' onclick='Test([0x41,2*input_Temperatur2.value])'>aktivieren</button></span>.
-    </li>
-  <li>Boost Mode <span><button id='button_Boost_Start' onclick='Test([0x45,0x01])'>Start</button></span> und <span><button id='button_Boost_Stop' onclick='Test([0x45,0x00])'>Stopp</button></span>.</li>
-  <li>Holiday Mode mit <i>t<sub>hol</sub>=<input id='input_Holiday_Temperatur' size="3" value='12'> °C</i> für <input id='input_Holiday_Dauer' size="3" value='5'><span> Tage <button id='button_Holiday_Start' onclick='let jj=new Date(Date.now()+input_Holiday_Dauer.value*24*60*60*1000); Test([0x40,2*input_Holiday_Temperatur.value+128,jj.getDate(),jj.getFullYear()%100,jj.getHours()*2+Math.floor(jj.getMinutes()/30),jj.getMonth()+1])'>starten</button></span>.</li>
-  <li>Tasten am Ventil <span><button id='button_Lock' onclick='Test([0x80,0x01])'>sperren (lock)</button></span> oder <span><button id='button_Unlock' onclick='Test([0x80,0x00])'>freigeben (unlock)</button></span>. <span id='Ausgabe_Tasten_Lock' class='Ausgabe'>?</span></li>
-  <li>Temperatur Offset <i>Δt=<input id='input_Offset' size="3" value='0'> °C</i>
-    <span><button id='button_Offset' onclick='Test([0x41,2*input_Offset.value])'>einstellen</button></span> (irgendwas zwischen -3.5 und 3.5 °C).
-    </li>
-  <li>Modus 'offenes Fenster' mit <i>t<sub>Fenst</sub>=<input id='input_Offenes_Fenster_Temperatur' size="3" value='13'> °C</i> für <input id='input_Offenes_Fenster_Dauer' size="3" value='15'><span> Minuten <button id='button_Offenes_Fenster' onclick='Test([0x14,2*input_Offenes_Fenster_Temperatur.value,Math.round(input_Offenes_Fenster_Dauer.value/5)])'>voreinstellen</button></span> (aktivieren mit: Fenster öffnen).</li>
-  <li>Wochenprogramm (Modus Auto) <span><button id='button_Wochenprogramm_auslesen' onclick='Wochenprogramm_auslesen()'>auslesen</button></span> und dann bei Bedarf neu einstellen:
-    <ul>
-      <li id='li_Mo' style='display:none'>Ab 0 Uhr mit
-        <ul>
-          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='5:00'> Uhr, dann</li>
-          <li><i><input size="3" value='19'> °C</i> bis <input size="3" value='7:00'> Uhr, dann</li>
-          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='19:00'> Uhr, dann</li>
-          <li><i><input size="3" value='19'> °C</i> bis <input size="3" value='20:00'> Uhr, dann</li>
-          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='24:00'> Uhr, dann</li>
-          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='24:00'> Uhr, dann</li>
-          <li><i><input size="3" value='17'> °C</i> bis <input size="3" value='24:00'> Uhr</li>
-          </ul>
-        für <span><input type="checkbox" checked="checked">Sa
-        <input type="checkbox" checked="checked">So
-        <input type="checkbox" checked="checked">Mo
-        <input type="checkbox" checked="checked">Di
-        <input type="checkbox" checked="checked">Mi
-        <input type="checkbox" checked="checked">Do
-        <input type="checkbox" checked="checked">Fr</span>
-        <span><button onclick='einzelne_Tage_voreinstellen();button_Wochenprogramm_auslesen.click()'>neu einstellen</button></span>.
-        </li>
-      </ul>
-    </li>
-  <!--li>♦ gespeicherte Daten zurücklesen fehlt noch <span><button onclick='
-    CC_RT_BLE_handleNotifications([0x02,0x01,0x09,0x50,0x04,0x1e,0x00,0x00,0x00,0x00,0x18,0x03,0x2a,0x22,0x07]);
-    '>Test1</button></span> und <span><button onclick='
-    CC_RT_BLE_handleNotifications([0x02,0x01,0x2A,0x50,0x04,0x24,0x0e,0x10,0x25,0x0c,0x18,0x03,0x2a,0x22,0x07]);
-    '>Test2</button></span> und <span><button onclick='
-    CC_RT_BLE_handleNotifications([0x21,0x00,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    CC_RT_BLE_handleNotifications([0x21,0x01,0x22,0x1e,0x26,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    CC_RT_BLE_handleNotifications([0x21,0x02,0x22,0x1e,0x24,0x2c,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    CC_RT_BLE_handleNotifications([0x21,0x03,0x22,0x1e,0x24,0x2c,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    CC_RT_BLE_handleNotifications([0x21,0x04,0x22,0x1e,0x26,0x2f,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    CC_RT_BLE_handleNotifications([0x21,0x05,0x22,0x1e,0x28,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    CC_RT_BLE_handleNotifications([0x21,0x06,0x22,0x1e,0x28,0x2a,0x22,0x72,0x26,0x78,0x22,0x90,0x22,0x90,0x22,0x90]);
-    '>Test3</button></span></li-->
-  </ul>
 
 <div style="border:solid">
   <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
 <div id="div_notification" style="font-family:Courier,monospace">notification1</div>
 <div id="div_notification2" style="font-family:Courier,monospace">notification2</div>
-
-<div><a href='https://www.bedienungsanleitu.ng/eq3/cc-rt-n/anleitung?p=1'>Bedienungsanleitung EQ3/CC-RT-BLE</a>
-<div><a href='https://reverse-engineering-ble-devices.readthedocs.io/en/latest/protocol_description/00_protocol_description.html#eq3-eqiva-protocol'>Reverse Engineering BLE Devices Documentation Sergio Alberti, eq3-eqiva-protocol</a></div>
-<div><a href='https://github.com/Heckie75/eQ-3-radiator-thermostat'>https://github.com/Heckie75/eQ-3-radiator-thermostat</a></div>
+<svg border="1" width='800' height='400' style='border:solid; padding:0px; margin:0px'>
+<rect x='200' y='10' width='400' height='400' fill='orange' ontouchstart='tstart()' ontouchmove='tmove()' ontouchend='tend()'>
+  </svg>
+<span id='span_del'> </span>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
 
@@ -975,178 +777,6 @@ struct(15): {
            }
   .TxPower = int: 0
 }
-
------------------------------------------CC-RT-BLE------------------
-
-Disconnect
-Forget
-
-Name:
-CC-RT-BLE
-Address:
-00:1A:22:0B:F9:D1
-GATT Connected:
-Connected
-Latest RSSI:
--67
-Services:
-00001800-0000-1000-8000-00805f9b34fb, 00001801-0000-1000-8000-00805f9b34fb, 0000180a-0000-1000-8000-00805f9b34fb, 3e135142-654f-9090-134a-a6ff5bb77046, 9e5d1e47-5c13-43a0-8635-82ad38a1386f
-Manufacturer Data:
-Service:
-3e135142-654f-9090-134a-a6ff5bb77046
-Service Info
-
-ID:
-00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024
-UUID:
-3e135142-654f-9090-134a-a6ff5bb77046
-Type:
-Primary
-Characteristics
-Characteristic:
-3fa4585a-ce4a-3bad-db4b-b8df8179ea09
-Characteristic Info
-
-ID:
-00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024/3fa4585a-ce4a-3bad-db4b-b8df8179ea09,1041
-UUID:
-3fa4585a-ce4a-3bad-db4b-b8df8179ea09
-Properties
-
-Read:
-Write:
-Value
-0x00000000000000000000000000000000
-
-Hexadecimal
-Read
-Write
-Descriptors
-Characteristic:
-d0e8434d-cd29-0996-af41-6c90f4e0eb2a
-Characteristic Info
-
-ID:
-00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024/d0e8434d-cd29-0996-af41-6c90f4e0eb2a,1057
-UUID:
-d0e8434d-cd29-0996-af41-6c90f4e0eb2a
-Properties
-
-Read:
-Write:
-Notify:
-Value
-0x00000000000000000000000000000000
-
-Hexadecimal
-Read
-Write
-Descriptors
-Descriptor:
-00002902-0000-1000-8000-00805f9b34fb
-Descriptor Info
-
-ID:
-00:1A:22:0B:F9:D1/3e135142-654f-9090-134a-a6ff5bb77046,1024/d0e8434d-cd29-0996-af41-6c90f4e0eb2a,1057/00002902-0000-1000-8000-00805f9b34fb;0
-UUID:
-00002902-0000-1000-8000-00805f9b34fb
-Value
-0x0100
-
-Hexadecimal
-Read
-Write
-Service:
-0000180a-0000-1000-8000-00805f9b34fb
-Service:
-9e5d1e47-5c13-43a0-8635-82ad38a1386f
-Service Info
-
-ID:
-00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280
-UUID:
-9e5d1e47-5c13-43a0-8635-82ad38a1386f
-Type:
-Primary
-Characteristics
-Characteristic:
-347f7608-2e2d-47eb-913b-75d4edc4de3b
-Characteristic Info
-
-ID:
-00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/347f7608-2e2d-47eb-913b-75d4edc4de3b,65287
-UUID:
-347f7608-2e2d-47eb-913b-75d4edc4de3b
-Properties
-
-Read:
-Value
-0x00100200
-
-Hexadecimal
-Read
-Descriptors
-Characteristic:
-92e86c7a-d961-4091-b74f-2409e72efe36
-Characteristic Info
-
-ID:
-00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/92e86c7a-d961-4091-b74f-2409e72efe36,65285
-UUID:
-92e86c7a-d961-4091-b74f-2409e72efe36
-Properties
-
-Write:
-Value
-
-Hexadecimal
-Write
-Descriptors
-Characteristic:
-e3dd50bf-f7a7-4e99-838e-570a086c666b
-Characteristic Info
-
-ID:
-00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/e3dd50bf-f7a7-4e99-838e-570a086c666b,65282
-UUID:
-e3dd50bf-f7a7-4e99-838e-570a086c666b
-Properties
-
-Write:
-Notify:
-Indicate:
-Value
-
-Hexadecimal
-Write
-Descriptors
-Descriptor:
-00002902-0000-1000-8000-00805f9b34fb
-Descriptor Info
-
-ID:
-00:1A:22:0B:F9:D1/9e5d1e47-5c13-43a0-8635-82ad38a1386f,65280/e3dd50bf-f7a7-4e99-838e-570a086c666b,65282/00002902-0000-1000-8000-00805f9b34fb;0
-UUID:
-00002902-0000-1000-8000-00805f9b34fb
-Value
-0x0000
-
-Hexadecimal
-Read
-Write
-Service:
-00001801-0000-1000-8000-00805f9b34fb
-Service:
-00001800-0000-1000-8000-00805f9b34fb
-Adapter
-Devices
-Debug Logs
-ThermoBeacon
-CC-RT-BLE
-
-
-
-
 -->
    </body>
    </html>
