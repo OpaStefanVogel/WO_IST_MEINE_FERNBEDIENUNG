@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>Robi</title>
+<meta charset="utf-8"/>
+<style>
+  </style>
+
+<script>
+let manuServiceUuid           = '00001800-0000-1000-8000-00805f9b34fb';
+let manuCharacteristicUuid    = '00002a00-0000-1000-8000-00805f9b34fb';
+let robiServiceUuid = 'af237777-879d-6186-1f49-deca0e85d9c1';
+let robiSensorChar6 = 'af230006-879d-6186-1f49-deca0e85d9c1';
+let robiSensorChar3 = 'af230003-879d-6186-1f49-deca0e85d9c1';
+let robiCommandChar = 'af230002-879d-6186-1f49-deca0e85d9c1';
+
+function display_value(value) {
+  let a = [];
+  for (let i = 0; i < value.byteLength; i++) a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+  return a.join(' ');    
+  }
+
+</script><script>
+
+
+/*
+aus WonderPy-master/WonderPy/core/wwBTLEMgr.py:
+# Define service and characteristic UUIDs used by the WW devices.
+WW_SERVICE_UUID_D1     = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')   # dash and dot
+WW_SERVICE_UUID_D2     = uuid.UUID('AF237778-879D-6186-1F49-DECA0E85D9C1')   # cue
+WW_SERVICE_IDS         = [WW_SERVICE_UUID_D1, WW_SERVICE_UUID_D2]
+
+CHAR_UUID_CMD          = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')   # command channel
+CHAR_UUID_SENSOR0      = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')   # sensor channel 0 (all robots)
+CHAR_UUID_SENSOR1      = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')   # sensor channel 1 (dash and cue)
+
+
+aus RobotControl-master/robot.py:
+ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
+COMMAND1_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
+SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')
+SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
+COMMAND2_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
+INFO_CHAR_UUID = uuid.UUID('AF230001-879D-6186-1F49-DECA0E85D9C1')
+
+
+a[6] von links kommt was näher
+a[7] von rechts kommt was näher
+a[8] von hinten nähert sich was
+
+a[18:19]
+*/
+  </script>
+
+ <script>
+let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=display_value(value)}}};
+let CC_RT_BLE={};
+
+async function device_request() {
+  log();
+  let options={};
+  options.acceptAllDevices = true;
+  options.optionalServices = [
+    '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
+    'af237777-879d-6186-1f49-deca0e85d9c1', //robi
+    '3e135142-654f-9090-134a-a6ff5bb77046', //cc-rt-ble (eq-3)
+    '0000fff0-0000-1000-8000-00805f9b34fb', //ThermoBeacon
+    ] ;
+  log('Requesting Bluetooth Device...');
+  log('with options=' + JSON.stringify(options));
+  let RET={};
+  log("navigator.bluetooth="+navigator.bluetooth);
+  log("navigator.bluetooth.getDevices="+navigator.bluetooth.getDevices);
+  log("navigator.bluetooth.requestDevice="+navigator.bluetooth.requestDevice);
+  //RET.devices=navigator.bluetooth.getDevices();
+  RET.device=await navigator.bluetooth.requestDevice(options);
+  log('> Name:             ' + RET.device.name);
+  log('> Id:               ' + RET.device.id);
+  log('> Connected:        ' + RET.device.gatt.connected);
+  if (RET.device.name=='Robi') DASH= await kopple_Robi(RET);
+  if (RET.device.name=='CC-RT-BLE') CC_RT_BLE= await kopple_CC_RT_BLE(RET);
+  return RET;
+  }  
+
+function log(text) {
+  if (text) {
+    div_log.innerHTML=div_log.innerHTML+'<div>'+text+'</div>';
+    div_log.scrollTo({top:100000,left: 0,behavior: 'smooth'});
+    } else {
+      div_log.innerHTML='Neustart: '+Date();
+      }
+  }
+
+async function kopple_Robi(dev) {
+  log('kopple_Robi(device)');
+  log('Connecting to GATT Server...');
+  dev.server=await dev.device.gatt.connect();
+  log('> Connected:        ' + dev.device.gatt.connected);
+
+  log('Getting Service...'+dev.server);
+  dev.service = await dev.server.getPrimaryService('af237777-879d-6186-1f49-deca0e85d9c1');
+  log('> Service...'+dev.service.uuid);  
+
+  log('Getting Characteristic...');
+  dev.char6 = await dev.service.getCharacteristic('af230006-879d-6186-1f49-deca0e85d9c1');
+  log('> Characteristic...'+dev.char6.uuid);
+  
+  log('Starting Notifications...');
+  dev.notify=await dev.char6.startNotifications();
+  log('|return flag='+dev.notify);
+  dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
+
+  log('Getting Characteristic...');
+  dev.char3 = await dev.service.getCharacteristic('af230003-879d-6186-1f49-deca0e85d9c1');
+  log('> Characteristic...'+dev.char3.uuid);
+  
+  log('Starting Notifications...');
+  dev.notify=await dev.char3.startNotifications();
+  log('|return flag='+dev.notify);
+  dev.char3.addEventListener('characteristicvaluechanged',handleNotifications2);
+
+  log('Getting Characteristic...');
+  dev.char2 = await dev.service.getCharacteristic('af230002-879d-6186-1f49-deca0e85d9c1');
+  log('> Characteristic.uuid '+dev.char2.uuid);
+  log('> Characteristic.properties '+JSON.stringify(dev.char2.properties));
+  log('Getting Characteristic.readValue()...');
+  await dev.char2.readValue();
+  dev.value2=dev.char2.value;
+  log('> Characteristic.value '+display_value(dev.value2));
+
+  return dev;
+  }
+
+  </script>
+  
+<script>
+let toux=0;
+let touy=0;
+let delx=0;
+let dely=0;
+
+function tstart() {
+  event.preventDefault();
+  //log(event.touches[0]);
+  //for (var i in event.touches[0]) alert(i);
+  //for (var i in event.target) alert(i);
+  let tou=event.touches[0];
+  toux=Math.round(tou.clientX*3/2);
+  touy=Math.round(tou.clientY*3/2);
+  //let tar=event.target;
+  log("ontouchstart x="+tou.clientX+" "+tou.screenX+" "+tou.pageX+" y="+tou.clientY+" "+tou.screenY+" "+tou.pageY);
+  //log("ontouchstart x="+tar.x+" "+tar.y);
+  }
+
+let weitermachen=true;
+async function tmove() {
+  event.preventDefault();
+  let tou=event.touches[0];
+  delx=Math.round(tou.clientX*3/2)-toux;
+  dely=touy-Math.round(tou.clientY*3/2);
+  span_del.innerHTML=delx+" "+dely;
+  if (weitermachen) {
+    weitermachen=false;
+    //log('await writeValue');
+    DASH.value2.setUint8(0,2);
+    if (dely < 0) dely = dely + 0x800;
+    if (delx < 0) delx = delx + 0x800;
+    DASH.value2.setUint8(1,dely&0xFF);
+    DASH.value2.setUint8(2,delx&0xFF);
+    DASH.value2.setUint8(3,((dely&0xFF00)>>8)|((delx&0xFF00)>>5));
+    await DASH.char2.writeValue(DASH.value2);
+    weitermachen=true;
+    }
+  //log("ontouchmove");
+  }
+
+function tend() {
+//  event.preventDefault(); //nicht, sonst klappt Tastatur auf
+  log("ontouchend");
+  
+  }
+  </script>
+
+</head>
+<body>
+<span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
+<div><span><button id='button_2_200_0' onclick='log(DASH.value2);
+  DASH.value2.setUint8(0,2);log(DASH.value2);
+  DASH.value2.setUint8(1,200);log(DASH.value2);
+  DASH.value2.setUint8(2,0);log(DASH.value2);
+  DASH.value2.setUint8(3,0);log(DASH.value2);
+  log("[2,200,0,0]")
+  DASH.char2.writeValue(DASH.value2);
+  log("> gesendet")
+  '>[2,200,0,0]</button></span>
+  </div>
+<div><span><button id='button_2_0_0' onclick='
+  DASH.value2.setUint8(0,2);
+  DASH.value2.setUint8(1,0);
+  DASH.value2.setUint8(2,0);
+  DASH.value2.setUint8(3,0);
+  log("[2,200,0,0]")
+  DASH.char2.writeValue(DASH.value2);
+  log("> gesendet")
+  '>[2,0,0,0]</button></span>
+  </div>
+
+<div style="border:solid">
+  <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
+  </div>
+<div id="div_notification" style="font-family:Courier,monospace">notification1</div>
+<div id="div_notification2" style="font-family:Courier,monospace">notification2</div>
+<div style='display:flex; flex-direction:row'>
+  <svg width='600' height='400' style='border:solid; padding:0px; margin:0px'>
+     <rect x='200' y='0' width='400' height='400' fill='orange' ontouchstart='tstart()' ontouchmove='tmove()' ontouchend='tend()'>
+    </svg>
+  <div style='display:flex; flex-direction:column; font-family:Courier,monospace;'>
+    <span>(x y) = (<span id='span_del'> </span>)</span>
+    <span>writeValue(<span id='span_write'> </span>)</span>
+    </div>
+  </div>
+<div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
+<div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
+
+  </body>
+  </html>
