@@ -19,6 +19,23 @@ function handleNotifications(event) {//alert(event);
   document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
   }
 
+function ThermoBeacon_handleNotifications(val) {//alert(event);
+  let value = [];
+  let a = [];
+  let b = [];
+  if (ThermoBeacon.device) {
+    value = event.target.value;
+    for (let i = 0; i < value.byteLength; i++) b[i]=value.getUint8(i);
+    } else b=val;
+  for (let i = 0; i < b.length; i++) a.push('0x' + ('00' + b[i].toString(16)).slice(-2));
+  log('notification=['+a+']');
+  //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
+  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
+  }
+
+//0x01 0x53 0x00 0x00 0x00 0x03 0x52 0x01 0x52 0x01 0x51 0x01 0x6f 0x04 0x6f 0x04 0x6f 0x04 0x00 0x00
+//0x07 0x40 0x00 0x00 0x00 0x03 0x52 0x01 0x52 0x01 0x51 0x01 0x6f 0x04 0x6f 0x04 0x6f 0x04 0x00 0x00
+
 </script>
 
 <script>
@@ -108,9 +125,16 @@ function log(text) {
       }
   }
 
+function onDisconnected() {
+  Ausgabe_Kopplung.innerHTML='disconnected';
+  alert('disconnected\nwegen Button "trennen"\n(eventuell auch weil einige Zeit inaktiv?)');
+  }
+
 async function kopple_ThermoBeacon(dev) {
-  log('kopple_Robi(device)');
+  Ausgabe_Kopplung.innerHTML='versuche zu verbinden (nach 5 sek erneut versuchen)';
+  log('kopple_ThermoBeacon(device)');
   log('Connecting to GATT Server...');
+  dev.device.addEventListener('gattserverdisconnected', onDisconnected);
   dev.server=await dev.device.gatt.connect();
   log('> Connected:        ' + dev.device.gatt.connected);
 
@@ -125,11 +149,14 @@ async function kopple_ThermoBeacon(dev) {
   log('Starting Notifications...');
   dev.notify=await dev.char6.startNotifications();
   log('> return flag='+dev.notify);
-  dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
+  dev.char6.addEventListener('characteristicvaluechanged',ThermoBeacon_handleNotifications);
 
   log('Getting Characteristic...');
   dev.char2 = await dev.service.getCharacteristic('0000fff5-0000-1000-8000-00805f9b34fb');
   log('> Characteristic...'+dev.char2.uuid);
+  
+  Ausgabe_Kopplung.innerHTML='verbunden, button_Test1()';
+  setTimeout(function() {Ausgabe_Kopplung.innerHTML='verbunden';button_Test1.click()},500);
   
   return dev;
   }
@@ -138,7 +165,7 @@ async function kopple_ThermoBeacon(dev) {
   
 <script>
 async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
-  //if ((CC_RR_BLE.device!=undefined)&&CC_RT_BLE.device.gatt.connected) ; else alert('erst koppeln');
+  //if ((ThermoBeacon!=undefined)&&ThermoBeacon.device.gatt.connected) ; else alert('erst koppeln');
   log('writeValue(['+x.map(function(z,i) {return '0x'+('0'+z.toString(16)).slice(-2)})+'])');
   if (ThermoBeacon.device) {
     await ThermoBeacon.char2.writeValue(Uint8Array.of(...x));
@@ -151,18 +178,32 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
 
 </head>
 <body>
-<span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
-<div><span><button id='button_Test4' onclick='Test([4,0,0,0,0])'>[0x04,0,0,0,0] blink</button></span></div>
-<div><span><button id='button_Test1' onclick='Test([1,0,0,0,0])'>[0x01,0,0,0,0] get entries</button></span></div>
-<div><span><button id='button_Test2' onclick='Test([2,0,0,0,0])'>[0x02,0,0,0,0] reboot</button></span></div>
-<div><span><button id='button_Test7' onclick='Test([7,0x17,0,0,0,3])'>[0x07,0x17,0,0,0,3] get data</button></span></div>
-<span><button id='button_disconnect' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span>
+<style>.Ausgabe {font-family:Courier,monospace; font-size:100%; color:violet; border:solid; border-radius:4pt}</style>
+<div>
+  aktuell um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
+  Temperatur <span id='Ausgabe_Temperatur' class='Ausgabe'>?</span> <i>°C</i>,
+  Feuchtigkeit <span id='Ausgabe_Feuchtigkeit' class='Ausgabe'>?</span> <i>%</i>,
+  Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>?</span> <i>%</i>.
+  </div>
+<ul>
+  <li>den <b>ThermoBeacon</b> über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span>, <span><button id='button_device_request' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span></li>
+  <li>Ausgabe <span><button id='button_aktualisieren' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
+  </ul>
+<div><span><button id='button_device_request' onclick="device_request()">device_request()</button></span></div>
+<div><span><button id='button_Test4' onclick='Test([4,0,0,0,0,0])'>[0x04,0,0,0,0,0] blink</button></span></div>
+<div><span><button id='button_Test1' onclick='Test([1,0,0,0,0,0])'>[0x01,0,0,0,0,0] get entries</button></span></div>
+<div><span><button id='button_Test2' onclick='Test([2,0,0,0,0,0])'>[0x02,0,0,0,0,0] reboot</button></span></div>
+<div><span><button id='button_Test7' onclick='Test([7,0x40,0,0,0,3])'>[0x07,0x40,0,0,0,3] get data</button></span></div>
+<div><span><button id='button_disconnect' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span></div>
 <div style="border:solid">
   <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
 
 <div id="div_notification" style="font-family:Courier,monospace"><i>notification</i></div>
 
+
+<div><a href='https://github.com/emericg/WatchFlower/blob/master/docs/thermobeacon-ble-api.md#services-characteristics-and-handles'>https://github.com/emericg/WatchFlower/blob/master/docs/thermobeacon-ble-api.md#services-characteristics-and-handles</a></div>
+<div><a href='https://github.com/rnlgreen/thermobeacon/blob/main/thermobeacon2.py'>https://github.com/rnlgreen/thermobeacon/blob/main/thermobeacon2.py</a></div>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
 
