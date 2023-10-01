@@ -16,10 +16,15 @@ function handleNotifications(event) {//alert(event);
     a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
     }
   //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
-  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
+  div_notification.innerHTML='> ' + a.join(' ');
   }
 
-function ThermoBeacon_handleNotifications(val) {//alert(event);
+let Anzahl_Messwerte=30;
+let Liste_Temperatur=[];
+let Liste_Luftfeuchte=[];
+let Index=0;
+let Tabelle='<table>\n<tr><td>Zeitpunkt</td><td>Temperatur</td><td>Luftfeuchte</td></tr>\n';
+function ThermoBeacon_handleNotifications(val) {//alert(val);
   let value = [];
   let a = [];
   let b = [];
@@ -30,11 +35,38 @@ function ThermoBeacon_handleNotifications(val) {//alert(event);
   for (let i = 0; i < b.length; i++) a.push('0x' + ('00' + b[i].toString(16)).slice(-2));
   log('notification=['+a+']');
   //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
-  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
+  div_notification.innerHTML='> ' + a.join(' ');
+  Ausgabe_Uhrzeit.innerHTML=(new Date(Date.now())).toTimeString().slice(0,5);
+  if (b[0]==1) {
+    Anzahl_Messwerte=b[1];
+    Ausgabe_Anzahl.innerHTML=Anzahl_Messwerte;
+    button_Test7.click();
+    }
+  if (b[0]==7) {
+    Index=b[1]+256*b[2];
+    Liste_Temperatur[Index]=(b[6]+256*b[7])/16;
+    Liste_Temperatur[Index+1]=(b[8]+256*b[9])/16;
+    Liste_Temperatur[Index+2]=(b[10]+256*b[11])/16;
+    Liste_Luftfeuchte[Index]=(b[12]+256*b[13])/16;
+    Liste_Luftfeuchte[Index+1]=(b[14]+256*b[15])/16;
+    Liste_Luftfeuchte[Index+2]=(b[16]+256*b[17])/16;
+    Ausgabe_Temperatur.innerHTML=Liste_Temperatur[Index+2].toFixed(1);
+    Ausgabe_Luftfeuchte.innerHTML=Liste_Luftfeuchte[Index+2].toFixed(1);
+    Ausgabe_Tabelle(Index);
+    if ((Index+3)<Anzahl_Messwerte) setTimeout(Test,1000,[7,Index+3,0,0,0,3]);
+    log('Index+3='+(Index+3)+' Anzahl_Messwerte='+Anzahl_Messwerte);
+    }
   }
 
 //0x01 0x53 0x00 0x00 0x00 0x03 0x52 0x01 0x52 0x01 0x51 0x01 0x6f 0x04 0x6f 0x04 0x6f 0x04 0x00 0x00
 //0x07 0x40 0x00 0x00 0x00 0x03 0x52 0x01 0x52 0x01 0x51 0x01 0x6f 0x04 0x6f 0x04 0x6f 0x04 0x00 0x00
+
+function Ausgabe_Tabelle(Index) {
+  Tabelle=Tabelle+'<tr><td>'+(new Date(Date.now()-1000*60*10*(Anzahl_Messwerte-Index))).toTimeString().slice(0,5)+'</td><td>'+Liste_Temperatur[Index].toFixed(1)+'</td><td>'+Liste_Luftfeuchte[Index].toFixed(1)+'</td></tr>\n';
+  Tabelle=Tabelle+'<tr><td>'+(new Date(Date.now()-1000*60*10*(Anzahl_Messwerte-Index-1))).toTimeString().slice(0,5)+'</td><td>'+Liste_Temperatur[Index+1].toFixed(1)+'</td><td>'+Liste_Luftfeuchte[Index+1].toFixed(1)+'</td></tr>\n';
+  Tabelle=Tabelle+'<tr><td>'+(new Date(Date.now()-1000*60*10*(Anzahl_Messwerte-Index-2))).toTimeString().slice(0,5)+'</td><td>'+Liste_Temperatur[Index+2].toFixed(1)+'</td><td>'+Liste_Luftfeuchte[Index+2].toFixed(1)+'</td></tr>\n';
+  div_Tabelle.innerHTML=Tabelle+'\n</table>';
+  }
 
 </script>
 
@@ -93,7 +125,7 @@ async function device_request() {
   let options={};
   options.acceptAllDevices = true;
   options.optionalServices = [
-    '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
+    '00001800-0000-1000-8000-00805f9b34fb', //alle? n
     'af237777-879d-6186-1f49-deca0e85d9c1', //robi
     '3e135142-654f-9090-134a-a6ff5bb77046', //cc-rt-ble (eq-3)
     '0000fff0-0000-1000-8000-00805f9b34fb', //ThermoBeacon
@@ -161,6 +193,16 @@ async function kopple_ThermoBeacon(dev) {
   return dev;
   }
 
+function aktualisieren() {log('aktualisieren');
+  button_Test1.click();
+  }
+
+let Startindex=0;
+function auslesen() {//alert(8);
+  Startindex=Anzahl_Messwerte-input_Anzahl.value*1;
+  log('auslesen ab Startindex='+Startindex);
+  Test([7,Startindex,0,0,0,3])
+  }
   </script>
   
 <script>
@@ -179,22 +221,31 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
 </head>
 <body>
 <style>.Ausgabe {font-family:Courier,monospace; font-size:100%; color:violet; border:solid; border-radius:4pt}</style>
-<div>
-  aktuell um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
-  Temperatur <span id='Ausgabe_Temperatur' class='Ausgabe'>?</span> <i>°C</i>,
-  Feuchtigkeit <span id='Ausgabe_Feuchtigkeit' class='Ausgabe'>?</span> <i>%</i>,
-  Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>?</span> <i>%</i>.
-  </div>
 <ul>
-  <li>den <b>ThermoBeacon</b> über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span>, <span><button id='button_device_request' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span></li>
-  <li>Ausgabe <span><button id='button_aktualisieren' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
+  <li>den <b>ThermoBeacon</b> über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span> und dann wieder <span><button id='button_device_request' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span>.
+    </li>
+  <li>
+    aktuell um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
+    Temperatur <span id='Ausgabe_Temperatur' class='Ausgabe'>?</span> <i>°C</i>,
+    Feuchtigkeit <span id='Ausgabe_Luftfeuchte' class='Ausgabe'>?</span> <i>%</i>,
+    Ausgabe <span><button id='button_aktualisieren' onclick='aktualisieren()'>aktualisieren</button></span>
+    </li>
+  <li>Wo liegt der ThermoBeacon? Dazu die LED 30 mal <span><button id='button_suchen' onclick='button_Test4.click()'>blinken</button></span> lassen (und ausschalten wenn sie von allein angeht).</li>
+  <li>Es sind <span id='Ausgabe_Anzahl' class='Ausgabe'>?</span> Meßwerte gespeichert (einer je 10 Min). Die letzten <input id='input_Anzahl' size="3" value='144'> <span><button id='button_auslesen' onclick='auslesen()'>auslesen</button></span> (noch nicht fertig).</li>
   </ul>
+<div style='display:none'>
 <div><span><button id='button_device_request' onclick="device_request()">device_request()</button></span></div>
 <div><span><button id='button_Test4' onclick='Test([4,0,0,0,0,0])'>[0x04,0,0,0,0,0] blink</button></span></div>
 <div><span><button id='button_Test1' onclick='Test([1,0,0,0,0,0])'>[0x01,0,0,0,0,0] get entries</button></span></div>
 <div><span><button id='button_Test2' onclick='Test([2,0,0,0,0,0])'>[0x02,0,0,0,0,0] reboot</button></span></div>
-<div><span><button id='button_Test7' onclick='Test([7,0x40,0,0,0,3])'>[0x07,0x40,0,0,0,3] get data</button></span></div>
+<div><span><button id='button_Test7' onclick='Test([7,Anzahl_Messwerte-3,0,0,0,3])'>[0x07,Anzahl_Messwerte-3,0,0,0,3] get data</button></span></div>
 <div><span><button id='button_disconnect' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span></div>
+<div><span><button id='button_TestX' onclick='ThermoBeacon_handleNotifications([1,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])'>TestX</button></span></div>
+<div><span><button id='button_TestY' onclick='ThermoBeacon_handleNotifications([7,50,0,0,0,3,160,0,176,0,192,0,13*16,0,14*16,0,15*16,0,0,0,0,0])'>TestY</button></span></div>
+  </div>
+
+<div id='div_Tabelle' class='Ausgabe'> </div>
+
 <div style="border:solid">
   <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
