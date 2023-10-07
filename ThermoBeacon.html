@@ -235,9 +235,9 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
   </ul>
 <div style='display:none'>
 <div><span><button id='button_device_request' onclick="device_request()">device_request()</button></span></div>
-<div><span><button id='button_Test4' onclick='Test([4,0,0,0,0,0])'>[0x04,0,0,0,0,0] blink</button></span></div>
-<div><span><button id='button_Test1' onclick='Test([1,0,0,0,0,0])'>[0x01,0,0,0,0,0] get entries</button></span></div>
-<div><span><button id='button_Test2' onclick='Test([2,0,0,0,0,0])'>[0x02,0,0,0,0,0] reboot</button></span></div>
+<div><span><button id='button_Test4' onclick='Test([4,0,0,0,0,3])'>[0x04,0,0,0,0,3] blink</button></span></div>
+<div><span><button id='button_Test1' onclick='Test([1,0,0,0,0,3])'>[0x01,0,0,0,0,3] get entries</button></span></div>
+<div><span><button id='button_Test2' onclick='Test([2,0,0,0,0,3])'>[0x02,0,0,0,0,3] reboot</button></span></div>
 <div><span><button id='button_Test7' onclick='Test([7,Anzahl_Messwerte-3,0,0,0,3])'>[0x07,Anzahl_Messwerte-3,0,0,0,3] get data</button></span></div>
 <div><span><button id='button_disconnect' onclick="ThermoBeacon.device.gatt.disconnect()">trennen</button></span></div>
 <div><span><button id='button_TestX' onclick='ThermoBeacon_handleNotifications([1,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])'>TestX</button></span></div>

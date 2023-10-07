@@ -58,6 +58,22 @@ function onDisconnected() {
 async function kopple_CC_RT_BLE(dev) {
   Ausgabe_Kopplung.innerHTML='versuche zu verbinden (nach 5 sek erneut versuchen)';
   log('kopple_CC_RT_BLE(device)');
+
+  dev.device.addEventListener('advertisementreceived', (event) => {
+    log('Advertisement received.');
+    log('  Device Name: ' + event.device.name);
+    log('  Device ID: ' + event.device.id);
+    log('  RSSI: ' + event.rssi);
+    log('  TX Power: ' + event.txPower);
+    log('  UUIDs: ' + event.uuids);
+    log('  manufacturerData: '+displayValue(event.manufacturerData));
+    log('  serviceData: '+displayValue(event.serviceData));
+    });
+
+  log('Watching advertisements from "' + dev.device.name + '"...'+dev.device.watchAdvertisements);
+  if (dev.device.watchAdvertisements) dev.adv = await dev.device.watchAdvertisements(); //geht leider nicht: aus https://googlechrome.github.io/samples/web-bluetooth/watch-advertisements-async-await.html
+  log('> return from watchAdvertisements():  '+dev.adv);
+
   log('Connecting to GATT Server...');
   dev.device.addEventListener('gattserverdisconnected', onDisconnected);
   dev.server=await dev.device.gatt.connect();
@@ -166,7 +182,7 @@ function CC_RT_BLE_handleNotifications(val) {//alert(event);
     value = event.target.value;
     for (let i = 0; i < value.byteLength; i++) b[i]=value.getUint8(i);
     } else b=val;
-  for (let i = 0; i < b.length; i++) a.push('0x' + ('00' + b[i].toString(16)).slice(-2));
+  for (let i = 0; i < b.length; i++) a.push('0x' + b[i].toString(16).padStart(2,'0'));
   log('notification=['+a+']');
   //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
   document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
@@ -242,27 +258,26 @@ async function Wochenprogramm_auslesen() {
 </head>
 <body>
 <style>.Ausgabe {font-family:Courier,monospace; font-size:100%; color:red; border:solid; border-radius:4pt}</style>
-<div>aktuell um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
+<ul>
+  <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span> und später wieder <span><button id='button_device_request' onclick="CC_RT_BLE.device.gatt.disconnect()">trennen</button></span></li>
+  <li>Ausgabe um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
   Modus <span id='Ausgabe_Modus' class='Ausgabe'>?</span>,
   Solltemperatur <span id='Ausgabe_Solltemperatur' class='Ausgabe'>?</span> <i>°C</i>,
   Ventil <span id='Ausgabe_Ventilstellung' class='Ausgabe'>?</span> <i>%</i> geöffnet,
-  Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>?</span> <i>%</i> voll.
-  </div>
-<ul>
-  <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span>, <span><button id='button_device_request' onclick="CC_RT_BLE.device.gatt.disconnect()">trennen</button></span></li>
-  <li>Ausgabe <span><button id='button_aktualisieren' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
-  <li>Modus Manu <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span>.</li>
-  <li>Modus Auto <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
-  <li>Tages- ☀️ <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='19'> °C.</i>
-      und Nachttemperatur 🌛 <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='14'> °C.</i>
-      <span><button id='button_Auto' onclick='Test([0x11,2*input_reduzierte_Temperatur.value,2*input_Komfort_Temperatur.value])'>voreinstellen</button></span>, aktivieren mit:
+  <span style='display:none'>Batterie(?) <span id='Ausgabe_Batterie' class='Ausgabe'>?</span> <i>%</i> voll,</span>
+
+<span><button id='button_aktualisieren' onclick='let jj=new Date();Test([0x03,jj.getFullYear()%100,jj.getMonth()+1,jj.getDate(),jj.getHours(),jj.getMinutes(),jj.getSeconds()])'>aktualisieren</button></span>.</li>
+  <li>Modus Manu <span><button id='button_Manu' onclick='Test([0x40,0x40])'>aktivieren</button></span> oder
+    Modus Auto <span><button id='button_Auto' onclick='Test([0x40,0x00])'>aktivieren</button></span>.</li>
+  <li>Tages- ☀️ <i>t<sub>red</sub>=<input id='input_reduzierte_Temperatur' size="3" value='18.5'> °C.</i>
+    und Nachttemperatur 🌛 <i>t<sub>kom</sub>=<input id='input_Komfort_Temperatur' size="3" value='14'> °C.</i>
+    <span><button id='button_Auto' onclick='Test([0x11,2*input_reduzierte_Temperatur.value,2*input_Komfort_Temperatur.value])'>voreinstellen</button></span>, aktivieren mit:
       </li>
-  <li>Tagestemperatur ☀️ <span><button id='button_Reduzierte_Temperatur' onclick='Test([0x43])'>aktivieren</button></span>.</li>
-  <li>Nachttempemperatur🌛 <span><button id='button_Komfort_Temperatur' onclick='Test([0x44])'>aktivieren</button></span>.</li>
+  <li>Tagestemperatur ☀️ <span><button id='button_Reduzierte_Temperatur' onclick='Test([0x43])'>aktivieren</button></span> oder
+    Nachttempemperatur🌛 <span><button id='button_Komfort_Temperatur' onclick='Test([0x44])'>aktivieren</button></span></li>
   <li>oder Temperatur auf <i>t=<input id='input_Temperatur1' size="3" value='17'> °C</i>
-    <span><button id='button_Temperatur1' onclick='Test([0x41,2*input_Temperatur1.value])'>aktivieren</button></span>.
-    </li>
-  <li>oder Temperatur auf <i>t=<input id='input_Temperatur2' size="3" value='18'> °C</i>
+    <span><button id='button_Temperatur1' onclick='Test([0x41,2*input_Temperatur1.value])'>aktivieren</button></span>
+    oder Temperatur auf <i>t=<input id='input_Temperatur2' size="3" value='18'> °C</i>
     <span><button id='button_Temperatur2' onclick='Test([0x41,2*input_Temperatur2.value])'>aktivieren</button></span>.
     </li>
   <li>Boost Mode <span><button id='button_Boost_Start' onclick='Test([0x45,0x01])'>Start</button></span> und <span><button id='button_Boost_Stop' onclick='Test([0x45,0x00])'>Stopp</button></span>.</li>
