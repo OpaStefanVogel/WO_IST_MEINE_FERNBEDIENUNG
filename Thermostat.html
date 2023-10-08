@@ -17,8 +17,8 @@ let CC_RT_BLE={};
 
 async function device_request() {
   log();
-  let options={};
-  options.acceptAllDevices = true;
+  let options={filters:[{name:"CC-RT-BLE"}]};
+  //options.acceptAllDevices = true;
   options.optionalServices = [
     '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
     'af237777-879d-6186-1f49-deca0e85d9c1', //robi
