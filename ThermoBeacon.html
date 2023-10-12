@@ -122,8 +122,8 @@ let ThermoBeacon={};
 
 async function device_request() {
   log();
-  let options={};
-  options.acceptAllDevices = true;
+  let options={filters:[{name:"ThermoBeacon"}]};
+  //options.acceptAllDevices = true;
   options.optionalServices = [
     '00001800-0000-1000-8000-00805f9b34fb', //alle? n
     'af237777-879d-6186-1f49-deca0e85d9c1', //robi
@@ -257,6 +257,9 @@ async function Test(x) {//alert(1);alert(CC_RT_BLE.device!=undefined);
 <div><a href='https://github.com/rnlgreen/thermobeacon/blob/main/thermobeacon2.py'>https://github.com/rnlgreen/thermobeacon/blob/main/thermobeacon2.py</a></div>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
+<div><a href='https://opastefanvogel.github.io/WO_IST_MEINE_FERNBEDIENUNG/ThermoBeacon.html'>ThermoBeacon.html (diese Seite)</a>
+  <a href='https://github.com/OpaStefanVogel/WO_IST_MEINE_FERNBEDIENUNG/blob/main/ThermoBeacon.html'>Quelltext</a>
+  </div>
 
 <!--
  
