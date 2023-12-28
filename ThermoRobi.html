@@ -19,7 +19,32 @@ function display_value(value) {
   return a.join(' ');    
   }
 
-</script><script>
+function handleNotifications(event) {//alert(event);
+  let value = event.target.value;
+  let a = [];
+  // Convert raw data bytes to hex values just for the sake of showing something.
+  // In the "real" world, you_d use data.getUint8, data.getUint16 or even
+  // TextDecoder to process raw data bytes.
+  for (let i = 0; i < value.byteLength; i++) {
+    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+    }
+  //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
+  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
+  }
+
+function handleNotifications2(event) {//alert(event);
+  let value = event.target.value;
+  let a = [];
+  // Convert raw data bytes to hex values just for the sake of showing something.
+  // In the "real" world, you_d use data.getUint8, data.getUint16 or even
+  // TextDecoder to process raw data bytes.
+  for (let i = 0; i < value.byteLength; i++) {
+    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+    }
+  document.getElementById("div_notification2").innerHTML='> ' + a.join(' ');
+  }
+  
+  </script><script>
 
 
 /*
@@ -107,8 +132,9 @@ async function kopple_Robi(dev) {
   log('Starting Notifications...');
   dev.notify=await dev.char6.startNotifications();
   log('|return flag='+dev.notify);
+alert(7);
   dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
-
+alert(8);
   log('Getting Characteristic...');
   dev.char3 = await dev.service.getCharacteristic('af230003-879d-6186-1f49-deca0e85d9c1');
   log('> Characteristic...'+dev.char3.uuid);
@@ -140,6 +166,7 @@ let dely=0;
 
 function tstart() {
   event.preventDefault();
+  //log(Object.keys(event.touches[0]));
   //log(event.touches[0]);
   //for (var i in event.touches[0]) alert(i);
   //for (var i in event.target) alert(i);
@@ -178,10 +205,34 @@ function tend() {
   log("ontouchend");
   
   }
+alert(console);
+alert(console.log)
+console.log("hallooooo 778899");
+const channel = new MessageChannel(); 
+for (var i in channel.port1) alert(i);
+function Test() {
+  let x=1;
+  let t=x+"\n";
+  let a=11;
+  let b=9;
+  for (let i=1;i<40;i++) {
+    x=x+a*x/(x+b);
+    t=t+i+" "+x+"\n";
+    }
+  t=t+"--------\n";
+  for (let i=1;i<40;i++) {
+    x=(a*(i+1)-a*b*Math.log((i+1)+b))+216.3916320070387;
+    t=t+i+" "+x+"\n";
+    }
+
+
+  div_log.innerHTML=t;
+  }
+
   </script>
 
 </head>
-<body>
+<body onload="Test()">
 <span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
 <div><span><button id='button_2_200_0' onclick='log(DASH.value2);
   DASH.value2.setUint8(0,2);log(DASH.value2);
@@ -205,7 +256,7 @@ function tend() {
   </div>
 
 <div style="border:solid">
-  <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:nowrap; font-family:Courier,monospace; font-size:100%">none</div>  
+  <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:pre; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
 <div id="div_notification" style="font-family:Courier,monospace">notification1</div>
 <div id="div_notification2" style="font-family:Courier,monospace">notification2</div>
