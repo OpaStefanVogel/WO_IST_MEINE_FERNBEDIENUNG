@@ -31,7 +31,7 @@ function Kartoffeluhr(){
       let nz=NOCHZEIT.getMinutes();
       let nn=NOCHZEIT.getSeconds();
       if (nz==0&&nn==0) {Sprich("Dingdong "+node.getAttribute("Sprich")+" fertig");return}
-      if (nn==59) {
+      if (nn==59) if ((nz<6)||((nz%5)==4)) {
         let Sprechtext=node.getAttribute("Sprich");
         if (sign==1) Sprechtext=Sprechtext+" noch";
         if (nz==0) 
