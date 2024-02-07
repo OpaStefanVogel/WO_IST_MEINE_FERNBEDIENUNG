@@ -217,7 +217,7 @@ function showPosition(position) {
     Zeitpunkt_der_letzten_Ansage=Date.now();
     Geschwindigkeit=Math.floor(position.coords.speed*3.6);
     if (pause!=0) clearTimeout(pause);
-    if (Geschwindigkeit>20) {Sprich("noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+", "+"schnell "+Geschwindigkeit+" ."+Vorsprung());return}
+    if (Geschwindigkeit>10) {Sprich("noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+", "+"schnell "+Geschwindigkeit+" ."+Vorsprung());return}
     Richtung=Math.floor(position.coords.heading);
     text_noch.innerHTML=Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1);
     var text=TV[imin[0]][9];
