@@ -149,9 +149,9 @@ alert(8);
   log('> Characteristic.uuid '+dev.char2.uuid);
   log('> Characteristic.properties '+JSON.stringify(dev.char2.properties));
   log('Getting Characteristic.readValue()...');
-  await dev.char2.readValue();
-  dev.value2=dev.char2.value;
-  log('> Characteristic.value '+display_value(dev.value2));
+  //await dev.char2.readValue();alert(9);
+  dev.value2=dev.char2.value;alert(dev.char2.readValue);
+  log('> Characteristic.value '+display_value(dev.value2));alert(10);
 
   return dev;
   }
@@ -176,6 +176,8 @@ function tstart() {
   //let tar=event.target;
   log("ontouchstart x="+tou.clientX+" "+tou.screenX+" "+tou.pageX+" y="+tou.clientY+" "+tou.screenY+" "+tou.pageY);
   //log("ontouchstart x="+tar.x+" "+tar.y);
+  
+  alert(DASH.char2.writeValue);
   }
 
 let weitermachen=true;
@@ -188,7 +190,7 @@ async function tmove() {
   if (weitermachen) {
     weitermachen=false;
     //log('await writeValue');
-    DASH.value2.setUint8(0,2);
+    DASH.value2.setUint8(0,0x0b);
     if (dely < 0) dely = dely + 0x800;
     if (delx < 0) delx = delx + 0x800;
     DASH.value2.setUint8(1,dely&0xFF);
@@ -234,25 +236,25 @@ function Test() {
 </head>
 <body onload="Test()">
 <span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
-<div><span><button id='button_2_200_0' onclick='log(DASH.value2);
-  DASH.value2.setUint8(0,2);log(DASH.value2);
-  DASH.value2.setUint8(1,200);log(DASH.value2);
+<div><span><button id='button_b_400_0' onclick='log(DASH.value2);
+  DASH.value2.setUint8(0,0x000b);log(DASH.value2);
+  DASH.value2.setUint8(1,400);log(DASH.value2);
   DASH.value2.setUint8(2,0);log(DASH.value2);
   DASH.value2.setUint8(3,0);log(DASH.value2);
-  log("[2,200,0,0]")
+  log("[b,400,0,0]")
   DASH.char2.writeValue(DASH.value2);
   log("> gesendet")
-  '>[2,200,0,0]</button></span>
+  '>[b,400,0,0]</button></span>
   </div>
-<div><span><button id='button_2_0_0' onclick='
-  DASH.value2.setUint8(0,2);
+<div><span><button id='button_b_0_0' onclick='
+  DASH.value2.setUint8(0,0x000b);
   DASH.value2.setUint8(1,0);
   DASH.value2.setUint8(2,0);
   DASH.value2.setUint8(3,0);
-  log("[2,200,0,0]")
+  log("[b,0,0,0]")
   DASH.char2.writeValue(DASH.value2);
   log("> gesendet")
-  '>[2,0,0,0]</button></span>
+  '>[b,0,0,0]</button></span>
   </div>
 
 <div style="border:solid">
@@ -271,6 +273,7 @@ function Test() {
   </div>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
-
+<div><a href='https://maissan.net/articles/dash-and-dot/4'>https://maissan.net/articles/dash-and-dot/4</a>
+<div><a href='https://maissan.net/examples/dash-and-dot'>https://maissan.net/examples/dash-and-dot</a>
   </body>
   </html>
