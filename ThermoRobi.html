@@ -195,7 +195,7 @@ async function tmove() {
     weitermachen=false;
     //log('setUint8(0)');
     DASH.value2=[];
-    DASH.value2[0]=0x0b;
+    DASH.value2[0]=id_command.value*1;
     if (dely < 0) dely = dely + 0x800;
     if (delx < 0) delx = delx + 0x800;
     //log('setUint8(1)');
@@ -325,6 +325,7 @@ function Test() {
     <span>writeValue(<span id='span_write'> </span>)</span>
     </div>
   </div>
+<input id="id_command" value="0x0b"/>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
 <div><a href='https://maissan.net/articles/dash-and-dot/4'>https://maissan.net/articles/dash-and-dot/4</a>
