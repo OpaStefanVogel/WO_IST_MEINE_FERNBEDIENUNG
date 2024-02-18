@@ -82,8 +82,9 @@ let CC_RT_BLE={};
 
 async function device_request() {
   log();
-  let options={};
-  options.acceptAllDevices = true;
+  //let options={};
+  let options={filters:[{name:"Robi"}]};
+  //options.acceptAllDevices = true;
   options.optionalServices = [
     '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
     'af237777-879d-6186-1f49-deca0e85d9c1', //robi
@@ -117,41 +118,43 @@ function log(text) {
 
 async function kopple_Robi(dev) {
   log('kopple_Robi(device)');
-  log('Connecting to GATT Server...');
+  log('1 Connecting to GATT Server...');
   dev.server=await dev.device.gatt.connect();
   log('> Connected:        ' + dev.device.gatt.connected);
 
-  log('Getting Service...'+dev.server);
+  log('2 Getting Service...'+dev.server);
   dev.service = await dev.server.getPrimaryService('af237777-879d-6186-1f49-deca0e85d9c1');
   log('> Service...'+dev.service.uuid);  
 
-  log('Getting Characteristic...');
+  log('3 Getting Characteristic...');
   dev.char6 = await dev.service.getCharacteristic('af230006-879d-6186-1f49-deca0e85d9c1');
   log('> Characteristic...'+dev.char6.uuid);
   
-  log('Starting Notifications...');
+  log('4 Starting Notifications...');
   dev.notify=await dev.char6.startNotifications();
   log('|return flag='+dev.notify);
-alert(7);
+//alert(7);
   dev.char6.addEventListener('characteristicvaluechanged',handleNotifications);
-alert(8);
-  log('Getting Characteristic...');
+//alert(8);
+  log('5 Getting Characteristic...');
   dev.char3 = await dev.service.getCharacteristic('af230003-879d-6186-1f49-deca0e85d9c1');
   log('> Characteristic...'+dev.char3.uuid);
   
-  log('Starting Notifications...');
+  log('6 Starting Notifications...');
   dev.notify=await dev.char3.startNotifications();
   log('|return flag='+dev.notify);
   dev.char3.addEventListener('characteristicvaluechanged',handleNotifications2);
 
-  log('Getting Characteristic...');
+  log('7 Getting Characteristic...');
   dev.char2 = await dev.service.getCharacteristic('af230002-879d-6186-1f49-deca0e85d9c1');
   log('> Characteristic.uuid '+dev.char2.uuid);
   log('> Characteristic.properties '+JSON.stringify(dev.char2.properties));
-  log('Getting Characteristic.readValue()...');
-  //await dev.char2.readValue();alert(9);
-  dev.value2=dev.char2.value;alert(dev.char2.readValue);
-  log('> Characteristic.value '+display_value(dev.value2));alert(10);
+  log('8 Getting Characteristic.writeValue()...');
+  log('> dev.char2.writeValue='+dev.char2.writeValue);
+  log('> dev.char2.value='+dev.char2.value);
+  //await dev.char2.readValue();
+  //dev.value2=dev.char2.value;
+  log('> Characteristic.value='+dev.char2.value);//+display_value(dev.char2.value2));
 
   return dev;
   }
@@ -177,7 +180,8 @@ function tstart() {
   log("ontouchstart x="+tou.clientX+" "+tou.screenX+" "+tou.pageX+" y="+tou.clientY+" "+tou.screenY+" "+tou.pageY);
   //log("ontouchstart x="+tar.x+" "+tar.y);
   
-  alert(DASH.char2.writeValue);
+  log(DASH.char2);
+  log(DASH.char2.writeValue);
   }
 
 let weitermachen=true;
@@ -189,15 +193,20 @@ async function tmove() {
   span_del.innerHTML=delx+" "+dely;
   if (weitermachen) {
     weitermachen=false;
-    //log('await writeValue');
-    DASH.value2.setUint8(0,0x0b);
+    //log('setUint8(0)');
+    DASH.value2=[];
+    DASH.value2[0]=0x0b;
     if (dely < 0) dely = dely + 0x800;
     if (delx < 0) delx = delx + 0x800;
-    DASH.value2.setUint8(1,dely&0xFF);
-    DASH.value2.setUint8(2,delx&0xFF);
-    DASH.value2.setUint8(3,((dely&0xFF00)>>8)|((delx&0xFF00)>>5));
-    await DASH.char2.writeValue(DASH.value2);
+    //log('setUint8(1)');
+    DASH.value2[1]=dely&0xFF;
+    DASH.value2[2]=delx&0xFF;
+    DASH.value2[3]=((dely&0xFF00)>>8)|((delx&0xFF00)>>5);
+    //log(DASH.value2);
+    //log('await writeValue');
+    await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
     weitermachen=true;
+    //log('weitermachen='+weitermachen);
     }
   //log("ontouchmove");
   }
@@ -207,11 +216,56 @@ function tend() {
   log("ontouchend");
   
   }
-alert(console);
-alert(console.log)
+//alert(console);
+//alert(console.log)
 console.log("hallooooo 778899");
 const channel = new MessageChannel(); 
-for (var i in channel.port1) alert(i);
+//for (var i in channel.port1) alert(i);
+
+/*aus https://github.com/IlyaSukhanov/morseapi/tree/master/morseapi/constants.py
+HANDLES = {
+    "command": 0x13,
+}
+CHARACTERISTICS = {
+    "dash_sensor": UUID("af230006-879d-6186-1f49-deca0e85d9c1"),
+    "dot_sensor": UUID("af230003-879d-6186-1f49-deca0e85d9c1"),
+}
+COMMANDS = {
+    "neck_color":0x03,
+    "tail_brightness":0x04,
+    "eye_brightness":0x08,
+    "eye":0x09,
+    "left_ear_color":0x0b,
+    "right_ear_color":0x0c,
+    "head_color":0x0d,
+    "head_pitch":0x07,
+    "head_yaw":0x06,
+    "say":0x18,
+    "drive":0x02,
+    "move":0x23,
+    "reset":0xc8,
+}
+
+NOISES = {
+    k:v.decode("hex")
+    for (k, v) in {
+        "elephant":   "53595354454c455048414e545f300e460000",  # SYSTELEPHANT_0.F
+        "tiresqueal": "535953545449524553515545414c0e460000",  # SYSTTIRESQUEAL.F
+        "hi":         "53595354444153485f48495f564f0b00c900",  # SYSTDASH_HI_VO
+        "bragging":   "535953544252414747494e4731410b232300",  # SYSTBRAGGING1A##
+        "ohno":       "5359535456375f4f484e4f5f30390b000000",  # SYSTV7_OHNO_09
+        "ayayay":     "53595354434f4e46555345445f310b000000",  # SYSTCONFUSED_1
+        "confused2":  "53595354434f4e46555345445f320b000000",  # SYSTCONFUSED_2
+        "confused3":  "53595354434f4e46555345445f330b000000",  # SYSTCONFUSED_3
+        "confused5":  "53595354434f4e46555345445f350b000000",  # SYSTCONFUSED_5
+        "confused8":  "53595354434f4e46555345445f380b000000",  # SYSTCONFUSED_8
+        "brrp":       "53595354434f4e46555345445f360b000000",  # SYSTCONFUSED_6
+        "charge":     "535953544348415247455f3033000b000000",  # SYSTCHARGE_03
+    }.items()
+}
+
+*/
+
 function Test() {
   let x=1;
   let t=x+"\n";
@@ -251,9 +305,9 @@ function Test() {
   DASH.value2.setUint8(1,0);
   DASH.value2.setUint8(2,0);
   DASH.value2.setUint8(3,0);
-  log("[b,0,0,0]")
+  log("[b,0,0,0]");
   DASH.char2.writeValue(DASH.value2);
-  log("> gesendet")
+  log("> gesendet");
   '>[b,0,0,0]</button></span>
   </div>
 
