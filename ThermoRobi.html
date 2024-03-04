@@ -194,17 +194,47 @@ async function tmove() {
   if (weitermachen) {
     weitermachen=false;
     //log('setUint8(0)');
+/*
     DASH.value2=[];
-    DASH.value2[0]=id_command.value*1;
+    DASH.value2[0]=0x0b;//id_command.value*1;
     if (dely < 0) dely = dely + 0x800;
     if (delx < 0) delx = delx + 0x800;
     //log('setUint8(1)');
     DASH.value2[1]=dely&0xFF;
     DASH.value2[2]=delx&0xFF;
     DASH.value2[3]=((dely&0xFF00)>>8)|((delx&0xFF00)>>5);
+    await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
+*/
+
+
+/*
+    //
+    DASH.value2=[];
+    DASH.value2[0]=0x07;//id_command.value*1;
+    DASH.value2[1]=dely>>2;
     //log(DASH.value2);
     //log('await writeValue');
     await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
+
+    DASH.value2=[];
+    DASH.value2[0]=0x06;
+    DASH.value2[1]=delx>>3;
+    //log(DASH.value2);
+    //log('await writeValue');
+    await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
+*/
+
+    //drive/turn
+    DASH.value2=[];
+    DASH.value2[0]=id_command.value*1;//0x02;
+    DASH.value2[1]=dely>>2;
+    DASH.value2[2]=delx>>3;
+    DASH.value2[3]=0x00;
+    //log(DASH.value2);
+    //log('await writeValue');
+    //log(weitermachen+" "+DASH.value2);
+    await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
+
     weitermachen=true;
     //log('weitermachen='+weitermachen);
     }
@@ -325,7 +355,7 @@ function Test() {
     <span>writeValue(<span id='span_write'> </span>)</span>
     </div>
   </div>
-<input id="id_command" value="0x0b"/>
+<input id="id_command" value="0x02"/>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
 <div><a href='https://maissan.net/articles/dash-and-dot/4'>https://maissan.net/articles/dash-and-dot/4</a>
