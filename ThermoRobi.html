@@ -188,7 +188,7 @@ let weitermachen=true;
 async function tmove() {
   event.preventDefault();
   let tou=event.touches[0];
-  delx=Math.round(tou.clientX*3/2)-toux;
+  delx=toux-Math.round(tou.clientX*3/2);
   dely=touy-Math.round(tou.clientY*3/2);
   span_del.innerHTML=delx+" "+dely;
   if (weitermachen) {
@@ -227,11 +227,12 @@ async function tmove() {
     //drive/turn
     DASH.value2=[];
     DASH.value2[0]=id_command.value*1;//0x02;
-    DASH.value2[1]=dely>>2;
-    DASH.value2[2]=delx>>3;
-    DASH.value2[3]=0x00;
-    //log(DASH.value2);
-    //log('await writeValue');
+    if (dely < 0) dely = dely + 0x800;
+    if (delx < 0) delx = delx + 0x800;
+    //log('setUint8(1)');
+    DASH.value2[1]=dely&0xFF;
+    DASH.value2[2]=delx&0xFF;
+    DASH.value2[3]=((dely&0xFF00)>>8)|((delx&0xFF00)>>5);
     //log(weitermachen+" "+DASH.value2);
     await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
 
@@ -241,11 +242,20 @@ async function tmove() {
   //log("ontouchmove");
   }
 
-function tend() {
+async function tend() {
 //  event.preventDefault(); //nicht, sonst klappt Tastatur auf
   log("ontouchend");
-  
+  weitermachen=true;
+  DASH.value2=[];
+  DASH.value2[0]=2;//id_command.value*1;//0x02;
+  //log('setUint8(1)');
+  DASH.value2[1]=0;
+  DASH.value2[2]=0;
+  DASH.value2[3]=0;
+  //log(weitermachen+" "+DASH.value2);
+  await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
   }
+
 //alert(console);
 //alert(console.log)
 console.log("hallooooo 778899");
