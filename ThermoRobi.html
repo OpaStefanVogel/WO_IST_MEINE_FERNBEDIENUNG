@@ -66,7 +66,9 @@ function handleNotifications3(event) {//alert(event);
   DOT.button2=(value.getUint8(8)&0x40)>>6;
   DOT.button3=(value.getUint8(8)&0x80)>>7;
   DOT.tilt=((value.getUint8(4)&0xF0)<<4)+value.getUint8(2);
+  if (DOT.tilt>=0x400) DOT.tilt=DOT.tilt-0x800;
   DOT.lean=((value.getUint8(4)&0x0F)<<8)+value.getUint8(3);
+  if (DOT.lean>=0x400) DOT.lean=DOT.lean-0x800;
   document.getElementById("id_notification3").innerHTML='=Dot> button0123=' + DOT.button0+ DOT.button1+ DOT.button2+ DOT.button3+' tilt='+DOT.tilt+' lean='+DOT.lean;
   }
   
