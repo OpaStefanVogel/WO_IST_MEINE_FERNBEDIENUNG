@@ -52,7 +52,7 @@ function handleNotifications2(event) {//alert(event);
   
 function handleNotifications3(event) {//alert(event);
   let value = event.target.value;
-  let a = [Date.now()];
+//  let a = [Date.now()];
   // Convert raw data bytes to hex values just for the sake of showing something.
   // In the "real" world, you_d use data.getUint8, data.getUint16 or even
   // TextDecoder to process raw data bytes.
@@ -61,15 +61,22 @@ function handleNotifications3(event) {//alert(event);
 //    }
 //  Liste3.push(a);
 //  document.getElementById("id_notification3").innerHTML='=dot> ' + a.join(' ');
+  DOT.time2=DOT.time;
+  DOT.time=Date.now();
   DOT.button0=(value.getUint8(8)&0x10)>>4;
   DOT.button1=(value.getUint8(8)&0x20)>>5;
   DOT.button2=(value.getUint8(8)&0x40)>>6;
   DOT.button3=(value.getUint8(8)&0x80)>>7;
   DOT.tilt=((value.getUint8(4)&0xF0)<<4)+value.getUint8(2);
-  if (DOT.tilt>=0x400) DOT.tilt=DOT.tilt-0x800;
+  if (DOT.tilt>=0x400) {
+    DOT.tilt=DOT.tilt-0x800;
+    DOT.tilt2=DOT.tilt;
+    } else {
+      if (DOT.tilt2<DOT.tilt) DOT.tilt2=DOT.tilt2+DOT.dtime/1000*30; else DOT.tilt2=DOT.tilt;
+      }
   DOT.lean=((value.getUint8(4)&0x0F)<<8)+value.getUint8(3);
   if (DOT.lean>=0x400) DOT.lean=DOT.lean-0x800;
-  document.getElementById("id_notification3").innerHTML='=Dot> button0123=' + DOT.button0+ DOT.button1+ DOT.button2+ DOT.button3+' tilt='+DOT.tilt+' lean='+DOT.lean;
+  document.getElementById("id_notification3").innerHTML='=Dot> button0123=' + DOT.button0+ DOT.button1+ DOT.button2+ DOT.button3+' tilt='+DOT.tilt+' tilt2='+DOT.tilt2+' lean='+DOT.lean;
   }
   
   </script><script>
@@ -105,8 +112,8 @@ a[18:19]
   </script>
 
  <script>
-let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=value}}};
-let DOT={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=value}}};
+let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=value}},time2:Date.now()};
+let DOT={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=value}},time2:Date.now(),tilt2:0};
 
 let CC_RT_BLE={};
 
