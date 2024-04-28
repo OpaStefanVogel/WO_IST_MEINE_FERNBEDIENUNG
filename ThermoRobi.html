@@ -19,29 +19,48 @@ function display_value(value) {
   return a.join(' ');    
   }
 
+
+let Liste1=[[Date.now(),1,11,13,24,25,26,37,48,59],[Date.now(),1,11,13,24,25,26,37,48,59]];
+let Liste2=[[Date.now(),2,22,13,24,25,26,37,48,59],[Date.now(),1,11,13,24,25,26,37,48,59]];
+let Liste3=[[Date.now(),3,33,13,24,25,26,37,48,59],[Date.now(),1,11,13,24,25,26,37,48,59]];
 function handleNotifications(event) {//alert(event);
   let value = event.target.value;
-  let a = [];
+  let a = [Date.now()];
   // Convert raw data bytes to hex values just for the sake of showing something.
   // In the "real" world, you_d use data.getUint8, data.getUint16 or even
   // TextDecoder to process raw data bytes.
   for (let i = 0; i < value.byteLength; i++) {
     a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
     }
+  Liste1.push(a);
   //alert(document.getElementById("id_notification").innerHTML+'> ' + a.join(' '));
   document.getElementById("id_notification").innerHTML='dash> ' + a.join(' ');
   }
 
 function handleNotifications2(event) {//alert(event);
   let value = event.target.value;
-  let a = [];
+  let a = [Date.now()];
   // Convert raw data bytes to hex values just for the sake of showing something.
   // In the "real" world, you_d use data.getUint8, data.getUint16 or even
   // TextDecoder to process raw data bytes.
   for (let i = 0; i < value.byteLength; i++) {
     a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
     }
+  Liste2.push(a);
   document.getElementById("id_notification2").innerHTML='+dot> ' + a.join(' ');
+  }
+  
+function handleNotifications3(event) {//alert(event);
+  let value = event.target.value;
+  let a = [Date.now()];
+  // Convert raw data bytes to hex values just for the sake of showing something.
+  // In the "real" world, you_d use data.getUint8, data.getUint16 or even
+  // TextDecoder to process raw data bytes.
+  for (let i = 0; i < value.byteLength; i++) {
+    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+    }
+  Liste3.push(a);
+  document.getElementById("id_notification3").innerHTML='=dot> ' + a.join(' ');
   }
   
   </script><script>
@@ -103,6 +122,7 @@ async function device_request() {
   log('> Id:               ' + RET.device.id);
   log('> Connected:        ' + RET.device.gatt.connected);
   if (RET.device.name=='Robi') DASH= await kopple_Robi(RET);
+  if (RET.device.name=='Dot') DASH= await kopple_Dot(RET);
   if (RET.device.name=='CC-RT-BLE') CC_RT_BLE= await kopple_CC_RT_BLE(RET);
   return RET;
   }  
@@ -325,6 +345,16 @@ function Test() {
   div_log.innerHTML=t;
   }
 
+function show(Liste) {
+  //alert(Liste);
+  div_log.innerHTML='Liste=\n[ ['+Liste.join('],\n  [')+'] ];\n\n';
+  let sel=window.getSelection();//Quelle: https://gist.github.com/gubatron/6599366 nur Variante window.getSelection()
+  sel.removeAllRanges();
+  let range=document.createRange();
+  range.selectNodeContents(div_log);
+  sel.addRange(range);
+  }
+
   </script>
 
 </head>
@@ -354,8 +384,9 @@ function Test() {
 <div style="border:solid">
   <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:pre; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
-<div><span id="id_notification" style="font-family:Courier,monospace">notification1</span></div>
-<div><span id="id_notification2" style="font-family:Courier,monospace">notification2</span></div>
+<div><span id="id_notification" style="font-family:Courier,monospace" onclick="show(Liste1)">notification1</span></div>
+<div><span id="id_notification2" style="font-family:Courier,monospace" onclick="show(Liste2)">notification2</span></div>
+<div><span id="id_notification3" style="font-family:Courier,monospace" onclick="show(Liste3)">notification3</span></div>
 <div style='display:flex; flex-direction:row'>
   <svg width='600' height='400' style='border:solid; padding:0px; margin:0px'>
      <rect x='200' y='0' width='400' height='400' fill='orange' ontouchstart='tstart()' ontouchmove='tmove()' ontouchend='tend()'>
