@@ -9,8 +9,8 @@
 let manuServiceUuid           = '00001800-0000-1000-8000-00805f9b34fb';
 let manuCharacteristicUuid    = '00002a00-0000-1000-8000-00805f9b34fb';
 let robiServiceUuid = 'af237777-879d-6186-1f49-deca0e85d9c1';
-let robiSensorChar6 = 'af230006-879d-6186-1f49-deca0e85d9c1';
-let robiSensorChar3 = 'af230003-879d-6186-1f49-deca0e85d9c1';
+let robiSensorChar6 = 'af230006-879d-6186-1f49-deca0e85d9c1';//dash
+let robiSensorChar3 = 'af230003-879d-6186-1f49-deca0e85d9c1';//dash+dot
 let robiCommandChar = 'af230002-879d-6186-1f49-deca0e85d9c1';
 
 function display_value(value) {
@@ -28,8 +28,8 @@ function handleNotifications(event) {//alert(event);
   for (let i = 0; i < value.byteLength; i++) {
     a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
     }
-  //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
-  document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
+  //alert(document.getElementById("id_notification").innerHTML+'> ' + a.join(' '));
+  document.getElementById("id_notification").innerHTML='dash> ' + a.join(' ');
   }
 
 function handleNotifications2(event) {//alert(event);
@@ -41,7 +41,7 @@ function handleNotifications2(event) {//alert(event);
   for (let i = 0; i < value.byteLength; i++) {
     a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
     }
-  document.getElementById("div_notification2").innerHTML='> ' + a.join(' ');
+  document.getElementById("id_notification2").innerHTML='+dot> ' + a.join(' ');
   }
   
   </script><script>
@@ -60,12 +60,12 @@ CHAR_UUID_SENSOR1      = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')   # s
 
 
 aus RobotControl-master/robot.py:
-ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
-COMMAND1_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
-SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')
-SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
-COMMAND2_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
-INFO_CHAR_UUID = uuid.UUID('AF230001-879D-6186-1F49-DECA0E85D9C1')
+ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1');
+COMMAND1_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1');
+SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1');//dash
+SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1');//dash+dot
+COMMAND2_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1');
+INFO_CHAR_UUID = uuid.UUID('AF230001-879D-6186-1F49-DECA0E85D9C1');
 
 
 a[6] von links kommt was näher
@@ -354,8 +354,8 @@ function Test() {
 <div style="border:solid">
   <div id="div_log" style="display:flex; flex-direction:column; overflow:auto; height:200px; white-space:pre; font-family:Courier,monospace; font-size:100%">none</div>  
   </div>
-<div id="div_notification" style="font-family:Courier,monospace">notification1</div>
-<div id="div_notification2" style="font-family:Courier,monospace">notification2</div>
+<div><span id="id_notification" style="font-family:Courier,monospace">notification1</span></div>
+<div><span id="id_notification2" style="font-family:Courier,monospace">notification2</span></div>
 <div style='display:flex; flex-direction:row'>
   <svg width='600' height='400' style='border:solid; padding:0px; margin:0px'>
      <rect x='200' y='0' width='400' height='400' fill='orange' ontouchstart='tstart()' ontouchmove='tmove()' ontouchend='tend()'>
