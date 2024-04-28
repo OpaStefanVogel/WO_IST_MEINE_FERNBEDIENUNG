@@ -100,8 +100,9 @@ a[18:19]
   </script>
 
  <script>
-let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=display_value(value)}}};
-let DOT={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=display_value(value)}}};
+let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=value}}};
+let DOT={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=value}}};
+
 let CC_RT_BLE={};
 
 async function device_request() {
@@ -805,7 +806,50 @@ function show(Liste) {
   sel.addRange(range);
   }
 
-</script>
+  </script>
+  
+<script>
+DOT.button0=0;
+DOT.tilt=0;
+DOT.lean=0;
+DOT.button0_merk=0;
+DOT.tilt_merk=0;
+DOT.lean_merk=0;
+
+let num=0;
+function every() {
+  if (weitermachen==false) {return}
+  weitermachen=false;
+  id_callEvery.innerHTML=num;
+  num=num+1;
+  if (DOT.button0==0) {
+    DASH.value2=[0x02,0,0,0];
+    span_write.innerHTML=Uint8Array.of(...DASH.value2);
+    DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
+    }
+  if (DOT.button0==1) {
+    //drive/turn
+    DASH.value2=[0x02];
+    dely=0x0100;
+    delx=0x0000;
+    if (dely < 0) dely = dely + 0x800;
+    if (delx < 0) delx = delx + 0x800;
+    //log('setUint8(1)');
+    DASH.value2[1]=dely&0xFF;
+    DASH.value2[2]=delx&0xFF;
+    DASH.value2[3]=((dely&0xFF00)>>8)|((delx&0xFF00)>>5);
+    //log(weitermachen+" "+DASH.value2);
+    DASH.char2.writeValue(Uint8Array.of(...DASH.value2));    
+    }
+  
+  DOT.button0_merk=DOT.button0;
+  DOT.tilt_merk=DOT.tilt;
+  DOT.lean_merk=DOT.lean;
+  weitermachen=true;
+  }
+
+setInterval(every,1000);
+  </script>
 
 </head>
 <body onload="Test()">
@@ -846,7 +890,7 @@ function show(Liste) {
     <span>writeValue(<span id='span_write'> </span>)</span>
     </div>
   </div>
-<input id="id_command" value="0x02"/>
+<input id="id_command" value="0x02"/>, <span id='id_callEvery'>0</span>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
 <div><a href='https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth'>https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth</a></div>
 <div><a href='https://maissan.net/articles/dash-and-dot/4'>https://maissan.net/articles/dash-and-dot/4</a>
