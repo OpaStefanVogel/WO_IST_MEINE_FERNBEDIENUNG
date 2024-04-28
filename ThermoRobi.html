@@ -56,11 +56,15 @@ function handleNotifications3(event) {//alert(event);
   // Convert raw data bytes to hex values just for the sake of showing something.
   // In the "real" world, you_d use data.getUint8, data.getUint16 or even
   // TextDecoder to process raw data bytes.
-  for (let i = 0; i < value.byteLength; i++) {
-    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
-    }
-  Liste3.push(a);
-  document.getElementById("id_notification3").innerHTML='=dot> ' + a.join(' ');
+//  for (let i = 0; i < value.byteLength; i++) {
+//    a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+//    }
+//  Liste3.push(a);
+//  document.getElementById("id_notification3").innerHTML='=dot> ' + a.join(' ');
+  DOT.button0=(value.getUint8(8)&0x10)>>4;
+  DOT.tilt=(value.getUint8(4)&0xF0)<<4+value.getUint8(2);
+  DOT.lean=(value.getUint8(4)&0x0F)<<8+value.getUint8(3);
+  document.getElementById("id_notification3").innerHTML='=Dot> button0=' + DOT.button0+' tilt='+DOT.tilt+' lean='+DOT.lean;
   }
   
   </script><script>
@@ -97,12 +101,13 @@ a[18:19]
 
  <script>
 let DASH={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=display_value(value)}}};
+let DOT={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(value) {span_write.innerHTML=display_value(value)}}};
 let CC_RT_BLE={};
 
 async function device_request() {
   log();
   //let options={};
-  let options={filters:[{name:"Robi"},{name:"Dot"}]};//oder Robi
+  let options={filters:[{name:"Robi"},{name:"Dot"}]};
   //options.acceptAllDevices = true;
   options.optionalServices = [
     '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
@@ -122,8 +127,7 @@ async function device_request() {
   log('> Id:               ' + RET.device.id);
   log('> Connected:        ' + RET.device.gatt.connected);
   if (RET.device.name=='Robi') DASH= await kopple_Robi(RET);
-  if (RET.device.name=='Dot') DASH= await kopple_Dot(RET);
-  if (RET.device.name=='CC-RT-BLE') CC_RT_BLE= await kopple_CC_RT_BLE(RET);
+  if (RET.device.name=='Dot') DOT= await kopple_Dot(RET);
   return RET;
   }  
 
@@ -272,7 +276,7 @@ async function tmove() {
 
 
 /*
-    //
+    //07=HeadY
     DASH.value2=[];
     DASH.value2[0]=0x07;//id_command.value*1;
     DASH.value2[1]=dely>>2;
@@ -280,6 +284,7 @@ async function tmove() {
     //log('await writeValue');
     await DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
 
+    //06=HeadX
     DASH.value2=[];
     DASH.value2[0]=0x06;
     DASH.value2[1]=delx>>3;
