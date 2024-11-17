@@ -20,11 +20,15 @@ var LCode="";
 var HCode="";
 var p=[];
 var hist=[];
-var U=[];
-var V=[];
-var Yi=[];
-var Xj=[];
+let U=[];
+let V=[];
+let Yi=[];//war Ui
+let Xj=[];//war Vj
 let AMERK=[];
+let g=0;
+let h=0;
+let k=0;
+let l=0;
 
 function Los() {
   //alert(document.getElementById("input").value);
@@ -108,7 +112,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   let signx=1;
   if (determ!=Nenner) signd=-1;
   Yi=U.slice();Xj=V.slice();
-  T=T+"<tr>"+"<td>"+Nenner+'<sub><sub>'+determ+'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+"</sub></sub></td>";
+  T=T+"<tr>"+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
   for (var j=0;j<n;j++) {
       T=T+"<td>";
       if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
@@ -122,33 +126,37 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       signx=1;
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
         else T=T+"<td";Yi=U.slice();Xj=V.slice();
-      if (B[i]<0&&D[j]>=0)  {
+      if (B[i]<0&&D[j]>=0) {
         T=T+' class="yx"';
-        Xj.push(D[j]); Xj.sort();
-        Yi.push(-1-B[i]); Yi.sort();
-        signx=(-1)**(Yi.indexOf(-1-B[i])+Xj.indexOf(D[j]));
+        k=-1-B[i]; l=D[j];
+        Xj.push(l); Xj.sort();
+        Yi.push(k); Yi.sort();
+        signx=(-1)**(Yi.indexOf(k)+Xj.indexOf(l));
         }
       if (B[i]>=0&&D[j]>=0) {
         T=T+' class="xx"';
-        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]); Xj.push(D[j]); Xj.sort();
-        signx=(-1)**(Xj.indexOf(D[j])+V.indexOf(B[i]))*(-1);
+        h=B[i]; l=D[j];
+        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]); Xj.push(l); Xj.sort();
+        signx=(-1)**(Xj.indexOf(l)+V.indexOf(h))*(-1);
         }
-      if (B[i]<0&&D[j]<0){
+      if (B[i]<0&&D[j]<0) {
         T=T+' class="yy"';
-        Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=-1-D[j]) Yi.push(U[p]); Yi.push(-1-B[i]); Yi.sort();
-        signx=(-1)**(Yi.indexOf(-1-B[i])+U.indexOf(-1-D[j]));
+        k=-1-B[i]; g=-1-D[j];
+        Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=g) Yi.push(U[p]); Yi.push(k); Yi.sort();
+        signx=(-1)**(Yi.indexOf(k)+U.indexOf(g));
         }
-      if (B[i]>=0&&D[j]<0)  {
+      if (B[i]>=0&&D[j]<0) {
         T=T+' class="xy"';
-        Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=-1-D[j]) Yi.push(U[p]);
-        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]);
-        signx=(-1)**(V.indexOf(B[i])+U.indexOf(-1-D[j]));
+        h=B[i]; g=-1-D[j];
+        Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=g) Yi.push(U[p]);
+        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
+        signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
       determ=signd*signx*det(AUV(Yi,Xj));
       if (determ!=Ausgangsmatrix[i][j]) T=T+' style="border:solid red 5px"';
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small><small>'+determ+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+"</td>";
+      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small><small>'+determ+/*'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+*/'</small></small></small></sub>'+"</td>";
       }
     T=T+"</tr>";
     }
@@ -269,7 +277,7 @@ starte_Pivotverfahren();
 <button onclick="p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
 
 <style>
-table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray}
+table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:double}
 tbod {}
 sub {white-space:nowrap}
 sup {white-space:nowrap}
@@ -282,7 +290,7 @@ sub {font-size:75%}
 sup {padding-left:2px; font-size:75%} /* wegen dem kursiven f<sup>g</sup>*/ 
 var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gray; white-space:pre}
 </style>
-<div id="HCode"> </div>
+<div style='display:flex; flex-direvtion:row; overflow:;'><div id="HCode"> </div></div>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
   <div>
 <div id="Ausgabe">
