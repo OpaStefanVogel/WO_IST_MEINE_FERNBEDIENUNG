@@ -109,7 +109,14 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   return T;
   }
 
+let Checkbit_Nenner=false;
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
+    for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
+    gemeinsamer_Nenner=-gemeinsamer_Nenner;
+    Checkbit_Nenner=true;
+    }
+
   var T='<table style="font-style:italic;font-size:300%; box-sizing: border-box" border="0">\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
@@ -165,7 +172,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       signarray[i][j]=signx;
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
       determ=signd*signx*det(AUV(Yi,Xj));
-      if (determ!=Ausgangsmatrix[i][j]||determ<-10000) {
+      if (determ!=Ausgangsmatrix[i][j]/*||determ<-10000*/) {
         T=T+' style="border:solid red 5px";'; 
         err=true;
         alert('Error: determ!=Ausgangsmatrix[i][j]\n'+determ+'\n'+Ausgangsmatrix[i][j]); 
@@ -189,6 +196,11 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 //    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
   T=T+"</table>";
   //alert(T);
+  if (Checkbit_Nenner) {
+    for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
+    gemeinsamer_Nenner=-gemeinsamer_Nenner;
+    Checkbit_Nenner=false;
+    }
   return T;
   }
   </script>
@@ -228,7 +240,7 @@ for (let r=0;r<m;r++) {let s=r;
       if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
       }
     }
-//  if (neuerNenner<0) {
+//  if (Checkbox_Nenner&&(neuerNenner<0)) {
 //    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
 //    neuerNenner=-neuerNenner;
 //    }
@@ -429,6 +441,7 @@ starte_Pivotverfahren();
 <button onclick="err=false;zufaellig_weiter()">zufällig weiter</button>
 <button onclick="clearTimeout(handle)">anhalten</button>
 <button onclick="clearTimeout(handle); p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
+<input id="Checkbox_Nenner" type="checkbox" checked="checked"/> gemeinsamer Nenner immer positiv
 
 <style>
 table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:}
