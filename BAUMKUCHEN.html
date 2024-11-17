@@ -5,11 +5,13 @@
 <style>
   </style>
 <script>
-let r=400;
+let r=390;
 let T=[
-  ["M",0,0],
+  ["M",0,10],
   ["L",0,r],
   ["A",r,r,0,0,0,...rot(30,0,r)],
+  ["M",10,380],
+  ["L",20,370],
   ];
 
 function rot(p,x,y) {
@@ -21,7 +23,7 @@ function rot(p,x,y) {
 function zeichne_die_Tabelle(T) {
   let d="";
   let xy=[0,0];
-  for (let p=0;p<360;p=p+30) {
+  for (let p=15;p<375;p=p+30) {
     for (let i=0;i<T.length;i++) {
       if ("ML ".indexOf(T[i][0])>-1) {
         xy=rot(p,T[i][1],T[i][2]);
@@ -38,14 +40,31 @@ function zeichne_die_Tabelle(T) {
   screen2.requestFullscreen();
   path_Baumkuchen.setAttribute("d",d);
   }
+  
+function tstart() {
+  T.push(["M",(event.targetTouches.item(0).clientX-820)/2,event.targetTouches.item(0).clientY/2]);
+  zeichne_die_Tabelle(T);
+  }
+
+function tmove() {
+  T.push(["L",(event.targetTouches.item(0).clientX-820)/2,event.targetTouches.item(0).clientY/2]);  
+  zeichne_die_Tabelle(T);
+  }
+function tend() {
+  event.target.parentNode.requestFullscreen();
+  //alert(T.join("\n"));
+  }
   </script>
 <body onload="zeichne_die_Tabelle(T)">
 
 <div id="screen2">
-<svg id="svg_svg" width="800" height="800" style="border:solid 0.1px lightgrey">
-<g id="g_Baumkuchen" transform="scale(1) translate(400,400)" fill="none" stroke="black" stroke-width="0.2">
-<!--line x1="0" y1="0" x2="100" y2="100"/-->
+<svg id="svg_svg" width="1200" height="800" style="" onclick="event.target.requestFullscreen()">
+<g id="g_Baumkuchen" transform="scale(1) translate(400,400)" fill="none" stroke="white" stroke-width="1">
+<circle cx="0" cy="0" r="400" style="fill:maroon"/>
 <path id="path_Baumkuchen" d="M0,0 L200,100 300,100 400,50"/>
+  </g>
+<g id="g_Baumkuchen2" transform="scale(1) translate(820,00)" fill="none" stroke="white" stroke-width="0.2">
+  <rect x="0" y="0" width="400" height="800" stroke="blue" fill="orange" ontouchstart="tstart()" ontouchmove="tmove()" ontouchend="tend()"/>
   </g>
   </svg>
   </div>
