@@ -206,7 +206,36 @@ function Geradenpunkte(a,g,i) {
 
   </script>
 
-
+<script>
+function det(Ausgangsmatrix) {
+  //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  let gemeinsamer_Nenner=1;
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  //alert(m+" "+n);
+for (let r=0;r<m;r++) {let s=r;
+  var neueMatrix=[];
+  var neuerNenner=Ausgangsmatrix[r][s];
+  for (var i=0;i<m;i++) {
+    neueMatrix[i]=[];
+    for (var j=0;j<n;j++) {
+      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner;
+      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j];
+      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j];
+      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
+      }
+    }
+  if (neuerNenner<0) {
+    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
+    neuerNenner=-neuerNenner;
+    }
+  Ausgangsmatrix=neueMatrix;
+  gemeinsamer_Nenner=neuerNenner;
+  alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  }
+  return gemeinsamer_Nenner;
+  }
+  </script>
 
 <body onload="losrechnen.click()">
 <p>Ein Programm zu <a href="https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens" target="_blank">https://de.wikipedia.org/wiki/Pivotverfahren#Beispiel_eines_Criss-Cross-Verfahrens</a></p>
@@ -277,6 +306,9 @@ Ausgangsmatrix6=[
 
 starte_Pivotverfahren();
 Zusatz(1,1);
+
+det([[1,1],[2,4]]);
+det([[1,1,1,1],[2,4,8,16],[3,9,27,81],[4,16,64,256]]);
 </textarea>
 <button id='losrechnen' onclick="Los()">losrechnen</button>
 
