@@ -29,6 +29,8 @@ let g=0;
 let h=0;
 let k=0;
 let l=0;
+let sign=1;
+let signarray=[];
 
 function Los() {
   //alert(document.getElementById("input").value);
@@ -54,20 +56,21 @@ function tausche(r,s) {
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
   //alert(m+" "+n);
+  sign=signarray[r][s];
   var neueMatrix=[];
   var neuerNenner=Ausgangsmatrix[r][s];
   if (neuerNenner==0) {alert('da entsteht Division durch Null, deshalb anderen Koeffizient auswählen'); return}
   for (var i=0;i<m;i++) {
     neueMatrix[i]=[];
     for (var j=0;j<n;j++) {
-      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner;
-      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j];
-      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j];
-      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
+      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner*sign;
+      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j]*sign;
+      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j]*sign;
+      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner*sign;
       }
     }
   Ausgangsmatrix=neueMatrix;
-  gemeinsamer_Nenner=neuerNenner;
+  gemeinsamer_Nenner=neuerNenner*sign;
   //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   }
 
@@ -106,24 +109,26 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   }
 
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
-  var T='<table style="font-style:italic;font-size:300%; box-sizing: border-box" border="1">\n';
+  var T='<table style="font-style:italic;font-size:300%; box-sizing: border-box" border="0">\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
   let signd=1;
   let signx=1;
+  signarray=[];
   if (determ!=Nenner) signd=-1;
   Yi=U.slice();Xj=V.slice();
-  T=T+"<tr>"+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
+  T=T+"<!--tr>";
   for (var j=0;j<n;j++) {
       T=T+"<td>";
       if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
         else T=T+"y<sub>"+(-1-D[j])+"</sub></td>";
       }
+  T=T+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
+  T=T+'</tr-->\n';
   for (var i=0;i<m;i++) {
-    T=T+"<tr><td>"+Nenner+'·';
-    if (B[i]<0) T=T+"y<sub>"+(-1-B[i])+"</sub>=</td>"; 
-      else T=T+"x<sub>"+(B[i])+"</sub>=</td>";
+    signarray[i]=[];
+    T=T+'<tr>';
     for (var j=0;j<n;j++) {
       signx=1;
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
@@ -154,8 +159,10 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
         signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
+      signarray[i][j]=signx;
+      let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
       determ=signd*signx*det(AUV(Yi,Xj));
-      if (determ!=Ausgangsmatrix[i][j]) T=T+' style="border:solid red 5px"';
+      if (determ!=Ausgangsmatrix[i][j]) {T=T+' style="border:solid red 5px"'; Error('determ!=Ausgangsmatrix[i][j]')}
       if (Ausgangsmatrix[i][j]==0) {T=T+' style="visibility:hidden" ';}
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
@@ -164,7 +171,10 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         else T=T+"y<sub>"+(-1-D[j])+"</sub>";      
       T=T+"</td>";
       }
-    T=T+"</tr>";
+    T=T+"<td>="+Nenner+'·';
+    if (B[i]<0) T=T+"y<sub>"+(-1-B[i])+"</sub></td>"; 
+      else T=T+"x<sub>"+(B[i])+"</sub></td>";
+    T=T+"</tr>\n";
     }
 //  T=T+Ausgangsmatrix.join("],\n  [")+"] ] / "
 //    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
@@ -342,7 +352,7 @@ function zufaellig_weiter() {
   let zn=Math.round(Math.random()*(n)-1/2);
   //alert([zm,zn]);
   t(zm,zn);
-  handle=setTimeout(zufaellig_weiter,300);
+  handle=setTimeout(zufaellig_weiter,1000);
   }
   </script>
 <body onload="Los()">
@@ -350,26 +360,6 @@ function zufaellig_weiter() {
 
 <div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
 <textarea id="input" cols="80" rows="10" >Ausgangsmatrix=[ 
-  [  4, -1,  0,  0,  0,  0,  0, -1 ],
-  [ -1,  4, -1,  0,  0,  0,  0,  0 ],
-  [  0, -1,  4, -1,  0,  0,  0,  0 ],
-  [  0,  0, -1,  4, -1,  0,  0,  0 ],
-  [  0,  0,  0, -1,  4, -1,  0,  0 ],
-  [  0,  0,  0,  0, -1,  4, -1,  0 ],
-  [  0,  0,  0,  0,  0, -1,  4, -1 ],
-  [ -1,  0,  0,  0,  0,  0, -1,  4 ] 
-  ];
-
-gemeinsamer_Nenner=1;
-
-Ausgangsmatrix2=[ 
-
-  [  1,  2,  4,  1,  1 ],
-  [  4, -1, -3,  0, -1 ],
-  [  3, -2, -1,  0,  0 ],
-  [  3,  0, -1, -4, -1 ] ] ;
-
-Ausgangsmatrix=[ 
   [  1,  2,  4,  1,  1,  4,  3,  7,  8 ],
   [  4, -1, -3,  1, -1, -2,  5,  1,  9 ],
   [  3, -2, -1,  2,  4,  4, -8, -1,  7 ],
@@ -380,19 +370,32 @@ Ausgangsmatrix=[
   [  3, -1, -3,  4,  3,  5, -8, -7,  2 ],
   [  3,  2, -1, -4, -1,  6,  2,  5,  2 ] ] ;
 
+gemeinsamer_Nenner=1;
+
+Ausgangsmatrix1=[ 
+  [  4, -1,  0,  0,  0,  0,  0, -1 ],
+  [ -1,  4, -1,  0,  0,  0,  0,  0 ],
+  [  0, -1,  4, -1,  0,  0,  0,  0 ],
+  [  0,  0, -1,  4, -1,  0,  0,  0 ],
+  [  0,  0,  0, -1,  4, -1,  0,  0 ],
+  [  0,  0,  0,  0, -1,  4, -1,  0 ],
+  [  0,  0,  0,  0,  0, -1,  4, -1 ],
+  [ -1,  0,  0,  0,  0,  0, -1,  4 ] 
+  ];
+
+Ausgangsmatrix2=[ 
+
+  [  1,  2,  4,  1,  1 ],
+  [  4, -1, -3,  0, -1 ],
+  [  3, -2, -1,  0,  0 ],
+  [  3,  0, -1, -4, -1 ] ] ;
+
 Ausgangsmatrix3=[ 
 [-1,1,-2,5],
 [-2,2,4,-8],
 [-2,2,6,-8],
 [-4,1,-2,6]];
 
-/*
-  y3 y1 y2 y5
-x1
-x3
-x5
-x6
-*/
 /*
 tausche(0,0);
 alert(Ausgangsmatrix.join("\n"));
@@ -426,7 +429,7 @@ starte_Pivotverfahren();
 <button onclick="clearTimeout(handle); Los()">neu beginnen</button>
 
 <style>
-table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:double}
+table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:}
 tbod {}
 sub {white-space:nowrap}
 sup {white-space:nowrap}
@@ -439,7 +442,7 @@ sub {font-size:75%}
 sup {padding-left:2px; font-size:75%} /* wegen dem kursiven f<sup>g</sup>*/ 
 var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gray; white-space:pre}
 </style>
-<div style='display:flex; flex-direvtion:row; overflow:;'><div id="HCode"> </div></div>
+<p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
   <div>
 <div id="Ausgabe">
