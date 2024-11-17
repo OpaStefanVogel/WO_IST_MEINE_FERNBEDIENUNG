@@ -96,6 +96,7 @@ function Ausgabe() {
     +'U=['+U+'];\n'
     +'V=['+V+'];\n'
     +"-------\n"+LCode;
+  if (LCode.length>10000) LCode=LCode.slice(0,50000);
   HCode=Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
   document.getElementById("Logfile").firstChild.nodeValue=LCode;
   document.getElementById("HCode").innerHTML=HCode;
@@ -162,9 +163,13 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
       signarray[i][j]=signx;
-      let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
+      //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
       determ=signd*signx*det(AUV(Yi,Xj));
-      if (determ!=Ausgangsmatrix[i][j]) {T=T+' style="border:solid red 5px";'; Error('determ!=Ausgangsmatrix[i][j]')}
+      if (determ!=Ausgangsmatrix[i][j]||determ<-10000) {
+        T=T+' style="border:solid red 5px";'; 
+        err=true;
+        alert('Error: determ!=Ausgangsmatrix[i][j]\n'+determ+'\n'+Ausgangsmatrix[i][j]); 
+        }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" visibility:hidden; ";
       //alert(sty);
       T=T+' style="'+sty+'" onclick="t('+i+","+j+')">';
@@ -186,13 +191,6 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   //alert(T);
   return T;
   }
-/*
-  y3 y1 y2 y5
-x1
-x3
-x5
-x6
-*/
   </script>
 
 <script>
@@ -350,18 +348,19 @@ alert(determinantOfMatrixRecursive([[-1,1,-2,5],[-2,2,4,-8],[-2,2,6,-8],[-4,1,-2
 
 <script>
 let handle=0;
+let err=false;
 function zufaellig_weiter() {
   let zm=Math.round(Math.random()*(m)-1/2);
   let zn=Math.round(Math.random()*(n)-1/2);
   //alert([zm,zn]);
   t(zm,zn);
-  handle=setTimeout(zufaellig_weiter,1000);
+  if (err==false) handle=setTimeout(zufaellig_weiter,1000);
   }
   </script>
 <body onload="Los()">
-<p>Ein Programm zu <a href="https:" target="_blank">???</a></p>
+<!--p>Ein Programm zu <a href="https:" target="_blank">???</a></p>
 
-<div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
+<div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div-->
 <textarea id="input" cols="80" rows="10" >Ausgangsmatrix=[ 
   [  1,  2,  4,  1,  1,  4,  3,  7,  8 ],
   [  4, -1, -3,  1, -1, -2,  5,  1,  9 ],
@@ -426,10 +425,10 @@ starte_Pivotverfahren();
 <!--button onclick="Los()">losrechnen</button-->
 <!--button onclick="t(p[2],p[3])">weiter</button-->
 <!--button onclick="for (var w=0;w<100;w++) if (p[2]>0 & p[3]>0) t(p[2],p[3])">100*weiter</button-->
-<button onclick="zufaellig_weiter()">zufällig weiter</button>
-<button onclick="clearTimeout(handle)">anhalten</button>
-<button onclick="p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
 <button onclick="clearTimeout(handle); Los()">neu beginnen</button>
+<button onclick="err=false;zufaellig_weiter()">zufällig weiter</button>
+<button onclick="clearTimeout(handle)">anhalten</button>
+<button onclick="clearTimeout(handle); p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
 
 <style>
 table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:}
@@ -452,3 +451,9 @@ var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gra
   <div>
   </body>
   </html>
+<!--jetzt noch
+.. Bigint
+//.. Gleichungsnummern
+.. Error mit Halt
+.. Nenner positiv
+  -->
