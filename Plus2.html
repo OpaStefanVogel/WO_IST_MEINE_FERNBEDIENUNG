@@ -20,6 +20,9 @@ var LCode="";
 var HCode="";
 var p=[];
 var hist=[];
+var U=[];
+var V=[];
+let AMERK=[];
 
 function Los() {
   //alert(document.getElementById("input").value);
@@ -29,8 +32,11 @@ function Los() {
   LCode="m="+m+"\nn="+n+";\n";
   D=[]; for (var j=0;j<n;j++) D[j]=j;
   B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
+  U=[];
+  V=[];
   hist=[];
-  p=[m+n-1,m+n-1,0,0,0];
+  p=[0,0,0,0,0];
+  AMERK=structuredClone(Ausgangsmatrix);
   Ausgabe();
   }
 
@@ -66,14 +72,19 @@ function t(r,s) {
   B[p[2]]=D[p[3]];
   D[p[3]]=merk;
   tausche(p[2],p[3]);
+  U=[]; for (let i=0;i<B.length;i++) if (B[i]>=0) U.push(B[i]); U.sort();
+  V=[]; for (let i=0;i<D.length;i++) if (D[i]<0) V.push(-D[i]-1); V.sort();
   Ausgabe();
   }
 
 function Ausgabe() {
-  LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n-------\n"+LCode;
+  LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n"
+    +'U=['+U+'];\n'
+    +'V=['+V+'];\n'
+    +"-------\n"+LCode;
   HCode=Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
   document.getElementById("Logfile").firstChild.nodeValue=LCode;
-  document.getElementById("HCode").innerHTML=HCode;  
+  document.getElementById("HCode").innerHTML=HCode;
   }
 
 function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
@@ -121,9 +132,23 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 
 <script>
 function AUV(i,j) {
+  let RET='';
+  let M=[];
+  for (let k=0;k<U.length;k++) {
+    let Mi=[];
+    for (let l=0;l<V.length;l++) {
+      Mi.push(AMERK[U[k]][V[l]]);
+      
+      }
+    M.push(Mi);
+    }
   
-  
-  return "+0";
+      if (B[i]<0&&D[j]>=0) RET=RET+' class="yx"';
+      if (B[i]>=0&&D[j]>=0) RET=RET+' class="xx"';
+      if (B[i]<0&&D[j]<0) RET=RET+' class="yy"';
+      if (B[i]>=0&&D[j]<0) RET=RET+' class="xy"';
+//M=['üü'];
+  return M.join('\n');
   }
   </script>
 <body onload="Los()">
@@ -131,12 +156,14 @@ function AUV(i,j) {
 
 <div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
 <textarea id="input" cols="40" rows="10" >Ausgangsmatrix=[ 
-  [  4, -1,  0,  0,  0, -1 ],
-  [ -1,  4, -1,  0,  0,  0 ],
-  [  0, -1,  4, -1,  0,  0 ],
-  [  0,  0, -1,  4, -1,  0 ],
-  [  0,  0,  0, -1,  4, -1 ],
-  [ -1,  0,  0,  0, -1,  4 ] 
+  [  4, -1,  0,  0,  0,  0,  0, -1 ],
+  [ -1,  4, -1,  0,  0,  0,  0,  0 ],
+  [  0, -1,  4, -1,  0,  0,  0,  0 ],
+  [  0,  0, -1,  4, -1,  0,  0,  0 ],
+  [  0,  0,  0, -1,  4, -1,  0,  0 ],
+  [  0,  0,  0,  0, -1,  4, -1,  0 ],
+  [  0,  0,  0,  0,  0, -1,  4, -1 ],
+  [ -1,  0,  0,  0,  0,  0, -1,  4 ] 
   ];
 
 gemeinsamer_Nenner=1;
