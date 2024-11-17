@@ -22,8 +22,8 @@ var p=[];
 var hist=[];
 var U=[];
 var V=[];
-var Ui=[];
-var Vj=[];
+var Yi=[];
+var Xj=[];
 let AMERK=[];
 
 function Los() {
@@ -36,8 +36,8 @@ function Los() {
   B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
   U=[];
   V=[];
-  Ui=[];
-  Vj=[];
+  Yi=[];
+  Xj=[];
 
   hist=[];
   p=[0,0,0,0,0];
@@ -77,8 +77,8 @@ function t(r,s) {
   B[p[2]]=D[p[3]];
   D[p[3]]=merk;
   tausche(p[2],p[3]);
-  U=[]; for (let i=0;i<B.length;i++) if (B[i]>=0) U.push(B[i]); U.sort();
-  V=[]; for (let i=0;i<D.length;i++) if (D[i]<0) V.push(-D[i]-1); V.sort();
+  V=[]; for (let i=0;i<B.length;i++) if (B[i]>=0) V.push(B[i]); V.sort();
+  U=[]; for (let i=0;i<D.length;i++) if (D[i]<0) U.push(-D[i]-1); U.sort();
   Ausgabe();
   }
 
@@ -103,7 +103,9 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   var T='<table style="font-style:italic;font-size:300%" border="1">\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
-  T=T+"<tr>"+"<td>"+Nenner+"</td>";
+  let determ=det(AUV(U,V));
+  Yi=U.slice();Xj=V.slice();
+  T=T+"<tr>"+"<td>"+Nenner+'<sub><sub>'+determ+'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+"</sub></sub></td>";
   for (var j=0;j<n;j++) {
       T=T+"<td>";
       if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
@@ -115,14 +117,19 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       else T=T+"<td>x<sub>"+(B[i])+"</sub></td>";
     for (var j=0;j<n;j++) {
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
-        else T=T+"<td";Ui=U.slice();Vj=V.slice();
-      if (B[i]<0&&D[j]>=0)  {T=T+' class="yx"'; Vj.push(D[j]); Vj.sort(); Ui.push(-1-B[i]); Ui.sort()}
-      if (B[i]>=0&&D[j]>=0) {T=T+' class="xx"';Vj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Vj.push(V[p]); Vj.push(D[j]);Vj.sort()}
-      if (B[i]<0&&D[j]<0){T=T+' class="yy"';Ui=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Ui.push(U[p]);Ui.push(-1-B[i]);Ui.sort()}
-      if (B[i]>=0&&D[j]<0)  {T=T+' class="xy"';Ui=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Ui.push(U[p]);Vj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Vj.push(V[p]);}
+        else T=T+"<td";Yi=U.slice();Xj=V.slice();
+      if (B[i]<0&&D[j]>=0)  {T=T+' class="yx"'; Xj.push(D[j]); Xj.sort(); Yi.push(-1-B[i]); Yi.sort()}
+      if (B[i]>=0&&D[j]>=0) {
+        T=T+' class="xx"';
+        Xj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]); Xj.push(D[j]);Xj.sort();
+        }
+      if (B[i]<0&&D[j]<0){T=T+' class="yy"';Yi=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Yi.push(U[p]);Yi.push(-1-B[i]);Yi.sort()}
+      if (B[i]>=0&&D[j]<0)  {T=T+' class="xy"';Yi=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Yi.push(U[p]);Xj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]);}
+      determ=det(AUV(Yi,Xj));
+      if (determ!=Ausgangsmatrix[i][j]) T=T+' style="border:solid red 5px"';
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small>'+det(AUV(i,j))+'</small></small></sub>'+"</td>";
+      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small><small>'+determ+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+"</td>";
       }
     T=T+"</tr>";
     }
@@ -136,23 +143,14 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   </script>
 
 <script>
-function AUV(i,j) {
+function AUV(Yi,Xj) {
   let RET='';
   let M=[];
-  for (let k=0;k<Ui.length;k++) {
+  for (let k=0;k<Yi.length;k++) {
     let Mi=[];
-    for (let l=0;l<Vj.length;l++) {
-      Mi.push(AMERK[Ui[k]][Vj[l]]);
-      
-      }
+    for (let l=0;l<Xj.length;l++) Mi.push(AMERK[Yi[k]][Xj[l]]);
     M.push(Mi);
     }
-  
-      if (B[i]<0&&D[j]>=0) RET=RET+' class="yx"';
-      if (B[i]>=0&&D[j]>=0) RET=RET+' class="xx"';
-      if (B[i]<0&&D[j]<0) RET=RET+' class="yy"';
-      if (B[i]>=0&&D[j]<0) RET=RET+' class="xy"';
-//M=['üü'];
   return M;
   }
   </script>
@@ -192,7 +190,7 @@ for (let r=0;r<m;r++) {let s=r;
 <p>Ein Programm zu <a href="https:" target="_blank">???</a></p>
 
 <div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
-<textarea id="input" cols="40" rows="10" >Ausgangsmatrix=[ 
+<textarea id="input" cols="80" rows="10" >Ausgangsmatrix=[ 
   [  4, -1,  0,  0,  0,  0,  0, -1 ],
   [ -1,  4, -1,  0,  0,  0,  0,  0 ],
   [  0, -1,  4, -1,  0,  0,  0,  0 ],
@@ -206,10 +204,21 @@ for (let r=0;r<m;r++) {let s=r;
 gemeinsamer_Nenner=1;
 
 Ausgangsmatrix2=[ 
-  [     1,  2,  4,  1,  1 ],
-  [     4, -1, -3,  0, -1 ],
-  [     3, -2, -1,  0,  0 ],
-  [     3,  0, -1, -4, -1 ] ] ;
+  [  1,  2,  4,  1,  1 ],
+  [  4, -1, -3,  0, -1 ],
+  [  3, -2, -1,  0,  0 ],
+  [  3,  0, -1, -4, -1 ] ] ;
+
+Ausgangsmatrix=[ 
+  [  1,  2,  4,  1,  1,  4,  3,  7,  8 ],
+  [  4, -1, -3,  1, -1, -2,  5,  1,  9 ],
+  [  3, -2, -1,  2,  4,  4, -8, -1,  7 ],
+  [  2,  2,  4,  5,  1,  4,  3,  5,  8 ],
+  [  4, -4, -3,  1, -2, -2,  7,  1,  7 ],
+  [  3, -2, -3,  2,  3,  6, -8, -1,  2 ],
+  [  1, -4, -2,  1, -3, -2,  6,  1,  8 ],
+  [  3, -1, -3,  4,  3,  5, -8, -7,  2 ],
+  [  3,  2, -1, -4, -1,  6,  2,  5,  2 ] ] ;
 
 /*
 tausche(0,0);
@@ -240,6 +249,20 @@ starte_Pivotverfahren();
 <button onclick="for (var w=0;w<100;w++) if (p[2]>0 & p[3]>0) t(p[2],p[3])">100*weiter</button>
 <button onclick="p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
 
+<style>
+table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray}
+tbod {}
+sub {white-space:nowrap}
+sup {white-space:nowrap}
+mat,.mat,det,.det {font-family:Courier Monospace; font-style:italic; display:inline-flex; align-items:center; padding:3px; border-radius:0px; margin:0px; white-space:nowrap; width:min-content; color:gray}
+det,.det {border-left:solid 1px; border-right:solid 1px}
+det:before {content:""}
+co {display:inline-flex; flex-direction:column; font-size:100%; line-height:100%}
+su {font-size:75%}
+sub {font-size:75%}
+sup {padding-left:2px; font-size:75%} /* wegen dem kursiven f<sup>g</sup>*/ 
+var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gray; white-space:pre}
+</style>
 <div id="HCode"> </div>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
   <div>
