@@ -60,6 +60,7 @@ function handleNotifications2(event) {//alert(event);
   
 function handleNotifications3(event) {
   let value = event.target.value;
+  Liste3.push([Date.now(),value]);
 //  let a = [Date.now()];
   // Convert raw data bytes to hex values just for the sake of showing something.
   // In the "real" world, you_d use data.getUint8, data.getUint16 or even
@@ -1034,6 +1035,28 @@ function Robi_sound(sound) {
   }
   </script>
 
+<script>
+let Aufnahme=[];
+function Aufnahme_starten() {
+  Liste3=[];
+  alert('gestartet');
+  }
+
+function Aufnahme_anhalten() {
+//  alert(structuredClone);
+//  alert(structuredClone({x:Liste3}));
+//  Aufnahme=structuredClone(Liste3);
+  Aufnahme=structuredClone(Liste3);
+  alert(Aufnahme.join('\n'));
+  }
+
+function Aufnahme_abspielen() {
+  let t0=Aufnahme[0][0];
+  for (let i=0;i<Aufnahme.length;i++) setTimeout(handleNotifications3,Aufnahme[i][0]-t0,{target:{value:Aufnahme[i][1]}});
+  //alert('abspielen gestartet mit Aufnahme.length='+Aufnahme.length);
+  }
+  </script>
+
 </head>
 <body onload="Test()">
 <style>.device_request {font-size:300%}</style>
@@ -1041,6 +1064,11 @@ function Robi_sound(sound) {
 <span><button id='button_Robi' class='device_request' onclick='device_request("Robi")'>Robi</button></span>
 <span><button id='button_Dot' class='device_request' onclick='device_request("Dot")'>&nbsp;Dot&nbsp;</button></span>
 <span><button id='button_Robi_' class='sound' onclick='Robi_sound(NOISES.hi)'>Robi hi</button></span>
+Aufnahme
+<span><button id='button_Aufnahme_starten' class='sound' onclick='Aufnahme_starten()'>Aufnahme starten</button></span>,
+<span><button id='button_Aufnahme_anhalten' class='sound' onclick='Aufnahme_anhalten()'>anhalten</button></span>,
+<span><button id='button_Aufnahme_abspielen' class='sound' onclick='Aufnahme_abspielen()'>abspielen</button></span>.
+
 <div><span><button id='button_b_400_0' onclick='log(DASH.value2);
   DASH.value2.setUint8(0,0x000b);log(DASH.value2);
   DASH.value2.setUint8(1,400);log(DASH.value2);
