@@ -104,6 +104,9 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
+  let signd=1;
+  let signx=1;
+  if (determ!=Nenner) signd=-1;
   Yi=U.slice();Xj=V.slice();
   T=T+"<tr>"+"<td>"+Nenner+'<sub><sub>'+determ+'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+"</sub></sub></td>";
   for (var j=0;j<n;j++) {
@@ -116,16 +119,32 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
     if (B[i]<0) T=T+"<td>y<sub>"+(-1-B[i])+"</sub></td>"; 
       else T=T+"<td>x<sub>"+(B[i])+"</sub></td>";
     for (var j=0;j<n;j++) {
+      signx=1;
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
         else T=T+"<td";Yi=U.slice();Xj=V.slice();
-      if (B[i]<0&&D[j]>=0)  {T=T+' class="yx"'; Xj.push(D[j]); Xj.sort(); Yi.push(-1-B[i]); Yi.sort()}
+      if (B[i]<0&&D[j]>=0)  {
+        T=T+' class="yx"';
+        Xj.push(D[j]); Xj.sort();
+        Yi.push(-1-B[i]); Yi.sort();
+        signx=(-1)**(Yi.indexOf(-1-B[i])+Xj.indexOf(D[j]));
+        }
       if (B[i]>=0&&D[j]>=0) {
         T=T+' class="xx"';
-        Xj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]); Xj.push(D[j]);Xj.sort();
+        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]); Xj.push(D[j]); Xj.sort();
+        signx=(-1)**(Xj.indexOf(D[j])+V.indexOf(B[i]))*(-1);
         }
-      if (B[i]<0&&D[j]<0){T=T+' class="yy"';Yi=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Yi.push(U[p]);Yi.push(-1-B[i]);Yi.sort()}
-      if (B[i]>=0&&D[j]<0)  {T=T+' class="xy"';Yi=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Yi.push(U[p]);Xj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]);}
-      determ=det(AUV(Yi,Xj));
+      if (B[i]<0&&D[j]<0){
+        T=T+' class="yy"';
+        Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=-1-D[j]) Yi.push(U[p]); Yi.push(-1-B[i]); Yi.sort();
+        signx=(-1)**(Yi.indexOf(-1-B[i])+U.indexOf(-1-D[j]));
+        }
+      if (B[i]>=0&&D[j]<0)  {
+        T=T+' class="xy"';
+        Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=-1-D[j]) Yi.push(U[p]);
+        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Xj.push(V[p]);
+        signx=(-1)**(V.indexOf(B[i])+U.indexOf(-1-D[j]));
+        }
+      determ=signd*signx*det(AUV(Yi,Xj));
       if (determ!=Ausgangsmatrix[i][j]) T=T+' style="border:solid red 5px"';
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
