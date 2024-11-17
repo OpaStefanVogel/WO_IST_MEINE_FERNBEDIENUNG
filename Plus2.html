@@ -188,6 +188,7 @@ function det(Ausgangsmatrix) {
   //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   let m=Ausgangsmatrix.length;
   if (m==0) return 1;
+  return Math.round(determinantOfMatrixIterative(Ausgangsmatrix,m));
   let n=Ausgangsmatrix[0].length;
   //alert(m+" "+n);
 for (let r=0;r<m;r++) {let s=r;
@@ -212,6 +213,64 @@ for (let r=0;r<m;r++) {let s=r;
   }
   return gemeinsamer_Nenner;
   }
+  </script>
+
+<script>//https://www.geeksforgeeks.org/javascript-program-to-find-the-determinant-of-a-matrix/
+
+// N is the order of the matrix
+const N = 3;
+
+function determinantOfMatrixIterative(mat, n) {
+	let det = 1;
+	let total = 1;
+	const temp = Array(n).fill(0);
+	for (let i = 0; i < n; i++) {
+		let index = i;
+		while (index < n && mat[index][i] === 0) {
+			index++;
+		}
+		if (index === n) {
+			continue;
+		}
+		if (index !== i) {
+			for (let j = 0; j < n; j++) {
+				[mat[i][j], mat[index][j]] = 
+				[mat[index][j], mat[i][j]];
+			}
+			det *= Math.pow(-1, index - i);
+		}
+		for (let j = 0; j < n; j++) {
+			temp[j] = mat[i][j];
+		}
+		for (let j = i + 1; j < n; j++) {
+			const num1 = temp[i];
+			const num2 = mat[j][i];
+			for (let k = 0; k < n; k++) {
+				mat[j][k] = 
+					num1 * mat[j][k] - 
+					num2 * temp[k];
+			}
+			total *= num1;
+		}
+	}
+	for (let i = 0; i < n; i++) {
+		det *= mat[i][i];
+	}
+	return det / total;
+}
+
+const mat = [
+	[8, 1, 2],
+	[2, 1, 4],
+	[1, 0, 5]
+];
+//console.log(
+//	"Determinant of the matrix is:", 
+//	determinantOfMatrixIterative(mat, N));
+
+
+//alert(determinantOfMatrixIterative(mat, N));
+
   </script>
 <body onload="Los()">
 <p>Ein Programm zu <a href="https:" target="_blank">???</a></p>
