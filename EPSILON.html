@@ -33,7 +33,7 @@ let sign=1;
 let signarray=[];
 
 function NumberOrBigInt(x) { return Number(x)}
-NumberOrBigInt=BigInt;
+//NumberOrBigInt=BigInt;
 function Los() {
   //alert(document.getElementById("input").value);
   eval(document.getElementById("input").value);
@@ -75,6 +75,12 @@ function tausche(r,s) {//alert('tausche '+r+' '+s);
     }
   Ausgangsmatrix=neueMatrix;
   gemeinsamer_Nenner=neuerNenner*sign;
+  
+  if ((typeof gemeinsamer_Nenner)=='number') {
+    for (let i=0;i<m;i++) for (let j=0;j<n;j++) Ausgangsmatrix[i][j]=Ausgangsmatrix[i][j]/gemeinsamer_Nenner;
+    gemeinsamer_Nenner=1;
+    }
+  
   //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   }
 
@@ -471,6 +477,8 @@ var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gra
   </div>
 <div id="Logfile2" style="white-space:pre; font-family:Courier,Monospace; font-size:10%">
   </div>
+<div id="Logfile5" style="white-space:pre; font-family:Courier,Monospace; font-size:10%; overflow:auto;">
+  </div>
 <div id="Ausgabe">
   </div>
 <svg id='dat' style='border:double; width:1000px; height:1000px; stroke:blue; fill:none'>
@@ -507,10 +515,45 @@ for (let i=1;i<NN-1;i++) {
     if (AA[i][j]==2) {
       A4[i][j]=A3.length;
       A3.push([i,j]);
-      }
+      } else A4[i][j]=-1;
     }
   }
 Logfile2.innerHTML=A4.join('\n');
+
+let A5=[];
+let e0=1;
+let e1=2;
+let i=0;
+let j=0;
+signarray=[];
+for (let i=0;i<A3.length;i++) {
+  A5[i]=[];signarray[i]=[];
+  for (let j=0;j<A3.length;j++) {
+    A5[i][j]=0;signarray[i][j]=NumberOrBigInt(1);
+    }
+  }
+for (let t=0;t<A3.length;t++) {
+  [i,j]=A3[t];
+  g=A4[i-1][j];
+  h=A4[i][j-1];
+  k=A4[i+1][j];
+  l=A4[i][j+1];//alert([t,i,j,g,h,k,l]);
+  /*t,g*/ if (i-1<j) {A5[t][t]=A5[t][t]+e1; if (g>-1) A5[t][g]=A5[t][g]-e1} else {A5[t][t]=A5[t][t]+e0; if (g>-1) A5[t][g]=A5[t][g]-e0}
+  /*t,h*/ if (i-0<j) {A5[t][t]=A5[t][t]+e1; if (h>-1) A5[t][h]=A5[t][h]-e1} else {A5[t][t]=A5[t][t]+e0; if (h>-1) A5[t][h]=A5[t][h]-e0}
+  /*t,k*/ if (i-0<j) {A5[t][t]=A5[t][t]+e1; if (k>-1) A5[t][k]=A5[t][k]-e1} else {A5[t][t]=A5[t][t]+e0; if (k>-1) A5[t][k]=A5[t][k]-e0}
+  /*t,l*/ if (i-1<j) {A5[t][t]=A5[t][t]+e1; if (l>-1) A5[t][l]=A5[t][l]-e1} else {A5[t][t]=A5[t][t]+e0; if (l>-1) A5[t][l]=A5[t][l]-e0}
+  }
+Logfile5.innerHTML=A5.slice(0,20).join('\n');
+
+Ausgangsmatrix=A5;
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;alert([m,n]);
+  gemeinsamer_Nenner=NumberOrBigInt(gemeinsamer_Nenner);
+  for (let i=0;i<m;i++) for (let j=0;j<n;j++) Ausgangsmatrix[i][j]=NumberOrBigInt(Ausgangsmatrix[i][j]);
+alert((typeof gemeinsamer_Nenner)+'\n'+gemeinsamer_Nenner+'\n'+Ausgangsmatrix[0].slice(0,10));
+//tausche(0,0);
+for (let t=0;t<A3.length;t++) tausche(t,t);
+alert((typeof gemeinsamer_Nenner)+'\n'+gemeinsamer_Nenner+'\n'+Ausgangsmatrix[0].slice(0,10));
 
   </script>
   </body>
