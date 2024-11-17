@@ -437,6 +437,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     RET=RET+RET2;
     RET=RET+'<div>In {'+U+'}&setminus;{'+g+'}=<span class="pyy">{'+Ffert+'}</span> nimmt Index g='+g+' beim Sortieren vor dem Entfernen die Indexposition J(g)='+Jg+' ein (beginnend bei 0 gezählt).</div>';
     RET=RET+'<div>In {'+V+'}&setminus;{'+h+'}=<span class="pxx">{'+Xfert+'}</span> nimmt Index h='+h+' beim Sortieren vor dem Entfernen die Indexposition J(h)='+Jh+' ein (beginnend bei 0 gezählt).</div>';
+    RET=RET+'<div>J(g)+J(h) ist ';
+    if ((Jg+Jh)%2) RET=RET+'ungerade, also '; else RET=RET+'gerade, also kein '; 
+    RET=RET+'zusätzlicher Vorzeichenwechsel bei der Determinante.</div>';
     }
   if (td_class=='yy') {
     g=-1-D[j];
@@ -451,6 +454,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     RET=RET+RET2;
     RET=RET+'<div>In {'+U+'}&setminus;{'+g+'} nimmt Index g='+g+' beim Sortieren vor dem Entfernen die Indexposition J(g)='+Jg+' ein (beginnend bei 0 gezählt).</div>';
     RET=RET+'<div>In {'+U+'}&setminus;{'+g+'}&cup;{'+k+'}=<span class="pyy">{'+Ffert+'}</span> nimmt Index k='+k+' nach dem Hinzufügen beim Sortieren die Indexposition J(k)='+Jk+' ein (beginnend bei 0 gezählt).</div>';
+    RET=RET+'<div>J(g)+J(k) ist ';
+    if ((Jg+Jk)%2) RET=RET+'ungerade, also '; else RET=RET+'gerade, also kein '; 
+    RET=RET+'zusätzlicher Vorzeichenwechsel bei der Determinante.</div>';
     }
   if (td_class=='xx') {
     l=D[j];
@@ -467,6 +473,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     let zwischen=V.slice(); zwischen.push(l); zwischen.sort();
     RET=RET+'<div>In {'+V+'}&cup;{'+l+'}=<span class="pyx">{'+zwischen+'}</span> nimmt Index &ell;='+l+' nach dem Hinzufügen beim Sortieren die Indexposition J(&ell;)='+Jl+' ein (beginnend bei 0 gezählt).</div>';
     RET=RET+'<div>In {'+V+'}&cup;{'+l+'}&setminus;{'+h+'}=<span class="pxx">{'+Xfert+'}</span> nimmt Index h='+h+' beim Sortieren vor dem Entfernen die Indexposition J(h)='+Jh+' ein (beginnend bei 0 gezählt).</div>';
+    RET=RET+'<div>J(&ell;)+J(h) ist ';
+    if ((Jl+Jh)%2) RET=RET+'ungerade, also '; else RET=RET+'gerade, also kein '; 
+    RET=RET+'zusätzlicher Vorzeichenwechsel bei der Determinante.</div>';
     }
   if (td_class=='yx') {
     l=D[j];
@@ -481,13 +490,16 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     RET=RET+RET2;
     RET=RET+'<div>In {'+U+'}&cup;{'+k+'}=<span class="pyy">{'+Ffert+'}</span> nimmt Index k='+k+' nach dem Hinzufügen beim Sortieren die Indexposition J(k)='+Jk+' ein (beginnend bei 0 gezählt).</div>';
     RET=RET+'<div>In {'+V+'}&cup;{'+l+'}=<span class="pxx">{'+Xfert+'}</span> nimmt Index &ell;='+l+' nach dem Hinzufügen beim Sortieren die Indexposition J(&ell;)='+Jl+' ein (beginnend bei 0 gezählt).</div>';
+    RET=RET+'<div>J(&ell;)+J(k) ist ';
+    if ((Jl+Jk)%2) RET=RET+'ungerade, also '; else RET=RET+'gerade, also kein '; 
+    RET=RET+'zusätzlicher Vorzeichenwechsel bei der Determinante.</div>';
     }
   RET=RET+'<div>Aus <var>A</var> werden alle Zeilen herausgestrichen außer die Zeilen <span class="';
   if (td_class=='xx'||td_class==0) RET=RET+'yy'; else RET=RET+'pyy';  
   RET=RET+'">{'+Ffert+'}</span>.</div>';
   RET=RET+'<div>Aus <var>A</var> werden alle Spalten herausgestrichen außer die Spalten <span class="';
   if (td_class=='yy'||td_class==0) RET=RET+'xx'; else RET=RET+'pxx';
-  RET=RET+'">{'+Xfert+'}</span>.</div>';  
+  RET=RET+'">{'+Xfert+'}</span>.</div>';
   RET=RET+'<div>Es bleiben die Matrixeinträge auf <span class="xy">hellgrauem</span> Hintergrund übrig.</div>';
   RET=RET+'<div style="display:flex; align-items:center"><span style="min-width:100px"><det>A<co><su><span class="';
   if (td_class=='xx'||td_class==0) RET=RET+'yy'; else RET=RET+'pyy';
