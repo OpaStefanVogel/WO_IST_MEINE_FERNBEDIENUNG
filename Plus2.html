@@ -114,7 +114,7 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 
 let Checkbit_Nenner=false;
 let td_class="";
-let XiMat=[];
+let XjMat=[];
 let YiMat=[];
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
@@ -140,12 +140,12 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       }
   T=T+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
   T=T+'</tr-'+'->\n';
-  XiMat=[];
+  XjMat=[];
   YiMat=[];
   for (var i=0;i<m;i++) {
     signarray[i]=[];
     T=T+'<tr>';
-    XiMat[i]=[];
+    XjMat[i]=[];
     YiMat[i]=[];
     for (var j=0;j<n;j++) {
       signx=1;
@@ -180,7 +180,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
         signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
-      XiMat[i][j]=Xj;
+      XjMat[i][j]=Xj;
       YiMat[i][j]=Yi;
       signarray[i][j]=BigInt(signx);
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
@@ -192,7 +192,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" visibility:hidden; ";
       //alert(sty);
-      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J('+i+','+j+')">';
+      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J('+i+','+j+',\''+td_class+'\')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
       T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'</td>';
       T=T+'<td class="'+td_class+'" style="'+sty+'" onclick="t('+i+","+j+')">';
@@ -386,9 +386,19 @@ function zufaellig_weiter() {
   </script>
   
 <script>
-function Berechnung_Koeffizient_aus_J(i,j) {
-  Ausgabe_Koeffizient.innerHTML=[XiMat[i][j],'<br>',YiMat[i][j],'<br>U=',U,'<br>V=',V];
-  if (j==-1) Ausgabe_Koeffizient.innerHTML=det(AUV(U,V));
+function Berechnung_Koeffizient_aus_J(i,j,td_class) {
+  let RET='';
+  if (j==-1) {Ausgabe_Koeffizient.innerHTML=det(AUV(U,V));return}
+  if (td_class=='xy') {
+    g=-1-D[j];
+    h=B[i];
+    let Jg=U.indexOf(g);
+    let Jh=V.indexOf(h);
+    let detA=det(AUV(YiMat[i][j],XjMat[i][j]));
+    RET='<var><mat><op>J</op><co><su>F<mg/></su><su>X<mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F<mg/></su><su>X<mh/></su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jh+'</sup> · <det>A<co><su>{'+U+'}&setminus;{'+g+'}</su><su>{'+V+'}&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jg+Jh)+'</sup> · '+detA+' = '+(BigInt((-1)**(Jg+Jh))*detA)+'</var>';
+    }
+  RET=RET+'<br>'+[i,j,B[i],D[j],td_class,'<br>F-+=',YiMat[i][j],'<br>X+-=',XjMat[i][j],'<br>F=',U,'<br>X=',V,'<br>det',det(AUV(YiMat[i][j],XjMat[i][j]))];
+  Ausgabe_Koeffizient.innerHTML=RET;
   }
   </script>
 <body onload="Los()">
@@ -415,19 +425,57 @@ function Berechnung_Koeffizient_aus_J(i,j) {
 <input id="Checkbox_Nenner" type="checkbox"/> gemeinsamer Nenner immer positiv
 
 <style>
-table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:}
-tbod {}
+/*Schrift: Die Aufmerksamkeit soll anfangs auf dem fortlaufenden Text liegen, die Gleichungen etwas unauffälliger.*/
+mat, det, var, gl, wable {font-family:Courier momospace; font-style:italic; font-size:1.15rem; color:SlateGray} /*Anfangswert war Gray*/
+/*font-family ist wohl nicht verstellbar.*/
+/*1.15rem statt 1.15em ist eine Notlösung, weil det manchmal in var enthalten ist*/
+
+/*Schriftgröße der Indizes: maximal soviel, dass Gleichungen 62 bis 65 komplett sichtbar sind ohne Umschaltung auf Scrollbalken*/
+su, sub, sup {font-size:85%} /*Anfangswert war 75%*/
+
+/*weitere Gestaltung*/
 sub {white-space:nowrap}
-sup {white-space:nowrap}
-mat,.mat,det,.det {font-family:Courier Monospace; font-style:italic; display:inline-flex; align-items:center; padding:3px; border-radius:0px; margin:0px; white-space:nowrap; width:min-content; color:gray}
-det,.det {border-left:solid 1px; border-right:solid 1px}
-det:before {content:""}
-co {display:inline-flex; flex-direction:column; font-size:100%; line-height:100%}
-su {font-size:75%}
-sub {font-size:75%}
-sup {padding-left:2px; font-size:75%} /* wegen dem kursiven f<sup>g</sup>*/ 
-var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gray; white-space:pre}
-</style>
+sup {white-space:nowrap; padding-left:2px} /* padding-left wegen dem kursiven f in f<sup>g</sup>*/ 
+mat,det {display:inline-flex; align-items:center; padding:2px; border-radius:0px; margin:0px; white-space:nowrap}
+det {border-left:solid 1px; border-right:solid 1px; margin:2px}
+co {display:inline-flex; flex-direction:column}
+su {display:table-cell; line-height:100%}
+var {white-space:pre}
+
+pg:before {content:"∪{g}"; color:DarkGreen}
+ph:before {content:"∪{h}"; color:brown}
+pk:before {content:"∪{k}"; color:orange}
+pl:before {content:"∪{ℓ}"; color:DarkSlateGray}
+pp:before {content:"∪{p}"; color:DarkBlue}
+pq:before {content:"∪{q}"; color:DeepSkyBlue}
+pr:before {content:"∪{r}"; color:red} /*<span style="color:red">&cup;{r}</span> g h k l p q r s*/
+ps:before {content:"∪{s}"; color:violet}
+
+mg:before {content:"∖{g}"; color:DarkGreen}
+mh:before {content:"∖{h}"; color:brown}
+mk:before {content:"∖{k}"; color:orange}
+ml:before {content:"∖{ℓ}"; color:DarkSlateGray}
+mp:before {content:"∖{p}"; color:DarkBlue}
+mq:before {content:"∖{q}"; color:DeepSkyBlue}
+mr:before {content:"∖{r}"; color:red}
+ms:before {content:"∖{s}"; color:violet}
+
+op {font-style:normal}
+
+gl {display:inline-block; border:solid 1px; border-radius:20px; padding:1px; padding-right: 2px; background-color:snow; width:1.7em; width:1lh; text-align:center} /* 1lh geht nicht überall, deshalb vorher 1.7em*/
+
+whr {display:block; height:2lh; background-image:linear-gradient(white, LightGray 0.1lh);}
+
+wable {display:table; border-collapse:separate; border-spacing:2px; }
+wbody {display:table-row-group;}
+wr {display:table-row;}
+wd {display:table-cell;white-space:nowrap; padding:1px; borderx:solid pink 1px}
+
+bem {display:none; color:green}
+
+/* Fahrrad auch so groß wie die Schrift für die Gleichungen*/
+#Abschnitt_2, #Abschnitt_3, #Abschnitt_4, #Abschnitt_5, #Abschnitt_6, #Abschnitt_7, #Abschnitt_8, #Abschnitt_9, #Abschnitt_10, #Abschnitt_11, #Abschnitt_12, #Abschnitt_13, #Abschnitt_14, #Abschnitt_15, #Abschnitt_16 {font-size:1.15rem} 
+  </style>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
 <div id="Ausgabe_Koeffizient">
   </div>
