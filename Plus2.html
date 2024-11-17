@@ -3,7 +3,8 @@
 <title>Plus2.html</title>
 <meta charset="utf-8"/>
 <style>
-  td {text-align:right; min-width:100;font-size:30%}
+  td {text-align:right; font-size:30%; white-space:nowrap}
+  .td {min-width:70}
   .yx {background-color:white}
   .xy {background-color:Gainsboro}
   .xx {background-color:LavenderBlush}
@@ -112,6 +113,7 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   }
 
 let Checkbit_Nenner=false;
+let td_class="";
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
@@ -119,7 +121,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
     Checkbit_Nenner=true;
     }
 
-  var T='<table style="font-style:italic;font-size:300%; box-sizing: border-box" border="0">\n';
+  var T='<div style="display:flex; overflow:auto"><table style="font-style:italic;font-size:300%; box-sizing: border-box" border="0">\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
@@ -128,14 +130,14 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   signarray=[];
   if (determ!=Nenner) signd=-1n;
   Yi=U.slice();Xj=V.slice();
-  T=T+"<!--tr>";
+  T=T+"<!-"+"-tr>";
   for (var j=0;j<n;j++) {
       T=T+"<td>";
       if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
         else T=T+"y<sub>"+(-1-D[j])+"</sub></td>";
       }
   T=T+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
-  T=T+'</tr-->\n';
+  T=T+'</tr-'+'->\n';
   for (var i=0;i<m;i++) {
     signarray[i]=[];
     T=T+'<tr>';
@@ -146,26 +148,26 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       Yi=U.slice();Xj=V.slice();
       T=T+'<td ';
       if (B[i]<0&&D[j]>=0) {
-        T=T+'class="yx"';
+        td_class="yx";
         k=-1-B[i]; l=D[j];
         Xj.push(l); Xj.sort();
         Yi.push(k); Yi.sort();
         signx=(-1)**(Yi.indexOf(k)+Xj.indexOf(l));
         }
       if (B[i]>=0&&D[j]>=0) {
-        T=T+' class="xx"';
+        td_class="xx";
         h=B[i]; l=D[j];
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]); Xj.push(l); Xj.sort();
         signx=(-1)**(Xj.indexOf(l)+V.indexOf(h))*(-1);
         }
       if (B[i]<0&&D[j]<0) {
-        T=T+' class="yy"';
+        td_class="yy";
         k=-1-B[i]; g=-1-D[j];
         Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=g) Yi.push(U[p]); Yi.push(k); Yi.sort();
         signx=(-1)**(Yi.indexOf(k)+U.indexOf(g));
         }
       if (B[i]>=0&&D[j]<0) {
-        T=T+' class="xy"';
+        td_class="xy";
         h=B[i]; g=-1-D[j];
         Yi=[]; for(let p=0;p<U.length;p++) if (U[p]!=g) Yi.push(U[p]);
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
@@ -181,14 +183,15 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" visibility:hidden; ";
       //alert(sty);
-      T=T+' style="'+sty+'" onclick="t('+i+","+j+')">';
+      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J(['+i+','+j+'])">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'·';
-      if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub>"; 
-        else T=T+"y<sub>"+(-1-D[j])+"</sub>";      
+      T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'</td>';
+      T=T+'<td class="'+td_class+'" onclick="t('+i+","+j+')">';
+      if (D[j]>=0) T=T+"· x<sub>"+D[j]+"</sub>"; 
+        else T=T+"· y<sub>"+(-1-D[j])+"</sub>";      
       T=T+"</td>";
       }
-    T=T+"<td>="+Nenner+'·';
+    T=T+'<td>=</td><td class="td">'+Nenner+'</td><td>·</td><td>';
     if (B[i]<0) T=T+"y<sub>"+(-1-B[i])+"</sub></td>"; 
       else T=T+"x<sub>"+(B[i])+"</sub></td>";
     T=T+"</tr>\n";
@@ -196,7 +199,8 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 //  T=T+Ausgangsmatrix.join("],\n  [")+"] ] / "
 //    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
 //    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
-  T=T+"</table>";
+  T=T+"</table></div>";
+
   //alert(T);
   if (Checkbit_Nenner) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
@@ -371,8 +375,14 @@ function zufaellig_weiter() {
   if (err==false) handle=setTimeout(zufaellig_weiter,1000);
   }
   </script>
+  
+<script>
+function Berechnung_Koeffizient_aus_J(i,j) {
+  alert(i,j);
+  }
+  </script>
 <body onload="Los()">
-<p>Testprogramm zu <a href="https://matheplanet.de/matheplanet/nuke/html/article.php?sid=2976" target="_blank">Gleichungen umstellen mit Sylvester&rsquo;s determinant identity</a></p>
+<p>Testprogramm zu <a href="https://matheplanet.de/matheplanet/nuke/html/article.php?sid=2012" target="_blank">Gleichungen umstellen mit Sylvester&rsquo;s determinant identity</a></p>
 
 <p>Ein Klick auf eine Variable links vom Gleichheitszeichen tauscht diese mit der Variable rechts vom Gleichheitszeichen.</p>
 
@@ -392,7 +402,7 @@ function zufaellig_weiter() {
 <button onclick="err=false;zufaellig_weiter()">zufällig weiter</button>
 <button onclick="clearTimeout(handle)">anhalten</button>
 <button onclick="clearTimeout(handle); p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
-<input id="Checkbox_Nenner" type="checkbox" checked="checked"/> gemeinsamer Nenner immer positiv
+<input id="Checkbox_Nenner" type="checkbox"/> gemeinsamer Nenner immer positiv
 
 <style>
 table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:}
