@@ -129,7 +129,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
     Checkbit_Nenner=true;
     }
 
-  var T='<div style="display:flex; overflow:auto"><table style="font-style:italic;font-size:300%; box-sizing: border-box" border="0">\n';
+  var T='<div style="display:flex; overflow:auto"><table style="font-size:300%; box-sizing: border-box" border="0">\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
@@ -399,9 +399,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
   let detA=0;
   if (j==-1) {
     detA=det(AUV(U,V));
-    let stimmt='stimmt überein mit <i>'+gemeinsamer_Nenner+'</i> vom Zeilenanfang.';
+    let stimmt='stimmt überein mit '+gemeinsamer_Nenner+' vom Zeilenanfang.';
     if (detA!=gemeinsamer_Nenner) {stimmt='ERROR, keine Übereinstimmung mit Zeilenanfang'; alert(stimmt)}
-    RET='<div style="white-space:nowrap; overflow:auto"><span style="border:solid blue; padding:3px"><i>'+gemeinsamer_Nenner+'</i></span>: <var><mat><op>J</op><co><su>F</su><su>X</su></co></mat> = <det>A<co><su>F</su><su>X</su></co></det> = <det>A<co><su><span class="yy">{'+U+'}</span></su><su><span class="xx">{'+V+'}</span></su></co></det> = '+detA+'</var>,  '+stimmt+'</div>';
+    RET='<div style="white-space:nowrap; overflow:auto"><span style="border:solid blue; padding:3px">… = '+gemeinsamer_Nenner+' …</span>: <var><mat><op>J</op><co><su>F</su><su>X</su></co></mat> = <det>A<co><su>F</su><su>X</su></co></det> = <det>A<co><su><span class="yy">{'+U+'}</span></su><su><span class="xx">{'+V+'}</span></su></co></det> = '+detA+'</var>,  '+stimmt+'</div>';
     Ffert=U.slice();
     Xfert=V.slice();
     } else {Ffert=YiMat[i][j].slice(); Xfert=XjMat[i][j].slice()}
@@ -413,9 +413,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     let Jh=V.indexOf(h);
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jg+Jh));
-    let stimmt='stimmt überein mit <i>'+Ausgangsmatrix[i][j]+'</i> vom Zeilenanfang.';
+    let stimmt='stimmt überein mit '+Ausgangsmatrix[i][j]+' vom Zeilenanfang.';
     if (Vorzeichen*detA!=Ausgangsmatrix[i][j]) {stimmt='ERROR, keine Übereinstimmung mit Zeilenanfang'; alert(stimmt)}
-    RET='<div style="white-space:nowrap; overflow:auto"><span class="xy" style="border:solid blue; padding:3px"><i>'+Ausgangsmatrix[i][j]+' · f<sup>'+g+'</sup> … = … x<sub>'+h+'</sub></i></span>: <var><mat><op>J</op><co><su>F<mg/></su><su>X<mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F<mg/></su><su>X<mh/></su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jh+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&setminus;{'+g+'}</su><su><span class="xx">{'+V+'}</span>&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jg+Jh)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
+    RET='<div style="white-space:nowrap; overflow:auto"><span class="xy" style="border:solid blue; padding:3px">'+Ausgangsmatrix[i][j]+' · f<sup>'+g+'</sup> … = … x<sub>'+h+'</sub></span>: <var><mat><op>J</op><co><su>F<mg/></su><su>X<mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F<mg/></su><su>X<mh/></su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jh+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&setminus;{'+g+'}</su><su><span class="xx">{'+V+'}</span>&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jg+Jh)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
     }
   if (td_class=='yy') {
     g=-1-D[j];
@@ -424,9 +424,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     let Jk=YiMat[i][j].indexOf(k);
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jg+Jk));
-    let stimmt='stimmt überein mit <i>'+Ausgangsmatrix[i][j]+'</i> vom Zeilenanfang.';
+    let stimmt='stimmt überein mit '+Ausgangsmatrix[i][j]+' vom Zeilenanfang.';
     if (Vorzeichen*detA!=Ausgangsmatrix[i][j]) {stimmt='ERROR, keine Übereinstimmung mit Zeilenanfang'; alert(stimmt)}
-    RET='<div style="white-space:nowrap; overflow:auto"><span class="yy" style="border:solid blue; padding:3px"><i>'+Ausgangsmatrix[i][j]+' · f<sup>'+g+'</sup> … = … f<sup>'+k+'</sup></i></span>: <var><mat><op>J</op><co><su>F<mg/><pk/></su><su>X</su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:orange">J(k)</span></sup> · <det>A<co><su>F<mg/><pk/></su><su>X</su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jk+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&setminus;{'+g+'}&cup;{'+k+'}</su><su><span class="xx">{'+V+'}</span></su></co></det> = (&minus;1)<sup>'+(Jg+Jk)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="xx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
+    RET='<div style="white-space:nowrap; overflow:auto"><span class="yy" style="border:solid blue; padding:3px">'+Ausgangsmatrix[i][j]+' · f<sup>'+g+'</sup> … = … f<sup>'+k+'</sup></span>: <var><mat><op>J</op><co><su>F<mg/><pk/></su><su>X</su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:orange">J(k)</span></sup> · <det>A<co><su>F<mg/><pk/></su><su>X</su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jk+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&setminus;{'+g+'}&cup;{'+k+'}</su><su><span class="xx">{'+V+'}</span></su></co></det> = (&minus;1)<sup>'+(Jg+Jk)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="xx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
     }
   if (td_class=='xx') {
     l=D[j];
@@ -436,9 +436,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     let Jh=Xjmerk.indexOf(h);
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jl+Jh));
-    let stimmt='stimmt überein mit <i>'+Ausgangsmatrix[i][j]+'</i> vom Zeilenanfang.';
+    let stimmt='stimmt überein mit '+Ausgangsmatrix[i][j]+' vom Zeilenanfang.';
     if (Vorzeichen*detA!=Ausgangsmatrix[i][j]) {stimmt='ERROR, keine Übereinstimmung mit Zeilenanfang'; alert(stimmt)}
-    RET='<div style="white-space:nowrap; overflow:auto"><span class="xx" style="border:solid blue; padding:3px"><i>'+Ausgangsmatrix[i][j]+' · x<sub>'+l+'</sub> … = … x<sub>'+h+'</sub></i></span>: <var><mat><op>J</op><co><su>F</su><su>X<pl/><mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkSlateGray">J(&ell;)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F</su><su>X<pl/><mh/></su></co></det> = (&minus;1)<sup>'+Jl+'+'+Jh+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span></su><su><span class="xx">{'+V+'}</span>&cup;{'+l+'}&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jl+Jh)+'</sup> · <det>A<co><su><span class="yy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
+    RET='<div style="white-space:nowrap; overflow:auto"><span class="xx" style="border:solid blue; padding:3px">'+Ausgangsmatrix[i][j]+' · x<sub>'+l+'</sub> … = … x<sub>'+h+'</sub></span>: <var><mat><op>J</op><co><su>F</su><su>X<pl/><mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkSlateGray">J(&ell;)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F</su><su>X<pl/><mh/></su></co></det> = (&minus;1)<sup>'+Jl+'+'+Jh+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span></su><su><span class="xx">{'+V+'}</span>&cup;{'+l+'}&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jl+Jh)+'</sup> · <det>A<co><su><span class="yy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
     }
   if (td_class=='yx') {
     l=D[j];
@@ -447,9 +447,9 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     let Jk=YiMat[i][j].indexOf(k);
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jl+Jk));
-    let stimmt='stimmt überein mit <i>'+Ausgangsmatrix[i][j]+'</i> vom Zeilenanfang.';
+    let stimmt='stimmt überein mit '+Ausgangsmatrix[i][j]+' vom Zeilenanfang.';
     if (Vorzeichen*detA!=Ausgangsmatrix[i][j]) {stimmt='ERROR, keine Übereinstimmung mit Zeilenanfang'; alert(stimmt)}
-    RET='<div style="white-space:nowrap; overflow:auto"><span class="yx" style="border:solid blue; padding:3px"><i>'+Ausgangsmatrix[i][j]+' · x<sub>'+l+'</sub> … = … f<sup>'+k+'</sup></i></span>: <var><mat><op>J</op><co><su>F<pk/></su><su>X<pl/></su></co></mat> = (&minus;1)<sup><span style="color:DarkSlateGray">J(&ell;)</span>+<span style="color:orange">J(k)</span></sup> · <det>A<co><su>F<pk/></su><su>X<pl/></su></co></det> = (&minus;1)<sup>'+Jl+'+'+Jk+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&cup;{'+k+'}</su><su><span class="xx">{'+V+'}</span>&cup;{'+l+'}</su></co></det> = (&minus;1)<sup>'+(Jl+Jk)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
+    RET='<div style="white-space:nowrap; overflow:auto"><span class="yx" style="border:solid blue; padding:3px">'+Ausgangsmatrix[i][j]+' · x<sub>'+l+'</sub> … = … f<sup>'+k+'</sup></span>: <var><mat><op>J</op><co><su>F<pk/></su><su>X<pl/></su></co></mat> = (&minus;1)<sup><span style="color:DarkSlateGray">J(&ell;)</span>+<span style="color:orange">J(k)</span></sup> · <det>A<co><su>F<pk/></su><su>X<pl/></su></co></det> = (&minus;1)<sup>'+Jl+'+'+Jk+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&cup;{'+k+'}</su><su><span class="xx">{'+V+'}</span>&cup;{'+l+'}</su></co></det> = (&minus;1)<sup>'+(Jl+Jk)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
     }
   RET=RET+'<div>Aus <var>A</var> werden alle Zeilen herausgestrichen außer die Zeile(n) <var style="font-size:100%" class="';
   if (td_class=='xx'||td_class==0) RET=RET+'yy'; else RET=RET+'pyy';  
@@ -463,7 +463,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
   if (td_class=='yy'||td_class==0) RET=RET+'xx'; else RET=RET+'pxx';
   RET=RET+'">{'+Xfert+'}</span></su></co></det></span> = ';
   
-  RET=RET+'<table style="border-left:solid; border-right:solid; font-size:4em; margin:10px"><tbody>';
+  RET=RET+'<table style="border-left:solid; border-right:solid; font-size:3em; margin:10px"><tbody>';
   for (let i=0;i<m;i++) {
     RET=RET+'<tr>';
     for (let j=0;j<n;j++) {
@@ -479,7 +479,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
   RET=RET+'</tbody></table> = ';
   
   let AUVMAT=AUV(Ffert,Xfert);
-  RET=RET+'<table style="border-left:solid; border-right:solid; font-size:4em; margin:10px"><tbody>';
+  RET=RET+'<table style="border-left:solid; border-right:solid; font-size:3em; margin:10px"><tbody>';
   for (let i=0;i<AUVMAT.length;i++) {
     RET=RET+'<tr>';
     for (let j=0;j<AUVMAT[0].length;j++) {
@@ -503,6 +503,23 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class) {
     
     
   //RET=RET+'<br>'+[i,j,B[i],D[j],td_class,'<br>F-+=',YiMat[i][j],'<br>X+-=',XjMat[i][j],'<br>F=',U,'<br>X=',V,'<br>det',det(AUV(YiMat[i][j],XjMat[i][j]))];
+  let RET2='';
+  if (U.length==0) {
+    RET2=RET2+'<div>F={} bedeutet, alle f<sup>i</sup> stehen so wie anfangs (irgendwo) auf der rechten Seite der Gleichungen.</div>';
+    RET2=RET2+'<div>X={} bedeutet, alle x<sub>j</sub> stehen so wie anfangs (irgendwo) auf der linken Seite der Gleichungen.</div>';
+    } else {
+  RET2=RET2+'<div>F=<span class="yy">{'+U+'}</span> bedeutet, <span class="yy">';
+  for (let i=0;i<U.length;i++) RET2=RET2+'f<sup>'+U[i]+'</sup>, ';
+  RET2=RET2.slice(0,-2)+'</span> stehen (irgendwo) auf der linken Seite der Gleichungen und nicht mehr wie anfangs auf der rechten Seite.</div>';
+  
+  RET2=RET2+'<div>X=<span class="xx">{'+V+'}</span> bedeutet, <span class="xx">';
+  for (let j=0;j<V.length;j++) RET2=RET2+'x<sub>'+V[j]+'</sub>, ';
+  RET2=RET2.slice(0,-2)+'</span> stehen (irgendwo) auf der rechten Seite der Gleichungen und nicht mehr wie anfangs auf der linken Seite.</div>';
+      }
+  
+  RET=RET2+RET;
+  
+  
   Ausgabe_Koeffizient.innerHTML=RET;
   Pivot.setAttribute('style','border:solid white;');
   Pivot.removeAttribute('id');
