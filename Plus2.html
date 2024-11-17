@@ -37,6 +37,8 @@ function Los() {
   eval(document.getElementById("input").value);
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
+  for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=BigInt(Ausgangsmatrix[i][j]);
+  gemeinsamer_Nenner=BigInt(gemeinsamer_Nenner);
   LCode="m="+m+"\nn="+n+";\n";
   D=[]; for (var j=0;j<n;j++) D[j]=j;
   B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
@@ -121,10 +123,10 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
-  let signd=1;
-  let signx=1;
+  let signd=1n;
+  let signx=1n;
   signarray=[];
-  if (determ!=Nenner) signd=-1;
+  if (determ!=Nenner) signd=-1n;
   Yi=U.slice();Xj=V.slice();
   T=T+"<!--tr>";
   for (var j=0;j<n;j++) {
@@ -169,9 +171,9 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
         signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
-      signarray[i][j]=signx;
+      signarray[i][j]=BigInt(signx);
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
-      determ=signd*signx*det(AUV(Yi,Xj));
+      determ=BigInt(signd)*BigInt(signx)*BigInt(det(AUV(Yi,Xj)));
       if (determ!=Ausgangsmatrix[i][j]/*||determ<-10000*/) {
         T=T+' style="border:solid red 5px";'; 
         err=true;
@@ -220,12 +222,14 @@ function AUV(Yi,Xj) {
 
 <script>
 function det(Ausgangsmatrix) {
-  let gemeinsamer_Nenner=1;
+  let gemeinsamer_Nenner=1n;
   //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   let m=Ausgangsmatrix.length;
-  if (m==0) return 1;
+  if (m==0) return 1n;
 //  return Math.round(determinantOfMatrixIterative(Ausgangsmatrix,m));
-  return Math.round(determinantOfMatrixRecursive(Ausgangsmatrix,m));
+  let ret= determinantOfMatrixRecursive(Ausgangsmatrix,m);
+  //alert('ret '+ret);
+  return ret;
   let n=Ausgangsmatrix[0].length;
   //alert(m+" "+n);
 for (let r=0;r<m;r++) {let s=r;
@@ -257,11 +261,9 @@ for (let r=0;r<m;r++) {let s=r;
 // N is the order of the matrix
 const N = 3;
 function determinantOfMatrixRecursive(mat, n) {
-	if (n === 1) {
-		return mat[0][0];
-	}
-	let det = 0;
-	let sign = 1;
+	if (n === 1) {return mat[0][0]}
+	let det = 0n;
+	let sign = 1n;
 	for (let i = 0; i < n; i++) {
 		let submatrix = 
 			createSubmatrix(mat, i, n);
