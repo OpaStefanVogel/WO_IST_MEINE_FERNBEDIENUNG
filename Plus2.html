@@ -5,9 +5,9 @@
 <style>
   td {text-align:right; min-width:100;font-size:30%}
   .yx {background-color:white}
-  .xy {background-color:LightGray}
-  .xx {background-color:orange}
-  .yy {background-color:aqua}
+  .xy {background-color:Gainsboro}
+  .xx {background-color:LavenderBlush}
+  .yy {background-color:Azure}
   </style>
 <script>
 var Ausgangsmarix=[];
@@ -131,10 +131,12 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
     T=T+'<tr>';
     for (var j=0;j<n;j++) {
       signx=1;
-      if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
-        else T=T+"<td";Yi=U.slice();Xj=V.slice();
+      let sty="border:solid; border-color:white;";
+      if (i==p[2]&&j==p[3]) sty="color:blue; border:solid; border-color:blue;";
+      Yi=U.slice();Xj=V.slice();
+      T=T+'<td ';
       if (B[i]<0&&D[j]>=0) {
-        T=T+' class="yx"';
+        T=T+'class="yx"';
         k=-1-B[i]; l=D[j];
         Xj.push(l); Xj.sort();
         Yi.push(k); Yi.sort();
@@ -162,9 +164,10 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       signarray[i][j]=signx;
       let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
       determ=signd*signx*det(AUV(Yi,Xj));
-      if (determ!=Ausgangsmatrix[i][j]) {T=T+' style="border:solid red 5px"'; Error('determ!=Ausgangsmatrix[i][j]')}
-      if (Ausgangsmatrix[i][j]==0) {T=T+' style="visibility:hidden" ';}
-      T=T+' onclick="t('+i+","+j+')">';
+      if (determ!=Ausgangsmatrix[i][j]) {T=T+' style="border:solid red 5px";'; Error('determ!=Ausgangsmatrix[i][j]')}
+      if (Ausgangsmatrix[i][j]==0) sty=sty+" visibility:hidden; ";
+      //alert(sty);
+      T=T+' style="'+sty+'" onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
       T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'·';
       if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub>"; 
