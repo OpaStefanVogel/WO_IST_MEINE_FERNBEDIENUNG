@@ -4,6 +4,10 @@
 <meta charset="utf-8"/>
 <style>
   td {text-align:right; min-width:100}
+  .yx {background-color:white}
+  .xy {background-color:LightGray}
+  .xx {background-color:orange}
+  .yy {background-color:aqua}
   </style>
 <script>
 var Ausgangsmarix=[];
@@ -96,11 +100,13 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
     for (var j=0;j<n;j++) {
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
         else T=T+"<td";
-      //if (j>0&Ausgangsmatrix[i][0]<0&Ausgangsmatrix[i][j]>0) T=T+' class="zulaessig"';
-      //if (j>0&Ausgangsmatrix[0][j]>0&Ausgangsmatrix[i][j]<0) T=T+' class="fortschritt"';
+      if (B[i]<0&&D[j]>=0) T=T+' class="yx"';
+      if (B[i]>=0&&D[j]>=0) T=T+' class="xx"';
+      if (B[i]<0&&D[j]<0) T=T+' class="yy"';
+      if (B[i]>=0&&D[j]<0) T=T+' class="xy"';
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+(Ausgangsmatrix[i][j])+"</td>";
+      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small>'+AUV(i,j)+'</small></small></sub>'+"</td>";
       }
     T=T+"</tr>";
     }
@@ -110,6 +116,14 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   T=T+"</table>";
   //alert(T);
   return T;
+  }
+  </script>
+
+<script>
+function AUV(i,j) {
+  
+  
+  return "+0";
   }
   </script>
 <body onload="Los()">
