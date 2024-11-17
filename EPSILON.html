@@ -460,9 +460,11 @@ var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gra
 </style>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
-  <div>
+  </div>
+<div id="Logfile2" style="white-space:pre; font-family:Courier,Monospace; font-size:10%">
+  </div>
 <div id="Ausgabe">
-  <div>
+  </div>
 <svg id='dat' style='border:double; width:1000px; height:1000px; stroke:blue; fill:none'>
   <line x1='0' y1='0' x2='100' y2='100'/>
   <circle cx='200' cy='200' r='1'/>
@@ -487,6 +489,21 @@ for (let i=1;i<NN-1;i++) {
     }
   }
 dat.innerHTML=TT;
+Logfile2.innerHTML=AA.join('\n');
+//alert(AA);
+let A3=[];
+let A4=[];
+for (let i=1;i<NN-1;i++) {
+  A4[i]=[];
+  for (let j=1;j<NN-1;j++) {
+    if (AA[i][j]==2) {
+      A4[i][j]=A3.length;
+      A3.push([i,j]);
+      }
+    }
+  }
+Logfile2.innerHTML=A4.join('\n');
+
   </script>
   </body>
   </html>
