@@ -1,0 +1,171 @@
+<html>
+<head>
+<title>Plus2.html</title>
+<meta charset="utf-8"/>
+<style>
+  td {text-align:right; min-width:100}
+  </style>
+<script>
+var Ausgangsmarix=[];
+var gemeinsamer_Nenner=1;
+var m=0;
+var n=0;
+var D=[];
+var B=[];
+var LCode="";
+var HCode="";
+var p=[];
+var hist=[];
+
+function Los() {
+  //alert(document.getElementById("input").value);
+  eval(document.getElementById("input").value);
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  LCode="m="+m+"\nn="+n+";\n";
+  D=[]; for (var j=0;j<n;j++) D[j]=j;
+  B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
+  hist=[];
+  p=[m+n-1,m+n-1,0,0,0];
+  Ausgabe();
+  }
+
+function tausche(r,s) {
+  //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
+  m=Ausgangsmatrix.length;
+  n=Ausgangsmatrix[0].length;
+  //alert(m+" "+n);
+  var neueMatrix=[];
+  var neuerNenner=Ausgangsmatrix[r][s];
+  for (var i=0;i<m;i++) {
+    neueMatrix[i]=[];
+    for (var j=0;j<n;j++) {
+      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner;
+      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j];
+      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j];
+      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
+      }
+    }
+  Ausgangsmatrix=neueMatrix;
+  gemeinsamer_Nenner=neuerNenner;
+  //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  }
+
+function alt(bi) { if (bi<0) return n-bi-2; else return bi; }
+function neu(bi) { if (bi<n) return bi; else return n-bi-2; }
+function xy(bi) { if (bi<n) return "x"+bi; else if (bi<n+m-1) return "y"+(bi-n+1); else return 0;}
+
+function t(r,s) {
+  hist.push([r,s]);
+  p=[r,s,r,s];
+  var merk=B[p[2]];
+  B[p[2]]=D[p[3]];
+  D[p[3]]=merk;
+  tausche(p[2],p[3]);
+  Ausgabe();
+  }
+
+function Ausgabe() {
+  LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n-------\n"+LCode;
+  HCode=Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
+  document.getElementById("Logfile").firstChild.nodeValue=LCode;
+  document.getElementById("HCode").innerHTML=HCode;  
+  }
+
+function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  var T=Ausgangsmatrix.join("],\n  [")+"] ] / "
+    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
+    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  return T;
+  }
+
+function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+  var T='<table style="font-style:italic;font-size:300%" border="1">\n';
+  var Nenner=gemeinsamer_Nenner;
+//  if (p[2]>0&&p[3]>0) Nenner=1;
+  T=T+"<tr>"+"<td>"+Nenner+"</td>";
+  for (var j=0;j<n;j++) {
+      T=T+"<td>";
+      if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
+        else T=T+"y<sub>"+(-1-D[j])+"</sub></td>";
+      }
+  for (var i=0;i<m;i++) {
+    T=T+"<tr>";
+    if (B[i]<0) T=T+"<td>y<sub>"+(-1-B[i])+"</sub></td>"; 
+      else T=T+"<td>x<sub>"+(B[i])+"</sub></td>";
+    for (var j=0;j<n;j++) {
+      if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
+        else T=T+"<td";
+      //if (j>0&Ausgangsmatrix[i][0]<0&Ausgangsmatrix[i][j]>0) T=T+' class="zulaessig"';
+      //if (j>0&Ausgangsmatrix[0][j]>0&Ausgangsmatrix[i][j]<0) T=T+' class="fortschritt"';
+      T=T+' onclick="t('+i+","+j+')">';
+      if (Ausgangsmatrix[i][j]>=0) T=T+"+";
+      T=T+(Ausgangsmatrix[i][j])+"</td>";
+      }
+    T=T+"</tr>";
+    }
+//  T=T+Ausgangsmatrix.join("],\n  [")+"] ] / "
+//    +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
+//    +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  T=T+"</table>";
+  //alert(T);
+  return T;
+  }
+  </script>
+<body onload="Los()">
+<p>Ein Programm zu <a href="https:" target="_blank">???</a></p>
+
+<div>Input <i>(javascript, "." als Dezimaltrenner)</i>:</div>
+<textarea id="input" cols="40" rows="10" >Ausgangsmatrix=[ 
+  [  4, -1,  0,  0,  0, -1 ],
+  [ -1,  4, -1,  0,  0,  0 ],
+  [  0, -1,  4, -1,  0,  0 ],
+  [  0,  0, -1,  4, -1,  0 ],
+  [  0,  0,  0, -1,  4, -1 ],
+  [ -1,  0,  0,  0, -1,  4 ] 
+  ];
+
+gemeinsamer_Nenner=1;
+
+Ausgangsmatrix2=[ 
+  [     1,  2,  4,  1,  1 ],
+  [     4, -1, -3,  0, -1 ],
+  [     3, -2, -1,  0,  0 ],
+  [     3,  0, -1, -4, -1 ] ] ;
+
+/*
+tausche(0,0);
+alert(Ausgangsmatrix.join("\n"));
+tausche(1,1);
+alert(Ausgangsmatrix.join("\n"));
+tausche(0,0);
+alert(Ausgangsmatrix.join("\n"));
+tausche(1,1);
+alert(Ausgangsmatrix.join("\n"));
+//tausche(1,2);
+//tausche(2,2);
+
+
+//tausche(1,1);
+//tausche(2,2);
+//tausche(3,3);
+//tausche(4,1);
+//tausche(2,2);
+//tausche(4,2);
+
+starte_Pivotverfahren();
+//Zusatz(1,1);
+*/
+</textarea>
+<button onclick="Los()">losrechnen</button>
+<button onclick="t(p[2],p[3])">weiter</button>
+<button onclick="for (var w=0;w<100;w++) if (p[2]>0 & p[3]>0) t(p[2],p[3])">100*weiter</button>
+<button onclick="p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
+
+<div id="HCode"> </div>
+<div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
+  <div>
+<div id="Ausgabe">
+  <div>
+  </body>
+  </html>
