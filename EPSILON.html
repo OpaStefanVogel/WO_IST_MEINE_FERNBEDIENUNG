@@ -32,13 +32,15 @@ let l=0;
 let sign=1;
 let signarray=[];
 
+function NumberOrBigInt(x) { return Number(x)}
+NumberOrBigInt=BigInt;
 function Los() {
   //alert(document.getElementById("input").value);
   eval(document.getElementById("input").value);
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
-  for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=BigInt(Ausgangsmatrix[i][j]);
-  gemeinsamer_Nenner=BigInt(gemeinsamer_Nenner);
+  for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=NumberOrBigInt(Ausgangsmatrix[i][j]);
+  gemeinsamer_Nenner=NumberOrBigInt(gemeinsamer_Nenner);
   LCode="m="+m+"\nn="+n+";\n";
   D=[]; for (var j=0;j<n;j++) D[j]=j;
   B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
@@ -49,11 +51,11 @@ function Los() {
 
   hist=[];
   p=[0,0,0,0,0];
-  AMERK=structuredClone(Ausgangsmatrix);
+  AMERK=structuredClone(Ausgangsmatrix);//alert(AMERK);
   Ausgabe();
   }
 
-function tausche(r,s) {
+function tausche(r,s) {//alert('tausche '+r+' '+s);
   //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);  
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
@@ -112,7 +114,7 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   }
 
 let Checkbit_Nenner=false;
-function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {//alert('Ausgabe_HCode');
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
@@ -123,19 +125,19 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
-  let signd=1n;
-  let signx=1n;
+  let signd=NumberOrBigInt(1);
+  let signx=NumberOrBigInt(1);
   signarray=[];
-  if (determ!=Nenner) signd=-1n;
+  if (determ!=Nenner) signd=NumberOrBigInt(-1);
   Yi=U.slice();Xj=V.slice();
-  T=T+"<!--tr>";
+  T=T+"<!-"+"-tr>";
   for (var j=0;j<n;j++) {
       T=T+"<td>";
       if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub></td>"; 
         else T=T+"y<sub>"+(-1-D[j])+"</sub></td>";
       }
   T=T+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
-  T=T+'</tr-->\n';
+  T=T+'</tr-'+'->\n';
   for (var i=0;i<m;i++) {
     signarray[i]=[];
     T=T+'<tr>';
@@ -171,9 +173,15 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
         signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
-      signarray[i][j]=BigInt(signx);
+      signarray[i][j]=NumberOrBigInt(signx);
+      if (false&&i==0&&j==0) {
+        alert('signd='+NumberOrBigInt(signd));
+        alert('signx='+NumberOrBigInt(signx));
+        alert('det='+NumberOrBigInt(det(AUV(Yi,Xj))));
+        alert('determ='+(NumberOrBigInt(signd)*NumberOrBigInt(signx)*NumberOrBigInt(det(AUV(Yi,Xj)))));
+        }
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
-      determ=BigInt(signd)*BigInt(signx)*BigInt(det(AUV(Yi,Xj)));
+      determ=NumberOrBigInt(signd)*NumberOrBigInt(signx)*NumberOrBigInt(det(AUV(Yi,Xj)));
       if (determ!=Ausgangsmatrix[i][j]/*||determ<-10000*/) {
         T=T+' style="border:solid red 5px";'; 
         err=true;
@@ -222,10 +230,10 @@ function AUV(Yi,Xj) {
 
 <script>
 function det(Ausgangsmatrix) {
-  let gemeinsamer_Nenner=1n;
+  let gemeinsamer_Nenner=NumberOrBigInt(1);
   //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   let m=Ausgangsmatrix.length;
-  if (m==0) return 1n;
+  if (m==0) return NumberOrBigInt(1);
 //  return Math.round(determinantOfMatrixIterative(Ausgangsmatrix,m));
   let ret= determinantOfMatrixRecursive(Ausgangsmatrix,m);
   //alert('ret '+ret);
@@ -250,7 +258,7 @@ for (let r=0;r<m;r++) {let s=r;
 //    }
   Ausgangsmatrix=neueMatrix;
   gemeinsamer_Nenner=neuerNenner;
-  //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   }
   return gemeinsamer_Nenner;
   }
@@ -262,8 +270,8 @@ for (let r=0;r<m;r++) {let s=r;
 const N = 3;
 function determinantOfMatrixRecursive(mat, n) {
 	if (n === 1) {return mat[0][0]}
-	let det = 0n;
-	let sign = 1n;
+	let det = NumberOrBigInt(0);
+	let sign = NumberOrBigInt(1);
 	for (let i = 0; i < n; i++) {
 		let submatrix = 
 			createSubmatrix(mat, i, n);
