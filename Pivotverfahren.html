@@ -143,7 +143,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 <script>
 function Ausgabe_SVG(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   let tcode='';
-  tcode=tcode+'<div>Tab </div><svg width="400px" height="400px" style="border:solid 10px aqua; font-size:250%" fill="none" stroke="gray" xmlns="http://www.w3.org/2000/svg">\n    <line x1="0" y1="0" x2="100" y2="100" stroke="blue"/>\n';
+  tcode=tcode+'<div>Tab </div><svg width="400px" height="400px" style="border:solid 10px aqua; font-size:250%" fill="none" stroke="gray" xmlns="http://www.w3.org/2000/svg">\n    <line x1="0" y1="0" x2="10" y2="10" stroke="blue"/>\n';
   tcode=tcode+'<g transform="translate(200,200) scale(1,-1)"><line x1="0" y1="-200" x2="0" y2="200" stroke="orange"/>\n';
   tcode=tcode+'<line x1="-200" y1="0" x2="200" y2="0" stroke="orange"/>\n';
   sx=1; if (Ausgangsmatrix[0][1]<0) sx=-1;
@@ -153,12 +153,13 @@ function Ausgabe_SVG(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   let xy=Geradenpunkte(Ausgangsmatrix[0],gemeinsamer_Nenner,0);
   tcode=tcode+'<line x1="'+xy[0]+'" y1="'+xy[1]+'" x2="'+xy[2]+'" y2="'+xy[3]+'" stroke="red"/>\n';
   tcode=tcode+'<line x1="'+xy[6]+'" y1="'+xy[7]+'" x2="'+xy[4]+'" y2="'+xy[5]+'" stroke="brown"/>\n';
-/*  tcode=tcode+'<text x="'+xy[0]+'" y="'+xy[1]+'" stroke="red">'+i+'</text>\n';*/
+  tcode=tcode+'<text x="'+xy[0]+'" y="'+xy[1]+'" stroke="red">'+'z'+'</text>\n';
   for (let i=1;i<Ausgangsmatrix.length;i++) {
     let xy=Geradenpunkte(Ausgangsmatrix[i],gemeinsamer_Nenner,i);
     tcode=tcode+'<line x1="'+xy[0]+'" y1="'+xy[1]+'" x2="'+xy[2]+'" y2="'+xy[3]+'" stroke="black"/>\n';
-    tcode=tcode+'<line x1="'+xy[6]+'" y1="'+xy[7]+'" x2="'+xy[4]+'" y2="'+xy[5]+'" stroke="green"/>\n';
-    tcode=tcode+'<text x="'+xy[0]+'" y="'+xy[1]+'" stroke="black">'+i+'</text>\n';
+    //tcode=tcode+'<line x1="'+xy[6]+'" y1="'+xy[7]+'" x2="'+xy[4]+'" y2="'+xy[5]+'" stroke="green"/>\n';
+    tcode=tcode+'<line x1="'+(xy[0]+xy[4])+'" y1="'+(xy[1]+xy[5])+'" x2="'+(xy[2]+xy[4])+'" y2="'+(xy[3]+xy[5])+'" stroke="green"/>\n';
+    tcode=tcode+'<text x="'+xy[0]+'" y="'+xy[1]+'" stroke="black">x_'+i+'</text>\n';
     }
   tcode=tcode+'</g></svg>';
   //alert(tcode);
@@ -195,7 +196,9 @@ function Geradenpunkte(a,g,i) {
       y2=-8*sy*25;
       x2=-(a[0]-8*a[2])/a[1]*sx*25;
       }
-    
+  let l=Math.hypot(x3-x4,y3-y4);
+  x3=(x3-x4)/l*10;
+  y3=(y3-y4)/l*10; //Normale
   
   //alert([...a,g,'\n',i,x1,y1,x2,y2]);
   return [x1,y1,x2,y2,x3,y3,x4,y4];
