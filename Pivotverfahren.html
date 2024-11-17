@@ -64,7 +64,9 @@ function suche_Pivot() {
   return [r,s,ri,sj];
   }
 
+let AMERK=[[]];
 function starte_Pivotverfahren() {
+  AMERK=structuredClone(Ausgangsmatrix);
   m=Ausgangsmatrix.length;
   n=Ausgangsmatrix[0].length;
   D=[0]; for (var j=1;j<n;j++) D[j]=j;
@@ -107,6 +109,7 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   var T=Ausgangsmatrix.join("],\n  [")+"] ] / "
     +gemeinsamer_Nenner+"\n\nB=["+B+"]; D=["+D+"];"
     +"\n\nr="+p[0]+"; s="+p[1]+"; ri="+p[2]+"; sj="+p[3]+";\n";
+  T=T+Ausgabe_mit_det(B,D);
   if (D.length==3) T=T+Ausgabe_SVG(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p);
   return T;
   }
@@ -210,8 +213,9 @@ function Geradenpunkte(a,g,i) {
 function det(Ausgangsmatrix) {
   //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   let gemeinsamer_Nenner=1;
-  m=Ausgangsmatrix.length;
-  n=Ausgangsmatrix[0].length;
+  let m=Ausgangsmatrix.length;
+  if (m==0) return 1;
+  let n=Ausgangsmatrix[0].length;
   //alert(m+" "+n);
 for (let r=0;r<m;r++) {let s=r;
   var neueMatrix=[];
@@ -225,15 +229,84 @@ for (let r=0;r<m;r++) {let s=r;
       if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
       }
     }
-  if (neuerNenner<0) {
-    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
-    neuerNenner=-neuerNenner;
-    }
+//  if (neuerNenner<0) {
+//    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
+//    neuerNenner=-neuerNenner;
+//    }
   Ausgangsmatrix=neueMatrix;
   gemeinsamer_Nenner=neuerNenner;
-  alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
   }
   return gemeinsamer_Nenner;
+  }
+
+function detM(AMERK,UQ,VQ) {
+  let AM=[];
+  for (let i=0;i<UQ.length;i++) if (UQ[i]) {
+    let z=[];
+    for (let j=0;j<VQ.length;j++) if (VQ[j]) z.push(AMERK[i][j]);
+    AM.push(z);
+    }
+  
+  
+  return det(AM);
+  }
+
+let U=[];
+let V=[];
+let UQ=[];
+let VQ=[];
+let UR=[];
+let VR=[];
+
+function Ausgabe_mit_det(B,D) {
+  U=[0];
+  UQ=[1];//.repeat(B.length);
+  for (let i=0;i<B.length;i++) UQ[i]=1;
+  let d=D.length;
+  for (let i=0;i<B.length;i++) if (B[i]>=d) {U.push(B[i]-d+1); UQ[B[i]-d+1]=0}
+  UQ[0]=0;
+  U.sort();
+
+  V=[0];
+  VQ=[1];//.repeat(D.length);
+  for (let i=1;i<D.length;i++) VQ[i]=1;
+  for (let i=1;i<D.length;i++) if (D[i]<d) {V.push(D[i]); VQ[D[i]]=0}
+  VQ[0]=0;
+  V.sort();
+  
+  let AM=[];
+  for (let i=0;i<UQ.length;i++) if (UQ[i]) {
+    let z=[];
+    for (let j=0;j<VQ.length;j++) if (VQ[j]) z.push(AMERK[i][j]);
+    AM.push(z);
+    }
+  //alert(AM);
+  
+  let code='';
+  for (let g=1;g<B.length;g++) {
+    
+    for (let h=1;h<D.length;h++) {
+      code=code+g+' '+h+'  '+B[g]+' '+D[h]+'  ';
+      
+      if (B[g]>=d) code=code+'y'+(B[g]-d+1); else code=code+'x'+(B[g]); 
+      code=code+' ';
+      if (D[h]>=d) code=code+'y'+(D[h]-d+1); else code=code+'x'+(D[h]); 
+      
+      UR=UQ.slice();
+      VR=VQ.slice();
+      if (B[g]>=d) UR[B[g]-d+1]=1; else VR[B[g]]=0; 
+      if (D[h]>=d) UR[D[h]-d+1]=0; else VR[D[h]]=1;
+      code=code+' UR=['+UR+']; ';
+      code=code+' VR=['+VR+']; ';
+      
+      code=code+detM(AMERK,UR,VR);
+      
+      code=code+'\n';
+      
+      }
+    }
+  return 'U=['+U+']; UQ=['+UQ+']; V=['+V+']; VQ=['+VQ+']; '+det(AM)+'\n'+code;
   }
   </script>
 
@@ -252,7 +325,7 @@ Ausgangsmatrix=[
 
 gemeinsamer_Nenner=1;
 
-Ausgangsmatrix7=[ 
+Ausgangsmatrix=[ 
   [ 0,  1, -7, -1, -2 ], //für max z=0+x1-7x2-x3-2x4
   [ 0, -1, 11,  5,-18 ], //für y1=0+x1+11x2+5x3-18x4
   [ 0, -1,  3,  1, -2 ]  //für y2=0+x1+3x2+x3-2x4
