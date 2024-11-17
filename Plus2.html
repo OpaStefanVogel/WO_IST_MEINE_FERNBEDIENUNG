@@ -114,6 +114,8 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 
 let Checkbit_Nenner=false;
 let td_class="";
+let XiMat=[];
+let YiMat=[];
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
@@ -138,9 +140,13 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       }
   T=T+"<td>"+Nenner+'<sub><small><small>'+determ+/*'<br/>'+AUV(U,V).join('<br/>')+'<br/>U='+U+'<br/>V='+V+*/"</small></small></sub></td>";
   T=T+'</tr-'+'->\n';
+  XiMat=[];
+  YiMat=[];
   for (var i=0;i<m;i++) {
     signarray[i]=[];
     T=T+'<tr>';
+    XiMat[i]=[];
+    YiMat[i]=[];
     for (var j=0;j<n;j++) {
       signx=1;
       let sty="border:solid; border-color:white;";
@@ -157,8 +163,9 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       if (B[i]>=0&&D[j]>=0) {
         td_class="xx";
         h=B[i]; l=D[j];
-        Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]); Xj.push(l); Xj.sort();
-        signx=(-1)**(Xj.indexOf(l)+V.indexOf(h))*(-1);
+        Xj.push(l); Xj.sort(); let Xjmerk=Xj.slice();
+        signx=(-1)**(Xj.indexOf(l)+Xj.indexOf(h));
+        Xj=[]; for(let p=0;p<Xjmerk.length;p++) if (Xjmerk[p]!=h) Xj.push(Xjmerk[p]);
         }
       if (B[i]<0&&D[j]<0) {
         td_class="yy";
@@ -173,9 +180,11 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         Xj=[]; for(let p=0;p<V.length;p++) if (V[p]!=h) Xj.push(V[p]);
         signx=(-1)**(V.indexOf(h)+U.indexOf(g));
         }
+      XiMat[i][j]=Xj;
+      YiMat[i][j]=Yi;
       signarray[i][j]=BigInt(signx);
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
-      determ=BigInt(signd)*BigInt(signx)*BigInt(det(AUV(Yi,Xj)));
+      determ=BigInt(signd)*BigInt(signx)*(det(AUV(Yi,Xj)));
       if (determ!=Ausgangsmatrix[i][j]/*||determ<-10000*/) {
         T=T+' style="border:solid red 5px";'; 
         err=true;
@@ -183,15 +192,15 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" visibility:hidden; ";
       //alert(sty);
-      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J(['+i+','+j+'])">';
+      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J('+i+','+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
       T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'</td>';
-      T=T+'<td class="'+td_class+'" onclick="t('+i+","+j+')">';
+      T=T+'<td class="'+td_class+'" style="'+sty+'" onclick="t('+i+","+j+')">';
       if (D[j]>=0) T=T+"· x<sub>"+D[j]+"</sub>"; 
         else T=T+"· y<sub>"+(-1-D[j])+"</sub>";      
       T=T+"</td>";
       }
-    T=T+'<td>=</td><td class="td">'+Nenner+'</td><td>·</td><td>';
+    T=T+'<td>=</td><td class="td"'+'" onclick="Berechnung_Koeffizient_aus_J('+i+',-1)">'+Nenner+'</td><td>·</td><td>';
     if (B[i]<0) T=T+"y<sub>"+(-1-B[i])+"</sub></td>"; 
       else T=T+"x<sub>"+(B[i])+"</sub></td>";
     T=T+"</tr>\n";
@@ -378,7 +387,8 @@ function zufaellig_weiter() {
   
 <script>
 function Berechnung_Koeffizient_aus_J(i,j) {
-  alert(i,j);
+  Ausgabe_Koeffizient.innerHTML=[XiMat[i][j],'<br>',YiMat[i][j],'<br>U=',U,'<br>V=',V];
+  if (j==-1) Ausgabe_Koeffizient.innerHTML=det(AUV(U,V));
   }
   </script>
 <body onload="Los()">
@@ -419,6 +429,8 @@ sup {padding-left:2px; font-size:75%} /* wegen dem kursiven f<sup>g</sup>*/
 var {font-family:Courier Monospace; font-style:italic; font-size:100%; color:gray; white-space:pre}
 </style>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
+<div id="Ausgabe_Koeffizient">
+  </div>
 <div id="Logfile" style="white-space:pre; font-family:Courier,Monospace; font-size:70%">
   <div>
 <div id="Ausgabe">
