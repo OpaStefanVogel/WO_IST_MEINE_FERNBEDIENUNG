@@ -22,6 +22,8 @@ var p=[];
 var hist=[];
 var U=[];
 var V=[];
+var Ui=[];
+var Vj=[];
 let AMERK=[];
 
 function Los() {
@@ -34,6 +36,9 @@ function Los() {
   B=[]; for (var i=0;i<m;i++) B[i]=-1-i;
   U=[];
   V=[];
+  Ui=[];
+  Vj=[];
+
   hist=[];
   p=[0,0,0,0,0];
   AMERK=structuredClone(Ausgangsmatrix);
@@ -110,11 +115,11 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       else T=T+"<td>x<sub>"+(B[i])+"</sub></td>";
     for (var j=0;j<n;j++) {
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
-        else T=T+"<td";
-      if (B[i]<0&&D[j]>=0) T=T+' class="yx"';
-      if (B[i]>=0&&D[j]>=0) T=T+' class="xx"';
-      if (B[i]<0&&D[j]<0) T=T+' class="yy"';
-      if (B[i]>=0&&D[j]<0) T=T+' class="xy"';
+        else T=T+"<td";Ui=U.slice();Vj=V.slice();
+      if (B[i]<0&&D[j]>=0)  {T=T+' class="yx"'; Vj.push(D[j]); Vj.sort(); Ui.push(-1-B[i]); Ui.sort()}
+      if (B[i]>=0&&D[j]>=0) {T=T+' class="xx"';Vj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Vj.push(V[p]); Vj.push(D[j]);Vj.sort()}
+      if (B[i]<0&&D[j]<0){T=T+' class="yy"';Ui=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Ui.push(U[p]);Ui.push(-1-B[i]);Ui.sort()}
+      if (B[i]>=0&&D[j]<0)  {T=T+' class="xy"';Ui=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Ui.push(U[p]);Vj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Vj.push(V[p]);}
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
       T=T+(Ausgangsmatrix[i][j])+'<sub><small><small>'+AUV(i,j)+'</small></small></sub>'+"</td>";
@@ -134,10 +139,10 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
 function AUV(i,j) {
   let RET='';
   let M=[];
-  for (let k=0;k<U.length;k++) {
+  for (let k=0;k<Ui.length;k++) {
     let Mi=[];
-    for (let l=0;l<V.length;l++) {
-      Mi.push(AMERK[U[k]][V[l]]);
+    for (let l=0;l<Vj.length;l++) {
+      Mi.push(AMERK[Ui[k]][Vj[l]]);
       
       }
     M.push(Mi);
