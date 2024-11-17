@@ -122,7 +122,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       if (B[i]>=0&&D[j]<0)  {T=T+' class="xy"';Ui=[];for(let p=0;p<U.length;p++)if (U[p]!=-1-D[j]) Ui.push(U[p]);Vj=[];for(let p=0;p<V.length;p++) if (V[p]!=B[i]) Vj.push(V[p]);}
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small>'+AUV(i,j)+'</small></small></sub>'+"</td>";
+      T=T+(Ausgangsmatrix[i][j])+'<sub><small><small>'+det(AUV(i,j))+'</small></small></sub>'+"</td>";
       }
     T=T+"</tr>";
     }
@@ -153,7 +153,39 @@ function AUV(i,j) {
       if (B[i]<0&&D[j]<0) RET=RET+' class="yy"';
       if (B[i]>=0&&D[j]<0) RET=RET+' class="xy"';
 //M=['üü'];
-  return M.join('\n');
+  return M;
+  }
+  </script>
+
+<script>
+function det(Ausgangsmatrix) {
+  let gemeinsamer_Nenner=1;
+  //alert("[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  let m=Ausgangsmatrix.length;
+  if (m==0) return 1;
+  let n=Ausgangsmatrix[0].length;
+  //alert(m+" "+n);
+for (let r=0;r<m;r++) {let s=r;
+  var neueMatrix=[];
+  var neuerNenner=Ausgangsmatrix[r][s];
+  for (var i=0;i<m;i++) {
+    neueMatrix[i]=[];
+    for (var j=0;j<n;j++) {
+      if (i==r&&j==s) neueMatrix[i][j]=gemeinsamer_Nenner;
+      if (i!=r&&j==s) neueMatrix[i][j]=Ausgangsmatrix[i][j];
+      if (i==r&&j!=s) neueMatrix[i][j]=-Ausgangsmatrix[i][j];
+      if (i!=r&&j!=s) neueMatrix[i][j]=(Ausgangsmatrix[i][j]*neuerNenner-Ausgangsmatrix[i][s]*Ausgangsmatrix[r][j])/gemeinsamer_Nenner;
+      }
+    }
+//  if (neuerNenner<0) {
+//    for (var i=0;i<m;i++) for (var j=0;j<n;j++) neueMatrix[i][j]=-neueMatrix[i][j];
+//    neuerNenner=-neuerNenner;
+//    }
+  Ausgangsmatrix=neueMatrix;
+  gemeinsamer_Nenner=neuerNenner;
+  //alert("r="+r+"; s="+s+";\n\n[ ["+Ausgangsmatrix.join("],\n  [")+"] ] / "+gemeinsamer_Nenner);
+  }
+  return gemeinsamer_Nenner;
   }
   </script>
 <body onload="Los()">
