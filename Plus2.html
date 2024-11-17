@@ -3,7 +3,7 @@
 <title>Plus2.html</title>
 <meta charset="utf-8"/>
 <style>
-  td {text-align:right; min-width:100}
+  td {text-align:right; min-width:100;font-size:30%}
   .yx {background-color:white}
   .xy {background-color:LightGray}
   .xx {background-color:orange}
@@ -56,6 +56,7 @@ function tausche(r,s) {
   //alert(m+" "+n);
   var neueMatrix=[];
   var neuerNenner=Ausgangsmatrix[r][s];
+  if (neuerNenner==0) {alert('da entsteht Division durch Null, deshalb anderen Koeffizient auswählen'); return}
   for (var i=0;i<m;i++) {
     neueMatrix[i]=[];
     for (var j=0;j<n;j++) {
@@ -75,6 +76,7 @@ function neu(bi) { if (bi<n) return bi; else return n-bi-2; }
 function xy(bi) { if (bi<n) return "x"+bi; else if (bi<n+m-1) return "y"+(bi-n+1); else return 0;}
 
 function t(r,s) {
+  if (Ausgangsmatrix[r][s]==0) return;
   hist.push([r,s]);
   p=[r,s,r,s];
   var merk=B[p[2]];
@@ -104,7 +106,7 @@ function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
   }
 
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
-  var T='<table style="font-style:italic;font-size:300%" border="1">\n';
+  var T='<table style="font-style:italic;font-size:300%; box-sizing: border-box" border="1">\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
   let determ=det(AUV(U,V));
@@ -119,9 +121,9 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         else T=T+"y<sub>"+(-1-D[j])+"</sub></td>";
       }
   for (var i=0;i<m;i++) {
-    T=T+"<tr>";
-    if (B[i]<0) T=T+"<td>y<sub>"+(-1-B[i])+"</sub></td>"; 
-      else T=T+"<td>x<sub>"+(B[i])+"</sub></td>";
+    T=T+"<tr><td>"+Nenner+'·';
+    if (B[i]<0) T=T+"y<sub>"+(-1-B[i])+"</sub>=</td>"; 
+      else T=T+"x<sub>"+(B[i])+"</sub>=</td>";
     for (var j=0;j<n;j++) {
       signx=1;
       if (i==p[2]&&j==p[3]) T=T+'<td style="color:blue; border:solid"';
@@ -154,9 +156,13 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
         }
       determ=signd*signx*det(AUV(Yi,Xj));
       if (determ!=Ausgangsmatrix[i][j]) T=T+' style="border:solid red 5px"';
+      if (Ausgangsmatrix[i][j]==0) {T=T+' style="visibility:hidden" ';}
       T=T+' onclick="t('+i+","+j+')">';
       if (Ausgangsmatrix[i][j]>=0) T=T+"+";
-      T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/"</td>";
+      T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'·';
+      if (D[j]>=0) T=T+"x<sub>"+D[j]+"</sub>"; 
+        else T=T+"y<sub>"+(-1-D[j])+"</sub>";      
+      T=T+"</td>";
       }
     T=T+"</tr>";
     }
@@ -328,6 +334,17 @@ alert(determinantOfMatrixRecursive([[-1,1,-2,5],[-2,2,4,-8],[-2,2,6,-8],[-4,1,-2
 
 
   </script>
+
+<script>
+let handle=0;
+function zufaellig_weiter() {
+  let zm=Math.round(Math.random()*(m)-1/2);
+  let zn=Math.round(Math.random()*(n)-1/2);
+  //alert([zm,zn]);
+  t(zm,zn);
+  handle=setTimeout(zufaellig_weiter,300);
+  }
+  </script>
 <body onload="Los()">
 <p>Ein Programm zu <a href="https:" target="_blank">???</a></p>
 
@@ -400,10 +417,13 @@ starte_Pivotverfahren();
 //Zusatz(1,1);
 */
 </textarea>
-<button onclick="Los()">losrechnen</button>
-<button onclick="t(p[2],p[3])">weiter</button>
-<button onclick="for (var w=0;w<100;w++) if (p[2]>0 & p[3]>0) t(p[2],p[3])">100*weiter</button>
+<!--button onclick="Los()">losrechnen</button-->
+<!--button onclick="t(p[2],p[3])">weiter</button-->
+<!--button onclick="for (var w=0;w<100;w++) if (p[2]>0 & p[3]>0) t(p[2],p[3])">100*weiter</button-->
+<button onclick="zufaellig_weiter()">zufällig weiter</button>
+<button onclick="clearTimeout(handle)">anhalten</button>
 <button onclick="p=hist.pop(); t(p[0],p[1]); hist.pop()">zurueck</button>
+<button onclick="clearTimeout(handle); Los()">neu beginnen</button>
 
 <style>
 table {display:table; font-family:Courier Monospace; font-style:italic; font-size:100%; overflow:auto; color:gray; border:double}
