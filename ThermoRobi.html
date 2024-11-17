@@ -13,6 +13,10 @@ let robiSensorChar6 = 'af230006-879d-6186-1f49-deca0e85d9c1';//dash
 let robiSensorChar3 = 'af230003-879d-6186-1f49-deca0e85d9c1';//dash+dot
 let robiCommandChar = 'af230002-879d-6186-1f49-deca0e85d9c1';
 
+function hex(val) {
+  return '0x' + ('00' + val.toString(16)).slice(-2);    
+  }
+
 function display_value(value) {
   let a = [];
   for (let i = 0; i < value.byteLength; i++) a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
@@ -38,7 +42,7 @@ function handleNotifications(event) {//alert(event);
   DASH.prox_left  = value.getUint8(7);
   DASH.prox_rear  = value.getUint8(8);
   //document.getElementById("id_notification").innerHTML='dash> ' + a.join(' ');
-  document.getElementById("id_notification").innerHTML='dash> prox_right='+DASH.prox_right+' prox_left='+DASH.prox_left+' prox_rear='+DASH.prox_rear;
+  document.getElementById("id_notification").innerHTML='dash> prox_right='+hex(DASH.prox_right)+' prox_left='+hex(DASH.prox_left)+' prox_rear='+hex(DASH.prox_rear);
   }
 
 function handleNotifications2(event) {//alert(event);
@@ -77,7 +81,9 @@ function handleNotifications3(event) {
   if (DOT.tilt>=0x800) {
     DOT.tilt=DOT.tilt-0x1000;
     DOT.tilt2=DOT.tilt;
+      if ((DASH.prox_right+DASH.prox_left)>0x10) DOT.tilt2=-DOT.tilt;
     } else {
+      DOT.tilt2=DOT.tilt;
       if (DOT.tilt2<DOT.tilt) DOT.tilt2=Math.min(Math.round(DOT.tilt2+DOT.dtime/1000*30),DOT.tilt); else DOT.tilt2=DOT.tilt;
       }
   DOT.lean=((value.getUint8(4)&0x0F)<<8)+value.getUint8(3);
@@ -123,10 +129,11 @@ let DOT={value2:(new DataView(new ArrayBuffer(8))),char2:{writeValue:function(va
 
 let CC_RT_BLE={};
 
-async function device_request() {
+async function device_request(name) {
   log();
   //let options={};
-  let options={filters:[{name:"Robi"},{name:"Dot"}]};
+  //let options={filters:[{name:"Robi"},{name:"Dot"}]};
+  let options={filters:[{name:name}]};
   //options.acceptAllDevices = true;
   options.optionalServices = [
     '00001800-0000-1000-8000-00805f9b34fb', //alle? name?
@@ -147,6 +154,7 @@ async function device_request() {
   log('> Connected:        ' + RET.device.gatt.connected);
   if (RET.device.name=='Robi') DASH= await kopple_Robi(RET);
   if (RET.device.name=='Dot') DOT= await kopple_Dot(RET);
+  document.getElementById('Button_'+name).setAttribute('style','background-color:aqua');
   return RET;
   }  
 
@@ -439,6 +447,21 @@ NOISES = {
 }
 
 */
+
+let NOISES={
+        "elephant":   "53595354454c455048414e545f300e460000",  // SYSTELEPHANT_0.F
+        "tiresqueal": "535953545449524553515545414c0e460000",  // SYSTTIRESQUEAL.F
+        "hi":         "53595354444153485f48495f564f0b00c900",  // SYSTDASH_HI_VO
+        "bragging":   "535953544252414747494e4731410b232300",  // SYSTBRAGGING1A##
+        "ohno":       "5359535456375f4f484e4f5f30390b000000",  // SYSTV7_OHNO_09
+        "ayayay":     "53595354434f4e46555345445f310b000000",  // SYSTCONFUSED_1
+        "confused2":  "53595354434f4e46555345445f320b000000",  // SYSTCONFUSED_2
+        "confused3":  "53595354434f4e46555345445f330b000000",  // SYSTCONFUSED_3
+        "confused5":  "53595354434f4e46555345445f350b000000",  // SYSTCONFUSED_5
+        "confused8":  "53595354434f4e46555345445f380b000000",  // SYSTCONFUSED_8
+        "brrp":       "53595354434f4e46555345445f360b000000",  // SYSTCONFUSED_6
+        "charge":     "535953544348415247455f3033000b000000",  // SYSTCHARGE_03
+  }
 
 Liste=
 [
@@ -914,10 +937,12 @@ DOT.lean_merk=0;
 
 let num=0;
 function every() {
+//alert(weitermachen);
   if (weitermachen==false) {return}
   weitermachen=false;
   id_callEvery.innerHTML=num;
   num=num+1;
+/*
   if (DOT.button0==2) {
     DASH.value2=[0x02,0,0,0];
     //log("every "+DASH.value2);
@@ -937,7 +962,7 @@ function every() {
     DASH.char2.writeValue(Uint8Array.of(...DASH.value2));    
     }
 
-  if (DOT.button1==1) {
+  if (DOT.button0==2) {
     //tilt,pitch,
     DASH.value2=[0x07];
     DASH.value2[1]=Math.max(-7,Math.min(DOT.tilt/50,22));
@@ -945,12 +970,12 @@ function every() {
     span_write.innerHTML=Uint8Array.of(...DASH.value2);
     DASH.char2.writeValue(Uint8Array.of(...DASH.value2));    
     }
-
+*/
   //drive/turn
     DASH.value2=[0x02];
     dely=0;
     delx=0;
-    if (DOT.button0_ein==1) {dely=-DOT.tilt/2; delx=-DOT.lean;}
+    if (DOT.button0==1) {dely=-DOT.tilt2/2; delx=-DOT.lean;}
 //    if (dely < 0) dely = dely + 0x800;
 //    if (delx < 0) delx = delx + 0x800;
     //log('setUint8(1)');
@@ -969,7 +994,7 @@ function every() {
   weitermachen=true;
   }
 
-//setInterval(every,100);
+setInterval(every,100);
 
   </script>
   
@@ -993,9 +1018,29 @@ function TTest() {
 setInterval(TTest,1000);
   </script>
 
+<script>
+function sound_to_array(sound) {
+  //alert(sound.slice(0));
+  let RET=[0x18];
+  for (let i=0;i<36;i=i+2) RET.push(parseInt(sound.slice(i,i+2),16));//sound.slice(i,i+2),16));
+  return RET;
+  }
+
+function Robi_sound(sound) {
+  DASH.value2=sound_to_array(sound);
+  //alert(DASH.value2);
+  //alert(DASH.char2);
+  DASH.char2.writeValue(Uint8Array.of(...DASH.value2));
+  }
+  </script>
+
 </head>
 <body onload="Test()">
-<span><button id='button_device_request' onclick="device_request()">device_request()</button></span>
+<style>.device_request {font-size:300%}</style>
+<style>.sound {font-size:280%}</style>
+<span><button id='button_Robi' class='device_request' onclick='device_request("Robi")'>Robi</button></span>
+<span><button id='button_Dot' class='device_request' onclick='device_request("Dot")'>&nbsp;Dot&nbsp;</button></span>
+<span><button id='button_Robi_' class='sound' onclick='Robi_sound(NOISES.hi)'>Robi hi</button></span>
 <div><span><button id='button_b_400_0' onclick='log(DASH.value2);
   DASH.value2.setUint8(0,0x000b);log(DASH.value2);
   DASH.value2.setUint8(1,400);log(DASH.value2);
@@ -1003,7 +1048,7 @@ setInterval(TTest,1000);
   DASH.value2.setUint8(3,0);log(DASH.value2);
   log("[b,400,0,0]")
   DASH.char2.writeValue(DASH.value2);
-  log("> gesendet")
+  log("> gesendet"),
   '>[b,400,0,0]</button></span>
   </div>
 <div><span><button id='button_b_0_0' onclick='
