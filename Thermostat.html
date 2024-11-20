@@ -259,6 +259,7 @@ async function Wochenprogramm_auslesen() {
 <body>
 <style>.Ausgabe {font-family:Courier,monospace; font-size:100%; color:red; border:solid; border-radius:4pt}</style>
 <ul>
+  <li>am CC-RT-BLE Bluetooth aktivieren (3 Sek. Menütaste, dann Stellrad bis ble drehen und 1xdrücken, bei Anzeige "on" nochmal drücken)</li>
   <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span> und später wieder <span><button id='button_device_request' onclick="CC_RT_BLE.device.gatt.disconnect()">trennen</button></span></li>
   <li>Ausgabe um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
   Modus <span id='Ausgabe_Modus' class='Ausgabe'>?</span>,
@@ -331,7 +332,7 @@ async function Wochenprogramm_auslesen() {
 <div id="div_notification" style="font-family:Courier,monospace">notification1</div>
 <!--div id="div_notification2" style="font-family:Courier,monospace">notification2</div-->
 
-<div><a href='https://www.bedienungsanleitu.ng/eq3/cc-rt-n/anleitung?p=1'>Bedienungsanleitung EQ3/CC-RT-BLE</a>
+<div><a href='https://www.bedienungsanleitu.ng/eq-3/cc-rt-ble-eq/anleitung?p=1'>Bedienungsanleitung EQ3/CC-RT-BLE</a>
 <div><a href='https://reverse-engineering-ble-devices.readthedocs.io/en/latest/protocol_description/00_protocol_description.html#eq3-eqiva-protocol'>Reverse Engineering BLE Devices Documentation Sergio Alberti, eq3-eqiva-protocol</a></div>
 <div><a href='https://github.com/Heckie75/eQ-3-radiator-thermostat'>https://github.com/Heckie75/eQ-3-radiator-thermostat</a></div>
 <div><a href='https://googlechrome.github.io/samples/web-bluetooth/index.html'>https://googlechrome.github.io/samples/web-bluetooth/index.html</a></div>
