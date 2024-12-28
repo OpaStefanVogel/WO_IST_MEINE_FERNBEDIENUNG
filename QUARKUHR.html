@@ -58,12 +58,15 @@ function los(i) {
     event.target.parentNode.appendChild(c);
     naechsterButton=c.firstElementChild;
     }
-  if (i==1) { 
-    event.target.nextElementSibling.setAttribute("Anfangszeit",Date.now());
-    event.target.nextElementSibling.setAttribute("style","");
-    event.target.nextElementSibling.nextElementSibling.setAttribute("style","font-size:100%");
-    event.target.nextElementSibling.setAttribute("Zwischenzeit",0);
-    naechsterButton=event.target.nextElementSibling.nextElementSibling;
+  if (i==1) {
+    let nB=event.target.nextElementSibling;
+    if (Checkbox_Baumkuchen.checked) nB=nB.nextElementSibling.nextElementSibling.nextElementSibling;
+    nB.setAttribute("Anfangszeit",Date.now());
+    nB.setAttribute("style","");
+    nB.nextElementSibling.setAttribute("style","font-size:100%");
+    nB.setAttribute("Zwischenzeit",0);
+    naechsterButton=nB.nextElementSibling;
+    
     }
   if (i==2) {
     event.target.previousElementSibling.removeAttribute("Anfangszeit");
@@ -122,8 +125,8 @@ function naechsterButtonClick() {
   document.getElementById("LosX").firstChild.nodeValue=nB;
   if (nB=="Los"||nB=="Weiter") 
     nA.setAttribute("class","LosAaus");
-    else {
-      if (nB=="Wenden") {nA.firstChild.nodeValue=Pfanne; nA.setAttribute("class","LosAein")}
+    else {nA.firstChild.nodeValue=Pfanne; 
+      if (nB=="Wenden") {nA.setAttribute("class","LosAein")}
         else nA.setAttribute("class","LosAein2");
       
       }
@@ -138,6 +141,11 @@ function naechsterButtonClick() {
   </span>
   </div>
 <div style="min-height:220px"> </div>
+<div>
+  <input type='radio' id='Checkbox_Quarkkaeulchen' name='Sorte' checked='checked'>Quarkkäulchen</input>
+  <input type='radio' id='Checkbox_Eierkuchen' name='Sorte'>Eierkuchen</input>
+  <input type='radio' id='Checkbox_Baumkuchen' name='Sorte'>Baumkuchen</input>
+  </div>
 <a href="../Rezepte.xml" target="_blank">Rezepte.xml</a> (
 <a href="../Rezepte.xml#Eierkuchen" target="_blank">Eierkuchen</a>/<a href="../Rezepte.xml#Quarkkäulchen" target="_blank">Quarkkäulchen</a>/<a href="../Rezepte.xml#Baumkuchen" target="_blank">Baumkuchen</a>)
 <div id="defs" style="display:none">

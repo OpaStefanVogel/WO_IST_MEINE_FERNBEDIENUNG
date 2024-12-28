@@ -55,9 +55,17 @@ function onDisconnected() {
   alert('disconnected\nwegen Button "trennen"\noder weil 90 sek inaktiv');
   }
 
-async function kopple_CC_RT_BLE(dev) {
-  Ausgabe_Kopplung.innerHTML='versuche zu verbinden (nach 5 sek erneut versuchen)';
+
+let Timercode=0;
+function Countdown(i) {
+  Ausgabe_Kopplung.innerHTML='versuche zu verbinden (nach '+i+' sek erneut versuchen)';
+  Timercode=setTimeout(Countdown,1000,i-1);
+  }
+
+async function kopple_CC_RT_BLE(dev) {  
   log('kopple_CC_RT_BLE(device)');
+
+  Countdown(5);
 
   dev.device.addEventListener('advertisementreceived', (event) => {
     log('Advertisement received.');
@@ -110,6 +118,8 @@ async function kopple_CC_RT_BLE(dev) {
 //  log('> Characteristic.value '+display_value(dev.value3));
 //  log(dev);
 //  log(dev.value3);
+
+  if (Timercode!=0) clearTimeout(Timercode);
   Ausgabe_Kopplung.innerHTML='verbunden, button_aktualisieren()';
   setTimeout(function() {Ausgabe_Kopplung.innerHTML='verbunden';button_aktualisieren.click()},500);
   return dev;
@@ -187,7 +197,7 @@ function CC_RT_BLE_handleNotifications(val) {//alert(event);
   //alert(document.getElementById("div_notification").innerHTML+'> ' + a.join(' '));
   document.getElementById("div_notification").innerHTML='> ' + a.join(' ');
   if ((b[0]==2)&&(b[1]==1)) {
-    Ausgabe_Uhrzeit.innerHTML=(new Date()).toTimeString().slice(0,5);
+    Ausgabe_Uhrzeit.innerHTML=(new Date()).toTimeString().slice(0,8);
     Ausgabe_Solltemperatur.innerHTML=(b[5]/2).toFixed(1);
     Ausgabe_Ventilstellung.innerHTML=b[3];
     Ausgabe_Batterie.innerHTML=b[4];
@@ -261,7 +271,7 @@ async function Wochenprogramm_auslesen() {
 <ul>
   <li>am CC-RT-BLE Bluetooth aktivieren (3 Sek. Menütaste, dann Stellrad bis ble drehen und 1xdrücken, bei Anzeige "on" nochmal drücken)</li>
   <li>den CC-RT-BLE über Bluetooth <span><button id='button_device_request' onclick="device_request()">koppeln</button></span>. <span id='Ausgabe_Kopplung' class='Ausgabe'>?</span> und später wieder <span><button id='button_device_request' onclick="CC_RT_BLE.device.gatt.disconnect()">trennen</button></span></li>
-  <li>Ausgabe um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??</span> Uhr:
+  <li>Ausgabe um <span id='Ausgabe_Uhrzeit' class='Ausgabe'>??:??:??</span> Uhr:
   Modus <span id='Ausgabe_Modus' class='Ausgabe'>?</span>,
   Solltemperatur <span id='Ausgabe_Solltemperatur' class='Ausgabe'>?</span> <i>°C</i>,
   Ventil <span id='Ausgabe_Ventilstellung' class='Ausgabe'>?</span> <i>%</i> geöffnet,
