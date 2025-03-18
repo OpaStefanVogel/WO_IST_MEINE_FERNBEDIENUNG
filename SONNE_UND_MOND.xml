@@ -6,7 +6,8 @@
   width="100%" height="100%"
   viewBox="150 10 510 410"
   preserveAspectRatio="xMinYMin"
-  onload="fun1(evt)" style="border:dotted">
+  onload="fun1(evt)" style="border:dotted"
+  title='SONNE UND MOND'>
 <circle id="kursor" cx="100" cy="100" r="10" fill="none" stroke="green" stroke-width="1" />
 <circle id="kreis" cx="400" cy="200" r="100" fill="white" stroke="black" stroke-width="1" />
 <g id="=Pleyaden" transform="translate(400,200) rotate(-47) translate(190)">
@@ -46,19 +47,23 @@
   <rect x="10" y="10" ry="5" width="80" height="160" fill="green" style="fill:limegreen; stroke:black;" />
   </a>
   
+<foreignObject x="700" y="10" width="280" height="400" style="border:solid"><table id='bod' xmlns="http://www.w3.org/1999/xhtml">
+  </table></foreignObject>
 
 <script type="application/ecmascript"> 
 <![CDATA[ 
 var diff=0;
 var Woche=["So","Mo","Di","Mi","Do","Fr","Sa"];
+let t = new Date(Date.now()+diff*24*60*60*1000);
+let tn = new Date(2015,9,13);//irgendein nahegelegener Neumond
+let tdiff= 2551392000;
 function fun1(evt) {
-  var t = new Date(Date.now()+diff*24*60*60*1000);
-  var tn = new Date(2015,9,13);//irgendein nahegelegener Neumond
 //  var circle = evt.target;
+  t = new Date(Date.now()+diff*24*60*60*1000);
   var phi = (t.valueOf() % 31556952000)/31556952000*2*Math.PI+0.19191919;
   var sonnex = Math.sin(phi)*150+400;
   var sonney = Math.cos(phi)*150+200;
-  var kw = ((t.valueOf()-tn.valueOf()) % 2551392000) / 2551392000;
+  var kw = ((t.valueOf()-tn.valueOf()) % tdiff) / tdiff;
   var mphi=kw*2*Math.PI+phi;
   var mmphi = -mphi*180/Math.PI;
   var mondx = Math.sin(mphi)*150+400;
@@ -77,6 +82,28 @@ function fun1(evt) {
   }
 setInterval(jedeStunde,1000);
 function jedeStunde() {fun1(0)};
+
+let ts=tn.valueOf()+9*12*tdiff;
+let tt=0;
+let tab='';
+while (ts<t.valueOf()+16*tdiff) {
+  if (ts>t.valueOf()-tdiff) {
+    tt=new Date(ts);
+    ttvoll=new Date(ts+tdiff/2);
+    tab=tab+'<tr>'
+      +'<td>'+Woche[tt.getDay()]+'</td>'
+      +'<td>'+tt.getDate()+"."+(tt.getMonth()+1)+'.</td>'
+      +'<td>'+Woche[ttvoll.getDay()]+'</td>'
+      +'<td>'+ttvoll.getDate()+"."+(ttvoll.getMonth()+1)+'.</td>'
+      +'</tr>\n'
+    //alert(tab+'\n'+tdiff);
+    }
+  ts=ts+tdiff;
+  }
+tab=tab+'\n';
+//alert(tab);
+//alert(document.getElementById('bod').innerHTML);
+document.getElementById('bod').innerHTML=tab;
   ]]> 
   </script> 
 
