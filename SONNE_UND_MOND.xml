@@ -17,7 +17,7 @@
   <circle id="Pleyad4" cx="19" cy="-3" r="2" fill="green" stroke="none"/>
   <circle id="Pleyad5" cx="22" cy="-5" r="2" fill="green" stroke="none"/>
   <circle id="Pleyad6" cx="23" cy=" 3" r="2" fill="green" stroke="none"/>
-  <circle id="Pleyad5" cx="25" cy="-2" r="2" fill="green" stroke="none"/>
+  <circle id="Pleyad7" cx="25" cy="-2" r="2" fill="green" stroke="none"/>
   </g>
 <circle id="sonne" cx="350" cy="200" r="16.68" fill="yellow" stroke="black" stroke-width="1" />
 <g id="mond" stroke="black" stroke-width="1" transform="translate(400,200)">
@@ -47,7 +47,7 @@
   <rect x="10" y="10" ry="5" width="80" height="160" fill="green" style="fill:limegreen; stroke:black;" />
   </a>
 
-<foreignObject x="700" y="10" width="300" height="400" style="border:solid"><div style='display:flex; flex-direction:column; overflow:auto' xmlns="http://www.w3.org/1999/xhtml"><table id='bod' xmlns="http://www.w3.org/1999/xhtml"> </table></div></foreignObject>
+<foreignObject x="700" y="10" width="300" height="400" style="border:solid"><div style='display:flex; flex-direction: column-reverse; align-items: flex-end;  overflow:auto' xmlns="http://www.w3.org/1999/xhtml"><table id='bod' xmlns="http://www.w3.org/1999/xhtml"> </table></div></foreignObject>
 
 <script type="application/ecmascript"> 
 <![CDATA[ 
@@ -55,7 +55,8 @@ var diff=0;
 var Woche=["So","Mo","Di","Mi","Do","Fr","Sa"];
 let t = new Date(Date.now()+diff*24*60*60*1000);
 let tn = new Date(2015,9,13,6);//irgendein nahegelegener Neumond
-let tdiff= 2551392000;
+let tdiff= 2551392000; //von Vollmond zu Vollmond
+
 function fun1(evt) {
 //  var circle = evt.target;
   t = new Date(Date.now()+diff*24*60*60*1000);
@@ -82,6 +83,12 @@ function fun1(evt) {
 setInterval(jedeStunde,1000);
 function jedeStunde() {fun1(0)};
 
+//1747322713219X3.0148527001204
+//1749741961015X371.96802649060345
+//(1749741961015-1747322713219)/(371.96802649060345-3.0148527001204)*360 = 2360541305.587395 = tdiff2
+//(1747322713219-3.0148527001204*2360541305.587395/360) = 1747302944651.4197 = ttief = 2025__05_15__11_55__MESZ
+//alert(new Date(1747302944651.4197));
+
 let Neujahr=new Date(t.getFullYear(),0,1,0,0);
 let Fruehlingsanfang=new Date(t.getFullYear(),2,21,0,0);
 let ts=tn.valueOf()+9*12*tdiff;
@@ -92,12 +99,18 @@ let tab='';
 let wo12='.......::.....';
 let wo34='.......::.....';
 let border='';
-while (ts<t.valueOf()+30*tdiff) {
-  if (ts>Neujahr.valueOf()) {
-    tt=new Date(ts);
-    ttvoll=new Date(ts+tdiff/2);
-    tt2=new Date(ts+tdiff);
-    tt3=ts+24*60*60*1000;wo12='';
+
+let tdiff2=2360541305.587395 //von Tiefmond zu Tiefmond
+let ttief=1747302944651.4197 //irgendein Tiefmond
+let tdi=tdiff2;    //bei Tief-Hochmond, tdiff bei Neu-Vollmond
+let tstart=ttief-5*tdiff2; //bei Tief-Hochmond, ts bei Neu-Vollmond
+
+while (tstart<t.valueOf()+30*tdi) {
+  if (tstart>Neujahr.valueOf()) {
+    tt=new Date(tstart);
+    ttvoll=new Date(tstart+tdi/2);
+    tt2=new Date(tstart+tdi);
+    tt3=tstart+24*60*60*1000;wo12='';
     Fruehlingsanfang=new Date(ttvoll.getFullYear(),2,21,0,0);
     while ((new Date(tt3)).getDate()!=ttvoll.getDate()) {
       if (((new Date(tt3)).getDate()==t.getDate())&&((new Date(tt3)).getMonth()==t.getMonth())&&((new Date(tt3)).getFullYear()==t.getFullYear())) wo12=wo12+'<span style="color:red; background-color:lightgray"><sub>;</sub></span>';
@@ -111,8 +124,8 @@ while (ts<t.valueOf()+30*tdiff) {
       tt3=tt3+24*60*60*1000;
       }
     border='';
-    if (((ttvoll.valueOf()-tdiff)<=Fruehlingsanfang.valueOf())&&(ttvoll.valueOf()>=Fruehlingsanfang.valueOf())) border=' style="border:solid"';
-    if (((ttvoll.valueOf()-7*tdiff)<=Fruehlingsanfang.valueOf())&&(ttvoll.valueOf()-6*tdiff>=Fruehlingsanfang.valueOf())) border=' style="border:solid"';
+    if (((ttvoll.valueOf()-tdi)<=Fruehlingsanfang.valueOf())&&(ttvoll.valueOf()>=Fruehlingsanfang.valueOf())) border=' style="border:solid"';
+    if (((ttvoll.valueOf()-7*tdi)<=Fruehlingsanfang.valueOf())&&(ttvoll.valueOf()-6*tdi>=Fruehlingsanfang.valueOf())) border=' style="border:solid"';
     tab=tab+'<tr>'
       +'<td>'+Woche[tt.getDay()]+'</td>'
       +'<td>'+tt.getDate()+"."+(tt.getMonth()+1)+'.</td>'
@@ -121,9 +134,9 @@ while (ts<t.valueOf()+30*tdiff) {
       +'<td'+border+'>'+ttvoll.getDate()+"."+(ttvoll.getMonth()+1)+'.</td>'
       +'<td>'+wo34+'</td>'
       +'</tr>\n'
-    //alert(tab+'\n'+tdiff);
+    //alert(tab+'\n'+tdi);
     }
-  ts=ts+tdiff;
+  tstart=tstart+tdi;
   }
 tab=tab+'\n';
 //alert(tab);
