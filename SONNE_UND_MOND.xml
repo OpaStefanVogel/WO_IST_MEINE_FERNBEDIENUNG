@@ -110,14 +110,14 @@ while (tstart<t.valueOf()+30*tdi) {
     tt=new Date(tstart);
     ttvoll=new Date(tstart+tdi/2);
     tt2=new Date(tstart+tdi);
-    tt3=tstart+24*60*60*1000;wo12='';
+    tt3=tstart+0*24*60*60*1000;wo12='';
     Fruehlingsanfang=new Date(ttvoll.getFullYear(),2,21,0,0);
     while ((new Date(tt3)).getDate()!=ttvoll.getDate()) {
       if (((new Date(tt3)).getDate()==t.getDate())&&((new Date(tt3)).getMonth()==t.getMonth())&&((new Date(tt3)).getFullYear()==t.getFullYear())) wo12=wo12+'<span style="color:red; background-color:lightgray"><sub>;</sub></span>';
         else if ((new Date(tt3)).getDay()==0) wo12=wo12+':'; else wo12=wo12+'.';
       tt3=tt3+24*60*60*1000;
       }
-    tt3=tt3+24*60*60*1000;wo34='';
+    tt3=tt3+0*24*60*60*1000;wo34='';
     while ((new Date(tt3)).getDate()!=tt2.getDate()) {
       if (((new Date(tt3)).getDate()==t.getDate())&&((new Date(tt3)).getMonth()==t.getMonth())&&((new Date(tt3)).getFullYear()==t.getFullYear())) wo34=wo34+'<span style="color:red; background-color:lightgray"><sub>;</sub></span>';
         else if ((new Date(tt3)).getDay()==0) wo34=wo34+':'; else wo34=wo34+'.';
