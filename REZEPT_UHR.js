@@ -118,4 +118,4 @@ function Sprich(was) {
   window.speechSynthesis.speak(worte);
   }
 
-Sprich("Rezepte");
+//Sprich("los");
