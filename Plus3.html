@@ -129,6 +129,7 @@ let td_class="";
 let XjMat=[];
 let YiMat=[];
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
+  if (npiv) {AMERK[0][0]=AMERK[0][0]+1n; gemeinsamer_Nenner=neuer_gemeinsamer_Nenner};
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
@@ -155,6 +156,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
   T=T+'</tr-'+'->\n';
   XjMat=[];
   YiMat=[];
+  let bis_jetzt_noch_kein_Fehler=true;
   for (let i=0;i<m;i++) {
     signarray[i]=[];
     T=T+'<tr>';
@@ -199,13 +201,14 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
       YiMat[i][j]=Yi;
       signarray[i][j]=BigInt(signx);
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
-      if (npiv) AMERK[0][0]=AMERK[0][0]+1n;
       determ=BigInt(signd)*BigInt(signx)*(det(AUV(Yi,Xj)));
-      if (npiv) AMERK[0][0]=AMERK[0][0]-1n;
       if (determ!=Ausgangsmatrix[i][j]/*||determ<-10000*/) {
         T=T+' style="border:solid red 5px";'; 
         err=true;
-        if (npiv) ; else alert('Error: determ!=Ausgangsmatrix[i][j]\n'+determ+'\n'+Ausgangsmatrix[i][j]); 
+        if (npiv) if (determ!=-Ausgangsmatrix[i][j]) if (bis_jetzt_noch_kein_Fehler) {
+          alert('Error: determ!=Ausgangsmatrix[i][j]\n'+determ+'\n'+Ausgangsmatrix[i][j]);
+          bis_jetzt_noch_kein_Fehler=false;
+          } 
         }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" color:white; ";
       //alert(sty);
@@ -250,6 +253,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
     Checkbit_Nenner=false;
     }
+  if (npiv) {AMERK[0][0]=AMERK[0][0]-1n; gemeinsamer_Nenner=alter_gemeinsamer_Nenner};
   return T;
   }
   </script>
@@ -694,13 +698,29 @@ window.onerror=function(message, file, line, col, error) {alert('Fehlerausgabe v
 
 let Matrix_2=[];
 let d=1n;
+let alter_gemeinsamer_Nenner=0n;
+let neuer_gemeinsamer_Nenner=0n;
+
 function bestimme_Matrix_2() {
   Matrix_2=structuredClone(Ausgangsmatrix);
-  g=0;h=0;
-  if ((D.indexOf(g)==-1)&&(B.indexOf(-h-1)==-1)) for (let i=0;i<Matrix_2.length;i++) for (let j=0;j<Matrix_2[0].length;j++) 
-    Matrix_2[j][i]=Matrix_2[j][i]+d*(Ausgangsmatrix[j][i]*Ausgangsmatrix[h][g]-Ausgangsmatrix[h][i]*Ausgangsmatrix[j][g]);
+  g=0;h=0;//für a(g,h)+d
+  alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
+  neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_2[j][i]=Matrix_2[j][i]+d*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner=gemeinsamer_Nenner+d*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_2[B.indexOf(-g-1)][i]=Matrix_2[B.indexOf(-g-1)][i]+d*Matrix_2[B.indexOf(h)][i];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_2[j][D.indexOf(h)]=Matrix_2[j][D.indexOf(h)]-d*Matrix_2[j][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_2[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_2[B.indexOf(-g-1)][D.indexOf(h)]+d*gemeinsamer_Nenner;
   Logfile_Matrix_2.innerHTML='D=['+D+']\nB=['+B+']\n'+((D.indexOf(g)-1)&&(B.indexOf(-h-1)>-1));
-
   }
   </script>
 
