@@ -199,11 +199,13 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
       YiMat[i][j]=Yi;
       signarray[i][j]=BigInt(signx);
       //let err=Error('determ!=Ausgangsmatrix[i][j]');//alert(err);
+      if (npiv) AMERK[0][0]=AMERK[0][0]+1n;
       determ=BigInt(signd)*BigInt(signx)*(det(AUV(Yi,Xj)));
+      if (npiv) AMERK[0][0]=AMERK[0][0]-1n;
       if (determ!=Ausgangsmatrix[i][j]/*||determ<-10000*/) {
         T=T+' style="border:solid red 5px";'; 
         err=true;
-        alert('Error: determ!=Ausgangsmatrix[i][j]\n'+determ+'\n'+Ausgangsmatrix[i][j]); 
+        if (npiv) ; else alert('Error: determ!=Ausgangsmatrix[i][j]\n'+determ+'\n'+Ausgangsmatrix[i][j]); 
         }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" color:white; ";
       //alert(sty);
@@ -689,15 +691,24 @@ bem {display:none; color:green}
 <script>
 window.addEventListener('error',function(event) {alert('Fehlerausgabe von window.addEventListener("error",...)\n'+event+'\n'+event.error.name+'\n'+event.error.cause+'\n'+event.error.stack+'\n'+event.error.columnNumber+'\n'+event.error.fileName+'\n'+event.error.lineNumber+'\n'+event.error.message)});
 window.onerror=function(message, file, line, col, error) {alert('Fehlerausgabe von window.onerror\nmessage '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error)};
+
 let Matrix_2=[];
+let d=1n;
 function bestimme_Matrix_2() {
   Matrix_2=structuredClone(Ausgangsmatrix);
+  g=0;h=0;
+  if ((D.indexOf(g)==-1)&&(B.indexOf(-h-1)==-1)) for (let i=0;i<Matrix_2.length;i++) for (let j=0;j<Matrix_2[0].length;j++) 
+    Matrix_2[j][i]=Matrix_2[j][i]+d*(Ausgangsmatrix[j][i]*Ausgangsmatrix[h][g]-Ausgangsmatrix[h][i]*Ausgangsmatrix[j][g]);
+  Logfile_Matrix_2.innerHTML='D=['+D+']\nB=['+B+']\n'+((D.indexOf(g)-1)&&(B.indexOf(-h-1)>-1));
 
   }
   </script>
 
 <hr/>
+<p>Jetzt die gleiche Umformung für die in Koeffizient a(0,0)+1 abgeänderte Ausgangsmatrix:</p>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
+<div id="Logfile_Matrix_2" style="display:non; white-space:pre; font-family:Courier,Monospace; font-size:70%">xxx
+  </div>
   </body>
   </html>
 <!--jetzt noch
