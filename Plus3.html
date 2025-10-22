@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Plus2.html</title>
+<title>Plus3.html</title>
 <meta charset="utf-8"/>
 <style>
   td {text-align:right; font-size:30%; white-space:nowrap}
@@ -24,6 +24,7 @@ var B=[];
 var LCode="";
 var HCode="";
 var HCode2="";
+var HCode_Matrix_2="";
 var p=[];
 var hist=[];
 let U=[];
@@ -56,6 +57,7 @@ function Los() {
   hist=[];
   p=[0,0,0,0,0];
   AMERK=structuredClone(Ausgangsmatrix);
+  bestimme_Matrix_2();
   Ausgabe();
   }
 
@@ -96,6 +98,7 @@ function t(r,s) {
   tausche(p[2],p[3]);
   V=[]; for (let i=0;i<B.length;i++) if (B[i]>=0) V.push(B[i]); V.sort();
   U=[]; for (let i=0;i<D.length;i++) if (D[i]<0) U.push(-D[i]-1); U.sort();
+  bestimme_Matrix_2();
   Ausgabe();
   }
 
@@ -110,6 +113,8 @@ function Ausgabe() {
   document.getElementById("HCode").innerHTML=HCode;
   //document.getElementById("Pivot").click();
   Pivot.click();
+  HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,true);
+  document.getElementById("id_HCode_Matrix_2").innerHTML=HCode_Matrix_2;
   }
 
 function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
@@ -123,7 +128,7 @@ let Checkbit_Nenner=false;
 let td_class="";
 let XjMat=[];
 let YiMat=[];
-function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
+function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
@@ -161,7 +166,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
       HCode2=HCode2+'  <td ';
       signx=1;
       let sty="border:solid; border-color:white;";
-      if (i==p[2]&&j==p[3]) {sty="color:blue; border:solid; border-color:blue;"; T=T+'id="Pivot" ';}
+      if (i==p[2]&&j==p[3]) {sty="color:blue; border:solid; border-color:blue;"; if (npiv) ; else T=T+'id="Pivot" ';}
       Yi=U.slice();Xj=V.slice();
       if (B[i]<0&&D[j]>=0) {
         td_class="yx";
@@ -677,9 +682,22 @@ bem {display:none; color:green}
 <div id="Ausgabe_xml" style="display:none; font-family:Courier,Monospace; white-space:pre-wrap">
   </div>
 <div id="Logfile" style="display:none; white-space:pre; font-family:Courier,Monospace; font-size:70%">
-  <div>
+  </div>
 <div id="Ausgabe">
-  <div>
+  </div>
+
+<script>
+window.addEventListener('error',function(event) {alert('Fehlerausgabe von window.addEventListener("error",...)\n'+event+'\n'+event.error.name+'\n'+event.error.cause+'\n'+event.error.stack+'\n'+event.error.columnNumber+'\n'+event.error.fileName+'\n'+event.error.lineNumber+'\n'+event.error.message)});
+window.onerror=function(message, file, line, col, error) {alert('Fehlerausgabe von window.onerror\nmessage '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error)};
+let Matrix_2=[];
+function bestimme_Matrix_2() {
+  Matrix_2=structuredClone(Ausgangsmatrix);
+
+  }
+  </script>
+
+<hr/>
+<p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
   </body>
   </html>
 <!--jetzt noch
