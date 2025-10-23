@@ -762,6 +762,19 @@ function bestimme_Matrix_3() {
   Matrix_3=structuredClone(Ausgangsmatrix);
   alter_gemeinsamer_Nenner3=gemeinsamer_Nenner;
   neuer_gemeinsamer_Nenner3=gemeinsamer_Nenner;
+  
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+det([[dgh,dgl],[dkh,dkl]])*det([
+        [Ausgangsmatrix[j][i],Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]],
+        [Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
+        [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]
+        ])/gemeinsamer_Nenner/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+det([[dgh,dgl],[dkh,dkl]])*(
+      Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-
+      Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    }
+  
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
     for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
       Matrix_3[j][i]=Matrix_3[j][i]+dgh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
@@ -837,9 +850,9 @@ function bestimme_Matrix_3() {
 <hr/>
 <p>Nun nochmal die gleiche Umformung für die mit </p>
 <div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
-<div>  <code>a(g,l)+<input id='id_dgl' size='2' value='0'/></code> </div>
-<div>  <code>a(k,h)+<input id='id_dkh' size='2' value='0'/></code> </div>
-<div>  <code>a(k,l)+<input id='id_dkl' size='2' value='0'/></code> </div>
+<div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
+<div>  <code>a(k,h)+<input id='id_dkh' size='2' value='5'/></code> </div>
+<div>  <code>a(k,l)+<input id='id_dkl' size='2' value='7'/></code> </div>
 <div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='1'/></code> </div>
 <div>  <code>und k=<input id='id_k' size='1' value='2'/>, l=<input id='id_l' size='1' value='2'/></code> </div>
     
