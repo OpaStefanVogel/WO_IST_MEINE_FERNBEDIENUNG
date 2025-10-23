@@ -774,6 +774,28 @@ function bestimme_Matrix_3() {
       Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)])/gemeinsamer_Nenner;
     }
 
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
+    for (let i=0;i<Matrix_2[0].length;i++)
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
+           [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) 
+    for (let i=0;i<Matrix_2[0].length;i++)
+      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]-det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]],
+           [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]]])/gemeinsamer_Nenner;
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
+    for (let j=0;j<Matrix_2[0].length;j++)
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]],
+            [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) 
+    for (let j=0;j<Matrix_2[0].length;j++)
+      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
+            [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
+
+
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
   if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
   if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
