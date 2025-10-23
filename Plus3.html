@@ -143,7 +143,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     AMERK[npiv[0]][npiv[3]]=AMERK[npiv[0]][npiv[3]]+npiv[4][1];
     AMERK[npiv[2]][npiv[1]]=AMERK[npiv[2]][npiv[1]]+npiv[4][2];
     AMERK[npiv[2]][npiv[3]]=AMERK[npiv[2]][npiv[3]]+npiv[4][3];
-    gemeinsamer_Nenner=neuer_gemeinsamer_Nenner;
+    gemeinsamer_Nenner=neuer_gemeinsamer_Nenner3;
     };
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
@@ -273,7 +273,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     AMERK[npiv[0]][npiv[3]]=AMERK[npiv[0]][npiv[3]]-npiv[4][1];
     AMERK[npiv[2]][npiv[1]]=AMERK[npiv[2]][npiv[1]]-npiv[4][2];
     AMERK[npiv[2]][npiv[3]]=AMERK[npiv[2]][npiv[3]]-npiv[4][3];
-    gemeinsamer_Nenner=alter_gemeinsamer_Nenner
+    gemeinsamer_Nenner=alter_gemeinsamer_Nenner3;
     };
   return T;
   }
@@ -719,9 +719,10 @@ window.onerror=function(message, file, line, col, error) {alert('Fehlerausgabe v
 
 let Matrix_2=[];
 let Matrix_3=[];
-d=1n;
 let alter_gemeinsamer_Nenner=0n;
 let neuer_gemeinsamer_Nenner=0n;
+let alter_gemeinsamer_Nenner3=0n;
+let neuer_gemeinsamer_Nenner3=0n;
 
 function bestimme_Matrix_2() {
   g=id_g.value*1;
@@ -751,28 +752,74 @@ function bestimme_Matrix_2() {
 function bestimme_Matrix_3() {
   g=id_g3.value*1;
   h=id_h3.value*1;
-  k=2;
-  l=2;
-  d=BigInt(id_d.value);//für a(g,h)+d
-  dgh=d;dgl=0n;dkh=0n;dkl=0n;
+  k=id_k.value*1;
+  l=id_l.value*1;
+  dgh=BigInt(id_dgh.value);//für a(g,h)+dgh
+  dgl=BigInt(id_dgl.value);//für a(g,l)+dgl
+  dkh=BigInt(id_dkh.value);//für a(k,h)+dkh
+  dkl=BigInt(id_dkl.value);//für a(k,l)+dkl
   npiv3=[g,h,k,l,[dgh,dgl,dkh,dkl]];
   Matrix_3=structuredClone(Ausgangsmatrix);
-  alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
-  neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
+  alter_gemeinsamer_Nenner3=gemeinsamer_Nenner;
+  neuer_gemeinsamer_Nenner3=gemeinsamer_Nenner;
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
     for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][i]=Matrix_3[j][i]+d*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
-    neuer_gemeinsamer_Nenner=gemeinsamer_Nenner+d*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
+      Matrix_3[j][i]=Matrix_3[j][i]+dgh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
     }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dgl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dkh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
+    }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dkl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
+    }
+
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)) {
     for (let i=0;i<Matrix_2[0].length;i++) 
-      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+d*Ausgangsmatrix[B.indexOf(h)][i];
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+dgh*Ausgangsmatrix[B.indexOf(h)][i];
     }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+dgl*Ausgangsmatrix[B.indexOf(l)][i];
+    }
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]+dkh*Ausgangsmatrix[B.indexOf(h)][i];
+    }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]+dkl*Ausgangsmatrix[B.indexOf(l)][i];
+    }
+
   if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)) {
     for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-d*Ausgangsmatrix[j][D.indexOf(-g-1)];
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-dgh*Ausgangsmatrix[j][D.indexOf(-g-1)];
     }
-  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+d*gemeinsamer_Nenner;
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-dgl*Ausgangsmatrix[j][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-dkh*Ausgangsmatrix[j][D.indexOf(-k-1)];
+    }
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-dkl*Ausgangsmatrix[j][D.indexOf(-k-1)];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+dgh*gemeinsamer_Nenner;
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]+dgl*gemeinsamer_Nenner;
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]+dkh*gemeinsamer_Nenner;
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+dkl*gemeinsamer_Nenner;
   }
   </script>
 
@@ -780,7 +827,7 @@ function bestimme_Matrix_3() {
 <p>Jetzt die gleiche Umformung für die mit 
   <code>a(
     <input id='id_g' size='1' value='0'/>,
-    <input id='id_h' size='1' value='0'/>)+<input id='id_d' size='2' value='1'/></code> 
+    <input id='id_h' size='1' value='0'/>)+<input id='id_d' size='2' value='0'/></code> 
   abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>:</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
   </div>
@@ -790,9 +837,9 @@ function bestimme_Matrix_3() {
 <hr/>
 <p>Nun nochmal die gleiche Umformung für die mit </p>
 <div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
-<div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
-<div>  <code>a(k,h)+<input id='id_dkh' size='2' value='4'/></code> </div>
-<div>  <code>a(k,l)+<input id='id_dkl' size='2' value='5'/></code> </div>
+<div>  <code>a(g,l)+<input id='id_dgl' size='2' value='0'/></code> </div>
+<div>  <code>a(k,h)+<input id='id_dkh' size='2' value='0'/></code> </div>
+<div>  <code>a(k,l)+<input id='id_dkl' size='2' value='0'/></code> </div>
 <div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='1'/></code> </div>
 <div>  <code>und k=<input id='id_k' size='1' value='2'/>, l=<input id='id_l' size='1' value='2'/></code> </div>
     
