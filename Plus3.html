@@ -103,6 +103,7 @@ function t(r,s) {
   }
 
 function Ausgabe() {
+  let npiv=[g,h,d];
   LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n"
     +'U=['+U+'];\n'
     +'V=['+V+'];\n'
@@ -113,7 +114,7 @@ function Ausgabe() {
   document.getElementById("HCode").innerHTML=HCode;
   //document.getElementById("Pivot").click();
   Pivot.click();
-  HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,true);
+  HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,npiv);
   document.getElementById("id_HCode_Matrix_2").innerHTML=HCode_Matrix_2;
   }
 
@@ -129,7 +130,7 @@ let td_class="";
 let XjMat=[];
 let YiMat=[];
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
-  if (npiv) {AMERK[0][0]=AMERK[0][0]+1n; gemeinsamer_Nenner=neuer_gemeinsamer_Nenner};
+  if (npiv) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[2]; gemeinsamer_Nenner=neuer_gemeinsamer_Nenner};
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
@@ -253,7 +254,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
     Checkbit_Nenner=false;
     }
-  if (npiv) {AMERK[0][0]=AMERK[0][0]-1n; gemeinsamer_Nenner=alter_gemeinsamer_Nenner};
+  if (npiv) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]-npiv[2]; gemeinsamer_Nenner=alter_gemeinsamer_Nenner};
   return T;
   }
   </script>
@@ -702,8 +703,10 @@ let alter_gemeinsamer_Nenner=0n;
 let neuer_gemeinsamer_Nenner=0n;
 
 function bestimme_Matrix_2() {
+  g=id_g.value*1;
+  h=id_h.value*1;
+  d=BigInt(id_d.value);//für a(g,h)+d
   Matrix_2=structuredClone(Ausgangsmatrix);
-  g=0;h=0;//für a(g,h)+d
   alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
   neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
@@ -725,7 +728,11 @@ function bestimme_Matrix_2() {
   </script>
 
 <hr/>
-<p>Jetzt die gleiche Umformung für die in Koeffizient a(0,0)+1 abgeänderte Ausgangsmatrix:</p>
+<p>Jetzt die gleiche Umformung für die mit 
+  <code>a(
+    <input id='id_g' size='1' value='0'/>,
+    <input id='id_h' size='1' value='0'/>)+<input id='id_d' size='2' value='1'/></code> 
+  abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>:</p>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
 <div id="Logfile_Matrix_2" style="display:non; white-space:pre; font-family:Courier,Monospace; font-size:70%">xxx
   </div>
