@@ -58,6 +58,7 @@ function Los() {
   p=[0,0,0,0,0];
   AMERK=structuredClone(Ausgangsmatrix);
   bestimme_Matrix_2();
+  bestimme_Matrix_3();
   Ausgabe();
   }
 
@@ -99,11 +100,13 @@ function t(r,s) {
   V=[]; for (let i=0;i<B.length;i++) if (B[i]>=0) V.push(B[i]); V.sort();
   U=[]; for (let i=0;i<D.length;i++) if (D[i]<0) U.push(-D[i]-1); U.sort();
   bestimme_Matrix_2();
+  bestimme_Matrix_3();
   Ausgabe();
   }
 
+let dgh=0,dgl=0,dkh=0,dkl=0;
 function Ausgabe() {
-  let npiv=[g,h,d];
+  let npiv=[g,h,k,l,[dgh,dgl,dkh,dkl]];
   LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n"
     +'U=['+U+'];\n'
     +'V=['+V+'];\n'
@@ -113,9 +116,11 @@ function Ausgabe() {
   document.getElementById("Logfile").firstChild.nodeValue=LCode;
   document.getElementById("HCode").innerHTML=HCode;
   //document.getElementById("Pivot").click();
-  Pivot.click();
+  Pivot.click();alert(npiv);
   HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,npiv);
   document.getElementById("id_HCode_Matrix_2").innerHTML=HCode_Matrix_2;
+  HCode_Matrix_3=Ausgabe_HCode(Matrix_3,gemeinsamer_Nenner,B,D,p,npiv);
+  document.getElementById("id_HCode_Matrix_3").innerHTML=HCode_Matrix_3;
   }
 
 function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
@@ -130,7 +135,13 @@ let td_class="";
 let XjMat=[];
 let YiMat=[];
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
-  if (npiv) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[2]; gemeinsamer_Nenner=neuer_gemeinsamer_Nenner};
+  if (npiv) {
+    AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[4][0];
+    AMERK[npiv[0]][npiv[3]]=AMERK[npiv[0]][npiv[3]]+npiv[4][1];
+    AMERK[npiv[2]][npiv[1]]=AMERK[npiv[2]][npiv[1]]+npiv[4][2];
+    AMERK[npiv[2]][npiv[3]]=AMERK[npiv[2]][npiv[3]]+npiv[4][3];
+    gemeinsamer_Nenner=neuer_gemeinsamer_Nenner
+    };
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
@@ -254,7 +265,13 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
     Checkbit_Nenner=false;
     }
-  if (npiv) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]-npiv[2]; gemeinsamer_Nenner=alter_gemeinsamer_Nenner};
+  if (npiv) {
+    AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]-npiv[4][0];
+    AMERK[npiv[0]][npiv[3]]=AMERK[npiv[0]][npiv[3]]-npiv[4][1];
+    AMERK[npiv[2]][npiv[1]]=AMERK[npiv[2]][npiv[1]]-npiv[4][2];
+    AMERK[npiv[2]][npiv[3]]=AMERK[npiv[2]][npiv[3]]-npiv[4][3];
+    gemeinsamer_Nenner=alter_gemeinsamer_Nenner
+    };
   return T;
   }
   </script>
@@ -698,6 +715,7 @@ window.addEventListener('error',function(event) {alert('Fehlerausgabe von window
 window.onerror=function(message, file, line, col, error) {alert('Fehlerausgabe von window.onerror\nmessage '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error)};
 
 let Matrix_2=[];
+let Matrix_3=[];
 let d=1n;
 let alter_gemeinsamer_Nenner=0n;
 let neuer_gemeinsamer_Nenner=0n;
@@ -706,6 +724,7 @@ function bestimme_Matrix_2() {
   g=id_g.value*1;
   h=id_h.value*1;
   d=BigInt(id_d.value);//für a(g,h)+d
+  dgh=d;dgl=0n;dkh=0n;dkl=0n;
   Matrix_2=structuredClone(Ausgangsmatrix);
   alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
   neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
@@ -716,26 +735,64 @@ function bestimme_Matrix_2() {
     }
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)) {
     for (let i=0;i<Matrix_2[0].length;i++) 
-      Matrix_2[B.indexOf(-g-1)][i]=Matrix_2[B.indexOf(-g-1)][i]+d*Matrix_2[B.indexOf(h)][i];
+      Matrix_2[B.indexOf(-g-1)][i]=Matrix_2[B.indexOf(-g-1)][i]+d*Ausgangsmatrix[B.indexOf(h)][i];
     }
   if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)) {
     for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_2[j][D.indexOf(h)]=Matrix_2[j][D.indexOf(h)]-d*Matrix_2[j][D.indexOf(-g-1)];
+      Matrix_2[j][D.indexOf(h)]=Matrix_2[j][D.indexOf(h)]-d*Ausgangsmatrix[j][D.indexOf(-g-1)];
     }
   if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_2[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_2[B.indexOf(-g-1)][D.indexOf(h)]+d*gemeinsamer_Nenner;
   Logfile_Matrix_2.innerHTML='D=['+D+']\nB=['+B+']\n'+((D.indexOf(g)-1)&&(B.indexOf(-h-1)>-1));
+  }
+
+function bestimme_Matrix_3() {
+  g=id_g.value*1;
+  h=id_h.value*1;
+  d=BigInt(id_d.value);//für a(g,h)+d
+  dgh=d;dgl=0n;dkh=0n;dkl=0n;
+  Matrix_3=structuredClone(Ausgangsmatrix);
+  alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
+  neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+d*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner=gemeinsamer_Nenner+d*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+d*Ausgangsmatrix[B.indexOf(h)][i];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-d*Ausgangsmatrix[j][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+d*gemeinsamer_Nenner;
   }
   </script>
 
 <hr/>
 <p>Jetzt die gleiche Umformung für die mit 
   <code>a(
-    <input id='id_g' size='1' value='0'/>,
-    <input id='id_h' size='1' value='0'/>)+<input id='id_d' size='2' value='1'/></code> 
+    <input id='id_g2' size='1' value='0'/>,
+    <input id='id_h2' size='1' value='0'/>)+<input id='id_d' size='2' value='1'/></code> 
   abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>:</p>
-<p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
+<p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
+  </div>
 <div id="Logfile_Matrix_2" style="display:non; white-space:pre; font-family:Courier,Monospace; font-size:70%">xxx
   </div>
+
+<hr/>
+<p>Nun nochmal die gleiche Umformung für die mit </p>
+<div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
+<div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
+<div>  <code>a(k,h)+<input id='id_dkh' size='2' value='4'/></code> </div>
+<div>  <code>a(k,l)+<input id='id_dkl' size='2' value='5'/></code> </div>
+<div>  <code>mit g=<input id='id_g' size='1' value='1'/>, h=<input id='id_h' size='1' value='1'/></code> </div>
+<div>  <code>und k=<input id='id_k' size='1' value='2'/>, l=<input id='id_l' size='1' value='2'/></code> </div>
+    
+<p>abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>:</p>
+<p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
+
   </body>
   </html>
 <!--jetzt noch
