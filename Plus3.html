@@ -704,7 +704,6 @@ bem {display:none; color:green}
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
 <div id="Ausgabe_Koeffizient">
   </div>
-<span id='aktuell'> </span>
 <!--geeigneter Code für den Kommentarbereich (noch nicht fertig):-->
 <div id="Ausgabe_xml" style="display:none; font-family:Courier,Monospace; white-space:pre-wrap">
   </div>
@@ -774,7 +773,12 @@ function bestimme_Matrix_3() {
       Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-
       Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)])/gemeinsamer_Nenner;
     }
-  
+
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
+
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
     for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
       Matrix_3[j][i]=Matrix_3[j][i]+dgh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
@@ -848,6 +852,7 @@ function bestimme_Matrix_3() {
   </div>
 
 <hr/>
+<span id='aktuell'> </span>
 <p>Nun nochmal die gleiche Umformung für die mit </p>
 <div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
 <div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
