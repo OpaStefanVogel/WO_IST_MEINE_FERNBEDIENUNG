@@ -31,6 +31,7 @@ let U=[];
 let V=[];
 let Yi=[];//war Ui
 let Xj=[];//war Vj
+let d=0;
 let AMERK=[];
 let g=0;
 let h=0;
@@ -105,8 +106,10 @@ function t(r,s) {
   }
 
 let dgh=0,dgl=0,dkh=0,dkl=0;
+let npiv2=[g,h,d];
+let npiv3=[g,h,k,l,[dgh,dgl,dkh,dkl]];
+
 function Ausgabe() {
-  let npiv=[g,h,k,l,[dgh,dgl,dkh,dkl]];
   LCode="D=["+D+"];\nB=["+B+"];\np=["+[neu(p[0]),neu(p[1]),p[2],p[3],p[4]]+"];\n"
     +'U=['+U+'];\n'
     +'V=['+V+'];\n'
@@ -116,10 +119,10 @@ function Ausgabe() {
   document.getElementById("Logfile").firstChild.nodeValue=LCode;
   document.getElementById("HCode").innerHTML=HCode;
   //document.getElementById("Pivot").click();
-  Pivot.click();alert(npiv);
-  HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,npiv);
+  Pivot.click();
+  HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,npiv2);
   document.getElementById("id_HCode_Matrix_2").innerHTML=HCode_Matrix_2;
-  HCode_Matrix_3=Ausgabe_HCode(Matrix_3,gemeinsamer_Nenner,B,D,p,npiv);
+  HCode_Matrix_3=Ausgabe_HCode(Matrix_3,gemeinsamer_Nenner,B,D,p,npiv3);
   document.getElementById("id_HCode_Matrix_3").innerHTML=HCode_Matrix_3;
   }
 
@@ -135,12 +138,12 @@ let td_class="";
 let XjMat=[];
 let YiMat=[];
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
-  if (npiv) {
+  if (npiv) if (npiv.length==3) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[2]; gemeinsamer_Nenner=neuer_gemeinsamer_Nenner} else {
     AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[4][0];
     AMERK[npiv[0]][npiv[3]]=AMERK[npiv[0]][npiv[3]]+npiv[4][1];
     AMERK[npiv[2]][npiv[1]]=AMERK[npiv[2]][npiv[1]]+npiv[4][2];
     AMERK[npiv[2]][npiv[3]]=AMERK[npiv[2]][npiv[3]]+npiv[4][3];
-    gemeinsamer_Nenner=neuer_gemeinsamer_Nenner
+    gemeinsamer_Nenner=neuer_gemeinsamer_Nenner;
     };
   if (Checkbox_Nenner.checked&&(gemeinsamer_Nenner<0)) {
     for (var i=0;i<m;i++) for (var j=0;j<n;j++) Ausgangsmatrix[i][j]=-Ausgangsmatrix[i][j];
@@ -265,7 +268,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     gemeinsamer_Nenner=-gemeinsamer_Nenner;
     Checkbit_Nenner=false;
     }
-  if (npiv) {
+  if (npiv) if (npiv.length==3) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]-npiv[2]; gemeinsamer_Nenner=alter_gemeinsamer_Nenner} else {
     AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]-npiv[4][0];
     AMERK[npiv[0]][npiv[3]]=AMERK[npiv[0]][npiv[3]]-npiv[4][1];
     AMERK[npiv[2]][npiv[1]]=AMERK[npiv[2]][npiv[1]]-npiv[4][2];
@@ -716,7 +719,7 @@ window.onerror=function(message, file, line, col, error) {alert('Fehlerausgabe v
 
 let Matrix_2=[];
 let Matrix_3=[];
-let d=1n;
+d=1n;
 let alter_gemeinsamer_Nenner=0n;
 let neuer_gemeinsamer_Nenner=0n;
 
@@ -724,7 +727,7 @@ function bestimme_Matrix_2() {
   g=id_g.value*1;
   h=id_h.value*1;
   d=BigInt(id_d.value);//für a(g,h)+d
-  dgh=d;dgl=0n;dkh=0n;dkl=0n;
+  npiv2=[g,h,d];
   Matrix_2=structuredClone(Ausgangsmatrix);
   alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
   neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
@@ -746,10 +749,13 @@ function bestimme_Matrix_2() {
   }
 
 function bestimme_Matrix_3() {
-  g=id_g.value*1;
-  h=id_h.value*1;
+  g=id_g3.value*1;
+  h=id_h3.value*1;
+  k=2;
+  l=2;
   d=BigInt(id_d.value);//für a(g,h)+d
   dgh=d;dgl=0n;dkh=0n;dkl=0n;
+  npiv3=[g,h,k,l,[dgh,dgl,dkh,dkl]];
   Matrix_3=structuredClone(Ausgangsmatrix);
   alter_gemeinsamer_Nenner=gemeinsamer_Nenner;
   neuer_gemeinsamer_Nenner=gemeinsamer_Nenner;
@@ -773,8 +779,8 @@ function bestimme_Matrix_3() {
 <hr/>
 <p>Jetzt die gleiche Umformung für die mit 
   <code>a(
-    <input id='id_g2' size='1' value='0'/>,
-    <input id='id_h2' size='1' value='0'/>)+<input id='id_d' size='2' value='1'/></code> 
+    <input id='id_g' size='1' value='0'/>,
+    <input id='id_h' size='1' value='0'/>)+<input id='id_d' size='2' value='1'/></code> 
   abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>:</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
   </div>
@@ -787,7 +793,7 @@ function bestimme_Matrix_3() {
 <div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
 <div>  <code>a(k,h)+<input id='id_dkh' size='2' value='4'/></code> </div>
 <div>  <code>a(k,l)+<input id='id_dkl' size='2' value='5'/></code> </div>
-<div>  <code>mit g=<input id='id_g' size='1' value='1'/>, h=<input id='id_h' size='1' value='1'/></code> </div>
+<div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='1'/></code> </div>
 <div>  <code>und k=<input id='id_k' size='1' value='2'/>, l=<input id='id_l' size='1' value='2'/></code> </div>
     
 <p>abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>:</p>
