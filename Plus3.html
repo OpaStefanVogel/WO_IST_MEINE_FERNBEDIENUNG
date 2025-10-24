@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <style>
   td {text-align:right; font-size:30%; white-space:nowrap}
-  .td {min-width:70}
+  .td {min-width:70; height:2em}
   .yx {background-color:white}
   .xy {background-color:Gainsboro}
   .xx {background-color:LavenderBlush}
@@ -227,7 +227,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
         }
       if (Ausgangsmatrix[i][j]==0) sty=sty+" color:white; ";
       //alert(sty);
-      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J('+i+','+j+',\''+td_class+'\')">';
+      T=T+'class="td '+td_class+'" style="'+sty+'" onclick="Berechnung_Koeffizient_aus_J('+i+','+j+',\''+td_class+'\',['+npiv+'])">';
       HCode2=HCode2+'class="'+td_class+'">';
       if (Ausgangsmatrix[i][j]>=0) {T=T+"+"; HCode2=HCode2+'+'}
       T=T+(Ausgangsmatrix[i][j])+/*'<sub><small><small><small>'+determ+'<br/>'+signx+'<br/>'+AUV(Yi,Xj).join('<br/>')+'<br/>Yi='+Yi+'<br/>Xj='+Xj+'</small></small></small></sub>'+*/'</td>';
@@ -447,7 +447,8 @@ function zufaellig_weiter() {
 <script>
 let Ffert=[];
 let XFert=[]
-function Berechnung_Koeffizient_aus_J(i,j,td_class) {
+function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
+  if (npiv) if (npiv.length>1) {Ausgabe_Koeffizient3.innerHTML='i='+i+'; j='+j+'; npiv='+JSON.stringify(npiv)+'; Berechnung folgt noch';return}
   let RET='';
   let detA=0;
 
@@ -866,7 +867,7 @@ function bestimme_Matrix_3() {
 <p>Jetzt die gleiche Umformung für die mit 
   <code>a(
     <input id='id_g' size='1' value='0'/>,
-    <input id='id_h' size='1' value='0'/>)+<input id='id_d' size='2' value='0'/></code> 
+    <input id='id_h' size='1' value='1'/>)+<input id='id_d' size='2' value='1'/></code> 
   abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>:</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
   </div>
@@ -875,16 +876,18 @@ function bestimme_Matrix_3() {
 
 <hr/>
 <span id='aktuell'> </span>
-<p>Nun nochmal die gleiche Umformung für die mit </p>
+<p>Nun nochmal für die mit </p>
 <div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
 <div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
 <div>  <code>a(k,h)+<input id='id_dkh' size='2' value='5'/></code> </div>
 <div>  <code>a(k,l)+<input id='id_dkl' size='2' value='7'/></code> </div>
-<div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='1'/></code> </div>
-<div>  <code>und k=<input id='id_k' size='1' value='2'/>, l=<input id='id_l' size='1' value='2'/></code> </div>
+<div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='2'/></code> </div>
+<div>  <code>und k=<input id='id_k' size='1' value='3'/>, l=<input id='id_l' size='1' value='4'/></code> </div>
     
 <p>abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>:</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
+<div id="Ausgabe_Koeffizient3">
+  </div>
 
   </body>
   </html>
@@ -894,6 +897,6 @@ ok Bigint
 ok Error mit Halt
 ok Nenner positiv
 .. den style fehler bei det
-.. u ala Komplement von U
-.. nochmal xmlns probieren
+nö u als Komplement von U
+nö nochmal xmlns probieren
 -->
