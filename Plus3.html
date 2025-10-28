@@ -183,7 +183,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
       HCode2=HCode2+'  <td ';
       signx=1;
       let sty="border:solid; border-color:white;";
-      if (i==p[2]&&j==p[3]) {sty="color:blue; border:solid; border-color:blue;"; if (npiv) ; else T=T+'id="Pivot" ';}
+      if (i==p[2]&&j==p[3]) if (npiv) ; else {sty="color:blue; border:solid; border-color:blue;"; T=T+'id="Pivot" '}
       Yi=U.slice();Xj=V.slice();
       if (B[i]<0&&D[j]>=0) {
         td_class="yx";
@@ -448,7 +448,7 @@ function zufaellig_weiter() {
 let Ffert=[];
 let XFert=[]
 function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
-  if (npiv) if (npiv.length>1) {Ausgabe_Koeffizient3.innerHTML='i='+i+'; j='+j+'; npiv='+JSON.stringify(npiv)+'; Berechnung folgt noch';return}
+  if (npiv) if (npiv.length>1) {Berechnung_Koeffizient_aus_ghkl(i,j,td_class,npiv); return}
   let RET='';
   let detA=0;
 
@@ -604,8 +604,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   RET=RET+'</div>';
 
   //RET=RET+'<br>'+[i,j,B[i],D[j],td_class,'<br>F-+=',YiMat[i][j],'<br>X+-=',XjMat[i][j],'<br>F=',U,'<br>X=',V,'<br>det',det(AUV(YiMat[i][j],XjMat[i][j]))];
-  
-  
+    
   Ausgabe_Koeffizient.innerHTML=RET;
   Ausgabe_xml.firstChild.nodeValue=HCode2+'\n\n'+RET;
   Pivot.setAttribute('style','border:solid white;');
@@ -615,7 +614,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   //Pivot.click();
   }
   </script>
-<body onload="Los()">
+<body onload="Los()" style='font-size:80%'>
 <p>Testprogramm zu <a href="https://matheplanet.de/matheplanet/nuke/html/article.php?sid=2012" target="_blank">Gleichungen umstellen mit Sylvester&rsquo;s determinant identity</a>. Indizes beginnen mit 0 statt 1.</p>
 
 <p>Ein Klick auf eine Variable links vom Gleichheitszeichen tauscht diese mit der Variable rechts vom Gleichheitszeichen.</p>
@@ -764,12 +763,17 @@ function bestimme_Matrix_3() {
   neuer_gemeinsamer_Nenner3=gemeinsamer_Nenner;
   
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][i]=Matrix_3[j][i]+det([[dgh,dgl],[dkh,dkl]])*det([
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) {
+      let det3=det([
         [Ausgangsmatrix[j][i],Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]],
         [Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
         [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]
-        ])/gemeinsamer_Nenner/gemeinsamer_Nenner;
+        ]);
+      let quot3=det3/gemeinsamer_Nenner/gemeinsamer_Nenner;
+      let prod3=quot3*gemeinsamer_Nenner*gemeinsamer_Nenner;
+      if (prod3!=det3) alert('Error\ndet='+det3+'\nprod='+prod3);
+      Matrix_3[j][i]=Matrix_3[j][i]+det([[dgh,dgl],[dkh,dkl]])*quot3;
+        }
     neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+det([[dgh,dgl],[dkh,dkl]])*(
       Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-
       Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)])/gemeinsamer_Nenner;
@@ -888,6 +892,14 @@ function bestimme_Matrix_3() {
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
 <div id="Ausgabe_Koeffizient3">
   </div>
+
+<script>
+function Berechnung_Koeffizient_aus_ghkl(i,j,td_class,npiv) {
+  Ausgabe_Koeffizient3.innerHTML='i='+i+'; j='+j+'; td_class='+td_class+'; npiv='+JSON.stringify(npiv)+'; Berechnung folgt noch';
+  return
+  }
+
+  </script>
 
   </body>
   </html>
