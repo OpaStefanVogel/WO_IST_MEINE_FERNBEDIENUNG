@@ -3,7 +3,7 @@
 <title>Plus3.html</title>
 <meta charset="utf-8"/>
 <style>
-  td {text-align:right; font-size:30%; white-space:nowrap}
+  td {text-align:right; font-size:1.15em; white-space:nowrap}
   .td {min-width:70; height:2em}
   .yx {background-color:white}
   .xy {background-color:Gainsboro}
@@ -122,8 +122,10 @@ function Ausgabe() {
   Pivot.click();
   HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,npiv2);
   document.getElementById("id_HCode_Matrix_2").innerHTML=HCode_Matrix_2;
+  Pivot2.click();
   HCode_Matrix_3=Ausgabe_HCode(Matrix_3,gemeinsamer_Nenner,B,D,p,npiv3);
   document.getElementById("id_HCode_Matrix_3").innerHTML=HCode_Matrix_3;
+  Pivot3.click();
   }
 
 function Ausgabe_Logfile(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p) {
@@ -139,6 +141,10 @@ let XjMat=[];
 let YiMat=[];
 let Pivot_i=1;
 let Pivot_j=1;
+let Pivot2_i=0;
+let Pivot2_j=2;
+let Pivot3_i=3;
+let Pivot3_j=1;
 function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
   if (npiv) if (npiv.length==3) {AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[2]; gemeinsamer_Nenner=neuer_gemeinsamer_Nenner} else {
     AMERK[npiv[0]][npiv[1]]=AMERK[npiv[0]][npiv[1]]+npiv[4][0];
@@ -153,7 +159,7 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
     Checkbit_Nenner=true;
     }
 
-  var T='<div style="display:flex; overflow:auto"><table style="font-size:300%; box-sizing: border-box" border="0">\n';
+  var T='<div style="display:flex; overflow:auto"><table style="box-sizing: border-box" border="0">\n';
   HCode2='<table style="text-align:right"><tbody>\n';
   var Nenner=gemeinsamer_Nenner;
 //  if (p[2]>0&&p[3]>0) Nenner=1;
@@ -186,6 +192,8 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
       signx=1;
       let sty="border:solid white;";
       if (i==Pivot_i&&j==Pivot_j) if (npiv) ; else {T=T+'id="Pivot" '}
+      if (i==Pivot2_i&&j==Pivot2_j) if (npiv) if (npiv.length==3) {T=T+'id="Pivot2" '}
+      if (i==Pivot3_i&&j==Pivot3_j) if (npiv) if (npiv.length>3) {T=T+'id="Pivot3" '}
       if (i==p[2]&&j==p[3]) sty="border:solid black;"
       Yi=U.slice();Xj=V.slice();
       if (B[i]<0&&D[j]>=0) {
@@ -250,7 +258,12 @@ function Ausgabe_HCode(Ausgangsmatrix,gemeinsamer_Nenner,B,D,p,npiv) {
       T=T+"</td>";
       HCode2=HCode2+'</td>\n';
       }
-    T=T+'<td>=</td><td class="td" onclick="Berechnung_Koeffizient_aus_J('+i+',-1,0)">'+Nenner+'</td><td>·</td>';
+    T=T+'<td>=</td><td class="td" style="border:solid white"';
+    if (npiv) ; else { 
+      T=T+' onclick="Berechnung_Koeffizient_aus_J('+i+',-1,0)"';
+      if (i==Pivot_i&&-1==Pivot_j) T=T+' id="Pivot" ';
+      }
+    T=T+'>'+Nenner+'</td><td>·</td>';
     HCode2=HCode2+'  <td>=</td>\n  <td>';
     if (B[i]<0) {
       T=T+"<td>f<sup>"+(-1-B[i])+"</sup></td>";
@@ -583,6 +596,10 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   if (td_class=='yy'||td_class==0) RET=RET+'xx'; else RET=RET+'pxx';
   RET=RET+'">{'+Xfert+'}</span></su></co></det></span> = ';
   
+  let sdgh=''+dgh; if (dgh>=0) sdgh='+'+dgh;
+  let sdgl=''+dgl; if (dgl>=0) sdgl='+'+dgl;
+  let sdkh=''+dkh; if (dkh>=0) sdkh='+'+dkh;
+  let sdkl=''+dkl; if (dkl>=0) sdkl='+'+dkl;
   RET=RET+'det<table style="border-left:solid 2px; border-radius:5px; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
   for (let i=0;i<m;i++) {
     RET=RET+'<tr>\n';
@@ -592,7 +609,17 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
       if (Ffert.indexOf(i)==-1&&Xfert.indexOf(j)>-1) if (td_class=='yy'||td_class==0) RET=RET+'xx'; else RET=RET+'pxx'; 
       if (Ffert.indexOf(i)>-1&&Xfert.indexOf(j)==-1) if (td_class=='xx'||td_class==0) RET=RET+'yy'; else RET=RET+'pyy'; 
       if (Ffert.indexOf(i)==-1&&Xfert.indexOf(j)==-1) RET=RET+'pyx';
-      RET=RET+'">'+AMERK[i][j]+'</td>\n';
+      RET=RET+'">';
+      let AMij=AMERK[i][j];
+      if (npiv) if (npiv.length==3) {
+        if ((i==gg)&&(j==hh)) AMij=(AMERK[i][j]-dgh)+sdgh;
+        } else {
+          if ((i==gg)&&(j==hh)) AMij=(AMERK[i][j]-dgh)+sdgh;
+          if ((i==gg)&&(j==ll)) AMij=(AMERK[i][j]-dgl)+sdgl;
+          if ((i==kk)&&(j==hh)) AMij=(AMERK[i][j]-dkh)+sdkh;
+          if ((i==kk)&&(j==ll)) AMij=(AMERK[i][j]-dkl)+sdkl;
+          }
+      RET=RET+AMij+'</td>\n';
       }
     RET=RET+'  </tr>\n';
     }
@@ -628,12 +655,24 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     if (npiv.length==3) {
       Ausgabe_Koeffizient2.innerHTML=RET;
       AMERK[gg][hh]=AMERK[gg][hh]-dgh;
+      Pivot2.setAttribute('style','border:solid white;');
+      Pivot2.removeAttribute('id');
+      event.target.setAttribute('id','Pivot2');
+      Pivot2.setAttribute('style','border:solid blue;');
+      Pivot2_i=i;
+      Pivot2_j=j;
       } else {
         Ausgabe_Koeffizient3.innerHTML=RET;
         AMERK[gg][hh]=AMERK[gg][hh]-dgh;
         AMERK[gg][ll]=AMERK[gg][ll]-dgl;
         AMERK[kk][hh]=AMERK[kk][hh]-dkh;
         AMERK[kk][ll]=AMERK[kk][ll]-dkl;
+        Pivot3.setAttribute('style','border:solid white;');
+        Pivot3.removeAttribute('id');
+        event.target.setAttribute('id','Pivot3');
+        Pivot3.setAttribute('style','border:solid blue;');
+        Pivot3_i=i;
+        Pivot3_j=j;
         }
     } else {
       Ausgabe_Koeffizient.innerHTML=RET;
@@ -644,7 +683,6 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
       Pivot.setAttribute('style','border:solid blue;');
       Pivot_i=i;
       Pivot_j=j;
-      //Pivot.click();
       }
   }
   </script>
@@ -733,7 +771,7 @@ wd {display:table-cell;white-space:nowrap; padding:1px; borderx:solid pink 1px}
 bem {display:none; color:green}
 
 /* Fahrrad auch so groß wie die Schrift für die Gleichungen*/
-#Abschnitt_2, #Abschnitt_3, #Abschnitt_4, #Abschnitt_5, #Abschnitt_6, #Abschnitt_7, #Abschnitt_8, #Abschnitt_9, #Abschnitt_10, #Abschnitt_11, #Abschnitt_12, #Abschnitt_13, #Abschnitt_14, #Abschnitt_15, #Abschnitt_16 {font-size:1.15rem} 
+#Abschnitt_2, #Abschnitt_3, #Abschnitt_4, #Abschnitt_5, #Abschnitt_6, #Abschnitt_7, #Abschnitt_8, #Abschnitt_9, #Abschnitt_10, #Abschnitt_11, #ßAbschnitt_12, #Abschnitt_13, #Abschnitt_14, #Abschnitt_15, #Abschnitt_16 {font-size:1.15rem} 
   </style>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
 <div id="Ausgabe_Koeffizient">
