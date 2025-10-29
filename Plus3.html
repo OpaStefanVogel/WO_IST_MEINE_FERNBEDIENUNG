@@ -119,7 +119,6 @@ function Ausgabe() {
   document.getElementById("Logfile").firstChild.nodeValue=LCode;
   document.getElementById("HCode").innerHTML=HCode;
   //document.getElementById("Pivot").click();
-  //alert(Pivot.outerHTML);
   Pivot.click();
   HCode_Matrix_2=Ausgabe_HCode(Matrix_2,gemeinsamer_Nenner,B,D,p,npiv2);
   document.getElementById("id_HCode_Matrix_2").innerHTML=HCode_Matrix_2;
@@ -568,7 +567,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   if (td_class=='yy'||td_class==0) RET=RET+'xx'; else RET=RET+'pxx';
   RET=RET+'">{'+Xfert+'}</span></su></co></det></span> = ';
   
-  RET=RET+'<table style="border-left:solid 1px; border-right:solid 1px; margin:10p; text-align:right">';
+  RET=RET+'det<table style="border-left:solid 2px; border-radius:5px; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
   for (let i=0;i<m;i++) {
     RET=RET+'<tr>\n';
     for (let j=0;j<n;j++) {
@@ -584,7 +583,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   RET=RET+'</table> = ';
   
   let AUVMAT=AUV(Ffert,Xfert);
-  RET=RET+'<table style="border-left:solid 1px; border-right:solid 1px; margin:10px; text-align:right">';
+  RET=RET+'det<table style="border-left:solid 2px; border-radius:5px; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
   for (let i=0;i<AUVMAT.length;i++) {
     RET=RET+'<tr>\n';
     for (let j=0;j<AUVMAT[0].length;j++) {
@@ -668,7 +667,7 @@ su, sub, sup {font-size:85%} /*Anfangswert war 75%*/
 sub {white-space:nowrap}
 sup {white-space:nowrap; padding-left:2px} /* padding-left wegen dem kursiven f in f<sup>g</sup>*/ 
 mat,det {display:inline-flex; align-items:center; padding:2px; border-radius:0px; margin:0px; white-space:nowrap}
-det {border-left:solid 1px; border-right:solid 1px; margin:2px}
+//det {border-left:solid 1px; border-right:solid 1px; margin:2px}
 co {display:inline-flex; flex-direction:column}
 su {display:table-cell; line-height:100%}
 var {white-space:pre}
