@@ -125,6 +125,7 @@ function Ausgabe() {
   Pivot2.click();
   HCode_Matrix_3=Ausgabe_HCode(Matrix_3,gemeinsamer_Nenner,B,D,p,npiv3);
   document.getElementById("id_HCode_Matrix_3").innerHTML=HCode_Matrix_3;
+  id_Ausgabe_zum_Artikel.innerHTML=A4+'<hr/>'+B4+'<hr/>'+C4;
   Pivot3.click();
   }
 
@@ -835,7 +836,7 @@ function bestimme_Matrix_3() {
   Matrix_3=structuredClone(Ausgangsmatrix);
   alter_gemeinsamer_Nenner3=gemeinsamer_Nenner;
   neuer_gemeinsamer_Nenner3=gemeinsamer_Nenner;
-  
+
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
     for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) {
       let det3=det([
@@ -938,6 +939,132 @@ function bestimme_Matrix_3() {
   if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]+dgl*gemeinsamer_Nenner;
   if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]+dkh*gemeinsamer_Nenner;
   if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+dkl*gemeinsamer_Nenner;
+  bestimme_Matrix_4();
+  }
+
+let A4='';
+let B4='';
+let C4='';
+function bestimme_Matrix_4() {
+  A4='';
+  B4='';
+  C4='';
+  g=id_g3.value*1;
+  h=id_h3.value*1;
+  k=id_k.value*1;
+  l=id_l.value*1;
+  
+  C4='g='+g+'; h='+h+'; k='+k+'; l='+l+';\n';
+  if (B.indexOf(-g-1)==-1) C4=C4+', <b>f<sub>g</sub> links</b>'; else C4=C4+', f<sub>g</sub> rechts';
+  if (D.indexOf(h)==-1) C4=C4+', <b>x<sub>h</sub> rechts</b>'; else C4=C4+', x<sub>h</sub> links';
+  if (B.indexOf(-k-1)==-1) C4=C4+', <b>f<sub>k</sub> links</b>'; else C4=C4+', f<sub>k</sub> rechts';
+  if (D.indexOf(l)==-1) C4=C4+', <b>x<sub>l</sub> rechts</b>'; else C4=C4+', x<sub>l</sub> links';
+
+/*
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
+    A4=A4;
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) {
+      let det3=det([
+        [Ausgangsmatrix[j][i],Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]],
+        [Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
+        [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]
+        ]);
+      let quot3=det3/gemeinsamer_Nenner/gemeinsamer_Nenner;
+      let prod3=quot3*gemeinsamer_Nenner*gemeinsamer_Nenner;
+      if (prod3!=det3) alert('Error\ndet='+det3+'\nprod='+prod3);
+      Matrix_3[j][i]=Matrix_3[j][i]+det([[dgh,dgl],[dkh,dkl]])*quot3;
+      }
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+det([[dgh,dgl],[dkh,dkl]])*(
+      Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-
+      Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    }
+
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
+    for (let i=0;i<Matrix_2[0].length;i++)
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
+           [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) 
+    for (let i=0;i<Matrix_2[0].length;i++)
+      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]-det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]],
+           [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]]])/gemeinsamer_Nenner;
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
+    for (let j=0;j<Matrix_2[0].length;j++)
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]],
+            [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) 
+    for (let j=0;j<Matrix_2[0].length;j++)
+      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])
+      *det([[Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
+            [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
+
+
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
+
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dgh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dgl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dkh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
+    }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][i]=Matrix_3[j][i]+dkl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
+    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
+    }
+
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+dgh*Ausgangsmatrix[B.indexOf(h)][i];
+    }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+dgl*Ausgangsmatrix[B.indexOf(l)][i];
+    }
+  if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]+dkh*Ausgangsmatrix[B.indexOf(h)][i];
+    }
+  if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) {
+    for (let i=0;i<Matrix_2[0].length;i++) 
+      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]+dkl*Ausgangsmatrix[B.indexOf(l)][i];
+    }
+
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-dgh*Ausgangsmatrix[j][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-dgl*Ausgangsmatrix[j][D.indexOf(-g-1)];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-dkh*Ausgangsmatrix[j][D.indexOf(-k-1)];
+    }
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) {
+    for (let j=0;j<Matrix_2.length;j++) 
+      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-dkl*Ausgangsmatrix[j][D.indexOf(-k-1)];
+    }
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+dgh*gemeinsamer_Nenner;
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]+dgl*gemeinsamer_Nenner;
+  if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]+dkh*gemeinsamer_Nenner;
+  if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+dkl*gemeinsamer_Nenner;
+  */
   }
   </script>
 
@@ -966,7 +1093,9 @@ function bestimme_Matrix_3() {
     
 <p>abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>:</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
-<div id="Ausgabe_Koeffizient3">
+<div id="Ausgabe_Koeffizient3"> </div><hr/>
+<div id="id_Ausgabe_zum_Artikel">zum Artikel</div>
+
   </div>
 
   </body>
