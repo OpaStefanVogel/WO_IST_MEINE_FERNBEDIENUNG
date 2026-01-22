@@ -501,10 +501,14 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   RET2=RET2.slice(0,-2)+'</span> stehen (irgendwo) auf der rechten Seite der Gleichungen und nicht mehr wie anfangs auf der linken Seite.</div>\n\n';
       }
 
-  RET=RET+'<div>Zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
+  RET=RET+'<div>Der markierte Koeffizient <span style="border:solid blue; padding:3px">'
+  if (j==-1) RET=RET+gemeinsamer_Nenner; else RET=RET+Aij;
+  RET=RET+'</span> wurde berechnet nach ';
+  if (npiv) {if (npiv.length==3) RET=RET+'den Gleichungen <gl>90</gl> bis <gl3>105</gl3></div>'; else RET=RET+'den Gleichungen ab <gl4>124?</gl4></div>' } else RET=RET+'den Gleichungen <gl>27</gl> bis <gl>86</gl></div>';
+  RET=RET+'<div>Zum Vergleichen die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
     detA=det(AUV(U,V));
-    let stimmt='stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+gemeinsamer_Nenner+'</span>.';
+    let stimmt='dieses Ergebnis stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+gemeinsamer_Nenner+'</span>. Ausführlicher:';
     if (detA!=gemeinsamer_Nenner) {stimmt='ERROR, keine Übereinstimmung mit Zeilenanfang'; alert(stimmt)}
     RET=RET+'… = '+gemeinsamer_Nenner+' …</span>:</div>\n\n<div style="overflow:auto"><var><mat><op>J</op><co><su>F</su><su>X</su></co></mat> = <det>A<co><su>F</su><su>X</su></co></det> = <det>A<co><su><span class="yy">{'+U+'}</span></su><su><span class="xx">{'+V+'}</span></su></co></det> = '+detA+'</var>, '+stimmt+'</div>\n\n';
     RET=RET+RET2;
@@ -514,7 +518,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     Xfert=V.slice();
     } else {Ffert=YiMat[i][j].slice(); Xfert=XjMat[i][j].slice()}
 
-  let stimmt='stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+Aij+'</span>.';
+  let stimmt='dieses Ergebnis stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+Aij+'</span>. Ausführlicher:';
   if (td_class=='xy') {
     g=-1-D[j];
     h=B[i];
@@ -523,7 +527,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jg+Jh));
     if (Vorzeichen*detA!=Aij) {stimmt='ERROR, keine Übereinstimmung mit der markierten '+Aij; alert(stimmt)}
-    RET=RET+'… '+Aij+' · f<sup>'+g+' (=g)</sup> … = … x<sub>'+h+' (=h)</sub></span>:</div>';
+    RET=RET+'… '+Aij+' · f<sup>'+g+' (=g)</sup> … = … x<sub>'+h+' (=h)</sub></span> aus der Definition</div>';
     RET=RET+'<div style="white-space:nowrap; soverflow:auto"> <var><mat><op>J</op><co><su>F<mg/></su><su>X<mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F<mg/></su><su>X<mh/></su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jh+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&setminus;{'+g+'}</su><su><span class="xx">{'+V+'}</span>&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jg+Jh)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>';
     RET=RET+RET2;
     RET=RET+'<div>In {'+U+'}&setminus;{'+g+'}=<span class="pyy">{'+Ffert+'}</span> nimmt Index g='+g+' beim Sortieren vor dem Entfernen die Indexposition J(g)='+Jg+' ein (beginnend bei 0 gezählt).</div>\n\n';
@@ -540,7 +544,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jg+Jk));
     if (Vorzeichen*detA!=Aij) {stimmt='ERROR, keine Übereinstimmung mit der markierten'+Aij; alert(stimmt)}
-    RET=RET+'… '+Aij+' · f<sup>'+g+' (=g)</sup> … = … f<sup>'+k+' (=k)</sup></span>:</div>\n\n';
+    RET=RET+'… '+Aij+' · f<sup>'+g+' (=g)</sup> … = … f<sup>'+k+' (=k)</sup></span> aus der Definition</div>\n\n';
     RET=RET+'<div style="white-space:nowrap; overflow:auto"> <var><mat><op>J</op><co><su>F<mg/><pk/></su><su>X</su></co></mat> = (&minus;1)<sup><span style="color:DarkGreen">J(g)</span>+<span style="color:orange">J(k)</span></sup> · <det>A<co><su>F<mg/><pk/></su><su>X</su></co></det> = (&minus;1)<sup>'+Jg+'+'+Jk+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&setminus;{'+g+'}&cup;{'+k+'}</su><su><span class="xx">{'+V+'}</span></su></co></det> = (&minus;1)<sup>'+(Jg+Jk)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="xx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>\n\n';
     RET=RET+RET2;
     RET=RET+'<div>In {'+U+'}&setminus;{'+g+'} nimmt Index g='+g+' beim Sortieren vor dem Entfernen die Indexposition J(g)='+Jg+' ein (beginnend bei 0 gezählt).</div>\n\n';
@@ -558,7 +562,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jl+Jh));
     if (Vorzeichen*detA!=Aij) {stimmt='ERROR, keine Übereinstimmung mit der markierten'+Aij; alert(stimmt)}
-    RET=RET+'… '+Aij+' · x<sub>'+l+' (=&ell;)</sub> … = … x<sub>'+h+' (=h)</sub></span>:</div>\n\n';
+    RET=RET+'… '+Aij+' · x<sub>'+l+' (=&ell;)</sub> … = … x<sub>'+h+' (=h)</sub></span> aus der Definition</div>\n\n';
     RET=RET+'<div style="white-space:nowrap; overflow:auto"> <var><mat><op>J</op><co><su>F</su><su>X<pl/><mh/></su></co></mat> = (&minus;1)<sup><span style="color:DarkSlateGray">J(&ell;)</span>+<span style="color:brown">J(h)</span></sup> · <det>A<co><su>F</su><su>X<pl/><mh/></su></co></det> = (&minus;1)<sup>'+Jl+'+'+Jh+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span></su><su><span class="xx">{'+V+'}</span>&cup;{'+l+'}&setminus;{'+h+'}</su></co></det> = (&minus;1)<sup>'+(Jl+Jh)+'</sup> · <det>A<co><su><span class="yy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>\n\n';
     RET=RET+RET2;
     let zwischen=V.slice(); zwischen.push(l); zwischen.sort();
@@ -576,7 +580,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     detA=det(AUV(YiMat[i][j],XjMat[i][j]));
     let Vorzeichen=BigInt((-1)**(Jl+Jk));
     if (Vorzeichen*detA!=Aij) {stimmt='ERROR, keine Übereinstimmung mit der markierten'+Aij; alert(stimmt)}
-    RET=RET+'… '+Aij+' · x<sub>'+l+' (=&ell;)</sub> … = … f<sup>'+k+' (=k)</sup></span>:</div>\n\n';
+    RET=RET+'… '+Aij+' · x<sub>'+l+' (=&ell;)</sub> … = … f<sup>'+k+' (=k)</sup></span> aus der Definition</div>\n\n';
     RET=RET+'<div style="white-space:nowrap; overflow:auto"> <var><mat><op>J</op><co><su>F<pk/></su><su>X<pl/></su></co></mat> = (&minus;1)<sup><span style="color:DarkSlateGray">J(&ell;)</span>+<span style="color:orange">J(k)</span></sup> · <det>A<co><su>F<pk/></su><su>X<pl/></su></co></det> = (&minus;1)<sup>'+Jl+'+'+Jk+'</sup> · <det>A<co><su><span class="yy">{'+U+'}</span>&cup;{'+k+'}</su><su><span class="xx">{'+V+'}</span>&cup;{'+l+'}</su></co></det> = (&minus;1)<sup>'+(Jl+Jk)+'</sup> · <det>A<co><su><span class="pyy">{'+YiMat[i][j]+'}</span></su><su><span class="pxx">{'+XjMat[i][j]+'}</span></su></co></det> = ('+Vorzeichen+') · ('+detA+') = '+(Vorzeichen*detA)+'</var>, '+stimmt+'</div>\n\n';
     RET=RET+RET2;
     RET=RET+'<div>In {'+U+'}&cup;{'+k+'}=<span class="pyy">{'+Ffert+'}</span> nimmt Index k='+k+' nach dem Hinzufügen beim Sortieren die Indexposition J(k)='+Jk+' ein (beginnend bei 0 gezählt).</div>\n\n';
@@ -726,18 +730,18 @@ Ausgangsmatrix2=[
 
 <style>
 /*Schrift: Die Aufmerksamkeit soll anfangs auf dem Text liegen, die Gleichungen etwas unauffälliger.*/
-mat, det, var, gl, wable {font-family:Courier momospace; font-style:italic; font-size:1.15rem; color:SlateGray} /*Anfangswert war Gray*/
-/*font-family ist wohl nicht verstellbar.*/
-/*1.15rem statt 1.15em ist eine Notlösung, weil det manchmal in var enthalten ist*/
+mat, det, var, gl, gl3, gl4, wable {font-style:italic; font-size:100%; color:DimGray; font-family:'Courier New'} 
 
-/*Schriftgröße der Indizes: maximal soviel, dass Gleichungen 62 bis 65 komplett sichtbar sind ohne Umschaltung auf Scrollbalken*/
-su, sub, sup {font-size:85%} /*Anfangswert war 75%*/
+/*Schriftgröße der Indizes maximal soviel, dass Gleichungen (62) bis (65) komplett sichtbar sind ohne Umschaltung auf Scrollbalken*/
+su, sub, sup {font-size:85%}
+
+/*Determinanten-Striche*/
+det {}
 
 /*weitere Gestaltung*/
 sub {white-space:nowrap}
-sup {white-space:nowrap; padding-left:2px} /* padding-left wegen dem kursiven f in f<sup>g</sup>*/ 
+sup {white-space:nowrap; padding-left:2px} /* padding-left wegen dem kursiven f in f<sup style=color:DarkGreen>g</sup>*/ 
 mat,det {display:inline-flex; align-items:center; padding:2px; border-radius:0px; margin:0px; white-space:nowrap}
-//det {border-left:solid 1px; border-right:solid 1px; margin:2px}
 co {display:inline-flex; flex-direction:column}
 su {display:table-cell; line-height:100%}
 var {white-space:pre}
@@ -750,6 +754,7 @@ pp:before {content:"∪{p}"; color:DarkBlue}
 pq:before {content:"∪{q}"; color:DeepSkyBlue}
 pr:before {content:"∪{r}"; color:red} /*<span style="color:red">&cup;{r}</span> g h k l p q r s*/
 ps:before {content:"∪{s}"; color:violet}
+pd:before {content:"∪{.}"}
 
 mg:before {content:"∖{g}"; color:DarkGreen}
 mh:before {content:"∖{h}"; color:brown}
@@ -759,22 +764,36 @@ mp:before {content:"∖{p}"; color:DarkBlue}
 mq:before {content:"∖{q}"; color:DeepSkyBlue}
 mr:before {content:"∖{r}"; color:red}
 ms:before {content:"∖{s}"; color:violet}
+md:before {content:"∖{.}"}
+
+vg:before {content:"g"; color:DarkGreen}
+vh:before {content:"h"; color:brown}
+vk:before {content:"k"; color:orange}
+vl:before {content:"ℓ"; color:DarkSlateGray}
+vp:before {content:"p"; color:DarkBlue}
+vq:before {content:"q"; color:DeepSkyBlue}
+vr:before {content:"r"; color:red}
+vs:before {content:"s"; color:violet}
+vd:before {content:"(.)"}
 
 op {font-style:normal}
 
 gl {display:inline-block; border:solid 1px; border-radius:20px; padding:1px; padding-right: 2px; background-color:snow; width:1.7em; width:1lh; text-align:center} /* 1lh geht nicht überall, deshalb vorher 1.7em*/
+gl3 {display:inline-block; border:solid 1px; border-radius:20px; padding:1px; padding-right: 2px; background-color:snow; width:2.7em; width:2lh; text-align:center}
+gl4 {display:inline-block; border:solid 1px; border-radius:20px; padding:1px; padding-right: 2px; background-color:snow; width:2.7em; text-align:center}
 
 whr {display:block; height:2lh; background-image:linear-gradient(white, LightGray 0.1lh);}
 
 wable {display:table; border-collapse:separate; border-spacing:2px; }
 wbody {display:table-row-group;}
 wr {display:table-row;}
-wd {display:table-cell;white-space:nowrap; padding:1px; borderx:solid pink 1px}
+wd,we {display:table-cell;white-space:nowrap; padding:1px; borderx:solid pink 1px}
+we {background-color:LightGray; border-radius:3px}
 
 bem {display:none; color:green}
 
-/* Fahrrad auch so groß wie die Schrift für die Gleichungen*/
-#Abschnitt_2, #Abschnitt_3, #Abschnitt_4, #Abschnitt_5, #Abschnitt_6, #Abschnitt_7, #Abschnitt_8, #Abschnitt_9, #Abschnitt_10, #Abschnitt_11, #ßAbschnitt_12, #Abschnitt_13, #Abschnitt_14, #Abschnitt_15, #Abschnitt_16 {font-size:1.15rem} 
+/* Fahrrad so groß wie die Schrift für die Gleichungen*/
+#Abschnitt_2, #Abschnitt_3, #Abschnitt_4, #Abschnitt_5, #Abschnitt_6, #Abschnitt_7, #Abschnitt_8, #Abschnitt_9, #Abschnitt_10, #Abschnitt_11, #Abschnitt_12, #Abschnitt_13, #Abschnitt_14, #Abschnitt_15, #Abschnitt_16 {font-size:100%} 
   </style>
 <p style='display:flex; flex-direvtion:row; overflow:auto;'><div id="HCode"> </div></p>
 <div id="Ausgabe_Koeffizient">
@@ -823,6 +842,7 @@ function bestimme_Matrix_2() {
   Logfile_Matrix_2.innerHTML='D=['+D+']\nB=['+B+']\n'+((D.indexOf(g)-1)&&(B.indexOf(-h-1)>-1));
   }
 
+//let V={};
 function bestimme_Matrix_3() {
   g=id_g3.value*1;
   h=id_h3.value*1;
@@ -945,6 +965,7 @@ function bestimme_Matrix_3() {
 let A4='';
 let B4='';
 let C4='';
+let JFX='', JFmpXmq='', JFXpsmq='', JFmpprX=''; JFprXps='';
 function bestimme_Matrix_4() {
   A4='';
   B4='';
@@ -1073,7 +1094,7 @@ function bestimme_Matrix_4() {
   <code>a(
     <input id='id_g' size='1' value='0'/>,
     <input id='id_h' size='1' value='1'/>)+<input id='id_d' size='2' value='1'/></code> 
-  abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>:</p>
+  abgeänderte Ausgangsmatrix (<span><button onclick='bestimme_Matrix_2();Ausgabe()'>neu berechnen</button></span>):</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_2"> </div></p>
   </div>
 <div id="Ausgabe_Koeffizient2">
@@ -1083,7 +1104,7 @@ function bestimme_Matrix_4() {
 
 <hr/>
 <span id='aktuell'> </span>
-<p>Nun nochmal für die mit </p>
+<p>Nun nochmal die gleichen Umformungsschritte für die mit </p>
 <div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
 <div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
 <div>  <code>a(k,h)+<input id='id_dkh' size='2' value='5'/></code> </div>
@@ -1091,7 +1112,7 @@ function bestimme_Matrix_4() {
 <div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='2'/></code> </div>
 <div>  <code>und k=<input id='id_k' size='1' value='3'/>, l=<input id='id_l' size='1' value='4'/></code> </div>
     
-<p>abgeänderte Ausgangsmatrix <span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>:</p>
+<p>abgeänderte Ausgangsmatrix (<span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>):</p>
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
 <div id="Ausgabe_Koeffizient3"> </div><hr/>
 <div id="id_Ausgabe_zum_Artikel">zum Artikel</div>
