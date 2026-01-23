@@ -966,6 +966,9 @@ let A4='';
 let B4='';
 let C4='';
 let JFX='', JFmpXmq='', JFXpsmq='', JFmpprX=''; JFprXps='';
+let IL=[];
+let IR=[];
+let Table='';
 function bestimme_Matrix_4() {
   A4='';
   B4='';
@@ -974,13 +977,52 @@ function bestimme_Matrix_4() {
   h=id_h3.value*1;
   k=id_k.value*1;
   l=id_l.value*1;
+  IL=[];
+  IR=[];
+  IT=['f<sup><vg/></sup>','x<sub><vh/></sub>','f<sup><vk/></sup>','x<sub><vl/></sub>','f<sup><vp/></sup>','x<sub><vq/></sub>','f<sup><vr/></sup>','x<sub><vs/></sub>'];
+  Table='';
   
   C4='g='+g+'; h='+h+'; k='+k+'; l='+l+';\n';
-  if (B.indexOf(-g-1)==-1) C4=C4+', <b>f<sub>g</sub> links</b>'; else C4=C4+', f<sub>g</sub> rechts';
-  if (D.indexOf(h)==-1) C4=C4+', <b>x<sub>h</sub> rechts</b>'; else C4=C4+', x<sub>h</sub> links';
-  if (B.indexOf(-k-1)==-1) C4=C4+', <b>f<sub>k</sub> links</b>'; else C4=C4+', f<sub>k</sub> rechts';
-  if (D.indexOf(l)==-1) C4=C4+', <b>x<sub>l</sub> rechts</b>'; else C4=C4+', x<sub>l</sub> links';
-
+  if (B.indexOf(-g-1)==-1) {IL.push(0); C4=C4+', <b>f<sub>g</sub> links</b>'} else {IR.push(0); C4=C4+', f<sub>g</sub> rechts'}
+  if (D.indexOf(h)==-1) {IR.push(1); C4=C4+', <b>x<sub>h</sub> rechts</b>'} else {IL.push(1); C4=C4+', x<sub>h</sub> links'}
+  if (B.indexOf(-k-1)==-1) {IL.push(2); C4=C4+', <b>f<sub>k</sub> links</b>'} else {IR.push(2); C4=C4+', f<sub>k</sub> rechts'}
+  if (D.indexOf(l)==-1) {IR.push(3); C4=C4+', <b>x<sub>l</sub> rechts</b>'} else {IL.push(3); C4=C4+', x<sub>l</sub> links'}
+  IL.push(4,7); IR.push(5,6);
+  C4=C4+'\n<div>IL=['+IL+']; IR=['+IR+'];</div>\n';
+  Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
+  for (let i=0;i<IR.length;i++) {
+    let ir=IR[i];
+    Table=Table+'<wr><wd>&ctdot;</wd>';
+    for (let j=0;j<IL.length;j++) {
+      let il=IL[j];
+      Table=Table+'<wd>+<mat><op>J</op><co><su>F';
+      if (il==0) Table=Table+'<mg/>';
+      if (il==2) Table=Table+'<mk/>';
+      if (il==4) Table=Table+'<mp/>';
+      if (il==6) Table=Table+'<mr>';
+      if (ir==0) Table=Table+'<pg/>';
+      if (ir==2) Table=Table+'<pk/>';
+      if (ir==4) Table=Table+'<pp/>';
+      if (ir==6) Table=Table+'<pr/>';
+      Table=Table+'</su><su>X';
+      if (il==1) Table=Table+'<ph/>';
+      if (il==3) Table=Table+'<pl/>';
+      if (il==5) Table=Table+'<pq/>';
+      if (il==7) Table=Table+'<ps/>';
+      if (ir==1) Table=Table+'<mh/>';
+      if (ir==3) Table=Table+'<ml/>';
+      if (ir==5) Table=Table+'<mq/>';
+      if (ir==7) Table=Table+'<ms/>';
+      Table=Table+'</su></co></mat></wd><wd>·</wd>';
+      if (IL[j]<4) Table=Table+'<we>'+IT[IL[j]]+'</we><wd>&ctdot;</wd>'; else Table=Table+'<wd>'+IT[IL[j]]+'</wd><wd>&ctdot;</wd>';
+      }
+    Table=Table+'<wd>=</wd><wd><mat><op>J</op><co><su>F</su><su>X</su></co></mat></wd><wd>·</wd>';
+    if (IR[i]<4) Table=Table+'<we>'+IT[IR[i]]+'</we>'; else Table=Table+'<wd>'+IT[IR[i]]+'</wd>';
+    Table=Table+'<wd></wd><wd><gl3 id="gl...">...</gl3></wd></wr>\n';
+    }
+  
+  Table=Table+'</wbody></wable>\n';
+  C4=C4+Table;
 /*
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
     A4=A4;
@@ -1103,7 +1145,6 @@ function bestimme_Matrix_4() {
   </div>
 
 <hr/>
-<span id='aktuell'> </span>
 <p>Nun nochmal die gleichen Umformungsschritte für die mit </p>
 <div>  <code>a(g,h)+<input id='id_dgh' size='2' value='2'/></code> </div>
 <div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
@@ -1116,6 +1157,7 @@ function bestimme_Matrix_4() {
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
 <div id="Ausgabe_Koeffizient3"> </div><hr/>
 <div id="id_Ausgabe_zum_Artikel">zum Artikel</div>
+<span id='aktuell'> </span>
 
   </div>
 
