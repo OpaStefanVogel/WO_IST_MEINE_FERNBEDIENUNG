@@ -503,8 +503,8 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
 
   RET=RET+'<div>Der markierte Koeffizient <span style="border:solid blue; padding:3px">'
   if (j==-1) RET=RET+gemeinsamer_Nenner; else RET=RET+Aij;
-  RET=RET+'</span> wurde berechnet nach ';
-  if (npiv) {if (npiv.length==3) RET=RET+'den Gleichungen <gl>90</gl> bis <gl3>105</gl3></div>'; else RET=RET+'den Gleichungen ab <gl4>124?</gl4></div>' } else RET=RET+'den Gleichungen <gl>27</gl> bis <gl>86</gl></div>';
+  RET=RET+'</span> wurde berechnet nach einer der Gleichungen ';
+  if (npiv) {if (npiv.length==3) RET=RET+'<gl>90</gl> bis <gl3>105</gl3>.</div>'; else RET=RET+'ab <gl4>124?</gl4>.</div>' } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
   RET=RET+'<div>Zum Vergleichen die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
     detA=det(AUV(U,V));
@@ -969,6 +969,29 @@ let JFX='', JFmpXmq='', JFXpsmq='', JFmpprX=''; JFprXps='';
 let IL=[];
 let IR=[];
 let Table='';
+function bestimme_JFX(l,r) {
+  let RET='<mat><op>J</op><co><su>F';
+      if (l==0) RET=RET+'<mg/>';
+      if (l==2) RET=RET+'<mk/>';
+      if (l==4) RET=RET+'<mp/>';
+      if (l==6) RET=RET+'<mr>';
+      if (r==0) RET=RET+'<pg/>';
+      if (r==2) RET=RET+'<pk/>';
+      if (r==4) RET=RET+'<pp/>';
+      if (r==6) RET=RET+'<pr/>';
+      RET=RET+'</su><su>X';
+      if (l==1) RET=RET+'<ph/>';
+      if (l==3) RET=RET+'<pl/>';
+      if (l==5) RET=RET+'<pq/>';
+      if (l==7) RET=RET+'<ps/>';
+      if (r==1) RET=RET+'<mh/>';
+      if (r==3) RET=RET+'<ml/>';
+      if (r==5) RET=RET+'<mq/>';
+      if (r==7) RET=RET+'<ms/>';
+      RET=RET+'</su></co></mat>';
+  return RET;      
+  }
+
 function bestimme_Matrix_4() {
   A4='';
   B4='';
@@ -995,25 +1018,7 @@ function bestimme_Matrix_4() {
     Table=Table+'<wr><wd>&ctdot;</wd>';
     for (let j=0;j<IL.length;j++) {
       let il=IL[j];
-      Table=Table+'<wd>+<mat><op>J</op><co><su>F';
-      if (il==0) Table=Table+'<mg/>';
-      if (il==2) Table=Table+'<mk/>';
-      if (il==4) Table=Table+'<mp/>';
-      if (il==6) Table=Table+'<mr>';
-      if (ir==0) Table=Table+'<pg/>';
-      if (ir==2) Table=Table+'<pk/>';
-      if (ir==4) Table=Table+'<pp/>';
-      if (ir==6) Table=Table+'<pr/>';
-      Table=Table+'</su><su>X';
-      if (il==1) Table=Table+'<ph/>';
-      if (il==3) Table=Table+'<pl/>';
-      if (il==5) Table=Table+'<pq/>';
-      if (il==7) Table=Table+'<ps/>';
-      if (ir==1) Table=Table+'<mh/>';
-      if (ir==3) Table=Table+'<ml/>';
-      if (ir==5) Table=Table+'<mq/>';
-      if (ir==7) Table=Table+'<ms/>';
-      Table=Table+'</su></co></mat></wd><wd>·</wd>';
+      Table=Table+'<wd>+'+bestimme_JFX(il,ir)+'</wd><wd>·</wd>';
       if (IL[j]<4) Table=Table+'<we>'+IT[IL[j]]+'</we><wd>&ctdot;</wd>'; else Table=Table+'<wd>'+IT[IL[j]]+'</wd><wd>&ctdot;</wd>';
       }
     Table=Table+'<wd>=</wd><wd><mat><op>J</op><co><su>F</su><su>X</su></co></mat></wd><wd>·</wd>';
