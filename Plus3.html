@@ -1038,45 +1038,74 @@ function bestimme_Matrix_4() {
     }
   
   Table=Table+'</wbody></wable></div>\n';
-  for (let i=0;i<IR.length;i++) {
-    let ir=IR[i];
-    for (let j=0;j<IL.length;j++) {
-      let il=IL[j];
-      Table=Table+'<div><var>'+bestimme_JFX(il,ir,true)+'='+bestimme_JFX(il,ir)+'+...';
+  Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
+  for (let j=0;j<IL.length;j++) {
+    let il=IL[j];
+    Table=Table+'<wr><wd>zu '+IT[IL[j]]+':</wd></wr>\n';
+    for (let i=0;i<IR.length;i++) {
+      let ir=IR[i];
+      Table=Table+'<wr><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
+
+  Table=Table+'</wd><wd>';
   if (hf&&gf&&lf&&kf) Table=Table+' +h+g+l+k ';
 
-  if (hf&&!gf&&lf&&kf) Table=Table+' +h-g+l+k ';
-  if (hf&&gf&&lf&&!kf) Table=Table+' +h+g+l-k ';
-  if (!hf&&gf&&lf&&kf) Table=Table+' -h+g+l+k ';
-  if (hf&&gf&&!lf&&kf) Table=Table+' +h+g-l+k ';
+  Table=Table+'</wd><wd>';
+  if (hf&&!gf&&lf&&kf) if (ir==0) Table=Table+' +h-g+l+k ';
+  Table=Table+'</wd><wd>';
+  if (hf&&gf&&lf&&!kf) if (ir==2) Table=Table+' +h+g+l-k ';
+  Table=Table+'</wd><wd>';
+  if (!hf&&gf&&lf&&kf) if (il==1) Table=Table+' -h+g+l+k ';
+  Table=Table+'</wd><wd>';
+  if (hf&&gf&&!lf&&kf) if (il==3) Table=Table+' +h+g-l+k ';
 
-  if (hf&&gf&&!lf&&!kf) Table=Table+' +h+g-l-k ';
-  if (!hf&&!gf&&lf&&kf) Table=Table+' -h-g+l+k ';
-  if (!hf&&gf&&lf&&!kf) Table=Table+' -h+g+l-k ';
-  if (hf&&!gf&&!lf&&kf) Table=Table+' +h-g-l+k ';
+  Table=Table+'</wd><wd>';
+  if (hf&&gf&&!lf&&!kf) if (il==3&&ir==2) Table=Table+' +h+g-l-k ';
+  Table=Table+'</wd><wd>';
+  if (!hf&&!gf&&lf&&kf) if (il==1&&ir==0) Table=Table+' -h-g+l+k ';
+  Table=Table+'</wd><wd>';
+  if (!hf&&gf&&lf&&!kf) if (il==1&&ir==2) Table=Table+' -h+g+l-k ';
+  Table=Table+'</wd><wd>';
+  if (hf&&!gf&&!lf&&kf) if (il==3&&ir==0) Table=Table+' +h-g-l+k ';
 
+  Table=Table+'</wd><wd>';
   if (hf&&gf) Table=Table+' +h+g ';
+  Table=Table+'</wd><wd>';
   if (lf&&gf) Table=Table+' +l+g ';
+  Table=Table+'</wd><wd>';
   if (hf&&kf) Table=Table+' +h+k ';
+  Table=Table+'</wd><wd>';
   if (lf&&kf) Table=Table+' +l+k ';
 
+  Table=Table+'</wd><wd>';
   if (hf&&!gf) if (ir==0) Table=Table+' +h-g ';
+  Table=Table+'</wd><wd>';
   if (lf&&!gf) if (ir==0) Table=Table+' +l-g ';
+  Table=Table+'</wd><wd>';
   if (hf&&!kf) if (ir==2) Table=Table+' +h-k ';
+  Table=Table+'</wd><wd>';
   if (lf&&!kf) if (ir==2) Table=Table+' +l-k ';
 
+  Table=Table+'</wd><wd>';
   if (!hf&&gf) if (il==1) Table=Table+' -h+g ';
+  Table=Table+'</wd><wd>';
   if (!lf&&gf) if (il==3) Table=Table+' -l+g ';
+  Table=Table+'</wd><wd>';
   if (!hf&&kf) if (il==1) Table=Table+' -h+k ';
+  Table=Table+'</wd><wd>';
   if (!lf&&kf) if (il==3) Table=Table+' -l+k ';
 
+  Table=Table+'</wd><wd>';
   if (!hf&&!gf) if (il==1&&ir==0) Table=Table+' -h-g ';
+  Table=Table+'</wd><wd>';
   if (!lf&&!gf) if (il==3&&ir==0) Table=Table+' -l-g ';
+  Table=Table+'</wd><wd>';
   if (!hf&&!kf) if (il==1&&ir==2) Table=Table+' -h-k ';
+  Table=Table+'</wd><wd>';
   if (!lf&&!kf) if (il==3&&ir==2) Table=Table+' -l-k ';
-      Table=Table+'</var></div>\n';
+      Table=Table+'</wd></wr>\n';
       }
     }
+  Table=Table+'</wbody></wable></div>\n';
   C4=C4+Table;
 /*
 ♦0  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
