@@ -504,8 +504,18 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   RET=RET+'<div>Der markierte Koeffizient <span style="border:solid blue; padding:3px">'
   if (j==-1) RET=RET+gemeinsamer_Nenner; else RET=RET+Aij;
   RET=RET+'</span> wurde berechnet nach einer der Gleichungen ';
-  if (npiv) {if (npiv.length==3) RET=RET+'<gl>90</gl> bis <gl3>105</gl3>.</div>'; else RET=RET+'ab <gl4>124?</gl4>.</div>' } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
-  RET=RET+'<div>Zum Vergleichen die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
+  if (npiv) {if (npiv.length==3) RET=RET+'<gl>90</gl> bis <gl3>105</gl3>.</div>'; else {
+    RET=RET+'ab <gl4>124?</gl4>, konkret '
+    //RET=RET+'i='+i+'; j='+j+'; td_class='+td_class+'; g='+gg+'; h='+hh+'; k='+kk+'; l='+ll;
+    let pqrs='';
+    if (td_class=='yx') { l=D[j];    k=-1-B[i]; pqrs=[7,6]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (k==kk) pqrs[1]=2; if (k==gg) pqrs[1]=0}
+    if (td_class=='yy') { g=-1-D[j]; k=-1-B[i]; pqrs=[4,6]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (k==kk) pqrs[1]=2; if (k==gg) pqrs[1]=0}
+    if (td_class=='xy') { g=-1-D[j]; h=B[i];    pqrs=[4,5]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
+    if (td_class=='xx') { l=D[j];    h=B[i];    pqrs=[7,5]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
+    //RET=RET+'; pqrs='+pqrs+'; ';
+    RET=RET+bestimme_JFX(pqrs[0],pqrs[1])+' siehe weiter unten.</div>';
+    } } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
+  RET=RET+'<div>Als Probe die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
     detA=det(AUV(U,V));
     let stimmt='dieses Ergebnis stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+gemeinsamer_Nenner+'</span>. Ausführlicher:';
@@ -518,7 +528,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     Xfert=V.slice();
     } else {Ffert=YiMat[i][j].slice(); Xfert=XjMat[i][j].slice()}
 
-  let stimmt='dieses Ergebnis stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+Aij+'</span>. Ausführlicher:';
+  let stimmt='<div>Dieses Ergebnis stimmt überein mit der markierten <span style="border:solid blue; padding:3px">'+Aij+'</span>.</div><div>Nochmal ausführlicher:</div>';
   if (td_class=='xy') {
     g=-1-D[j];
     h=B[i];
@@ -1102,7 +1112,7 @@ function bestimme_Matrix_4() {
   +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
   +opr+'·'+bestimme_JFX(0,1);
   Table=Table+'</wd><wd>';
-  if (!hf&&!gf&&lf&&kf) if (il==1&&ir==0) Table=Table+/*' -h-g+l+k '*/'+'
+  if (!hf&&!gf&&lf&&kf) if (il==1&&ir==0) Table=Table+/*i' -h-g+l+k '*/'+'
   +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
   +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
   +opr+'·'+bestimme_JFX(2,3);
