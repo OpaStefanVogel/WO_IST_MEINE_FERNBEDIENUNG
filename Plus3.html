@@ -980,28 +980,29 @@ let JFX='', JFmpXmq='', JFXpsmq='', JFmpprX=''; JFprXps='';
 let IL=[];
 let IR=[];
 let Table='';
+let JWR='';
 function bestimme_JFX(l,r,u) {
   let RET='<mat><op>';
   if (u) RET=RET+'<u>J</u>'; else RET=RET+'J';
   RET=RET+'</op><co><su>F';
-      if (l==0) RET=RET+'<mg/>';
-      if (l==2) RET=RET+'<mk/>';
-      if (l==4) RET=RET+'<mp/>';
-      if (l==6) RET=RET+'<mr>';
-      if (r==0) RET=RET+'<pg/>';
-      if (r==2) RET=RET+'<pk/>';
-      if (r==4) RET=RET+'<pp/>';
-      if (r==6) RET=RET+'<pr/>';
-      RET=RET+'</su><su>X';
-      if (l==1) RET=RET+'<ph/>';
-      if (l==3) RET=RET+'<pl/>';
-      if (l==5) RET=RET+'<pq/>';
-      if (l==7) RET=RET+'<ps/>';
-      if (r==1) RET=RET+'<mh/>';
-      if (r==3) RET=RET+'<ml/>';
-      if (r==5) RET=RET+'<mq/>';
-      if (r==7) RET=RET+'<ms/>';
-      RET=RET+'</su></co></mat>';
+  if (l==0) RET=RET+'<mg/>';
+  if (l==2) RET=RET+'<mk/>';
+  if (l==4) RET=RET+'<mp/>';
+  if (l==6) RET=RET+'<mr>';
+  if (r==0) RET=RET+'<pg/>';
+  if (r==2) RET=RET+'<pk/>';
+  if (r==4) RET=RET+'<pp/>';
+  if (r==6) RET=RET+'<pr/>';
+  RET=RET+'</su><su>X';
+  if (l==1) RET=RET+'<ph/>';
+  if (l==3) RET=RET+'<pl/>';
+  if (l==5) RET=RET+'<pq/>';
+  if (l==7) RET=RET+'<ps/>';
+  if (r==1) RET=RET+'<mh/>';
+  if (r==3) RET=RET+'<ml/>';
+  if (r==5) RET=RET+'<mq/>';
+  if (r==7) RET=RET+'<ms/>';
+  RET=RET+'</su></co></mat>';
   return RET;      
   }
 
@@ -1013,19 +1014,9 @@ let pf=true;
 let qf=true;
 let rf=false;
 let sf=false;
-let opl=`    <op><b>det</b></op>
-    <det style='border-left:solid 2px; border-right:solid 2px; border-radius:5px; border-color:black; padding:1px; margin:1px'>
-      &nbsp;
-      <co>`;
-let opm=`
-        </co>
-      &nbsp;
-      <co>`;
-let opr=`
-        </co>
-      &nbsp;
-      </det>
-  `;
+let opl=`<op><b>det</b></op><det style='border-left:solid 2px; border-right:solid 2px; border-radius:5px; border-color:black; padding:1px; margin:1px'>&nbsp;<co>`;
+let opm=`</co>&nbsp;<co>`;
+let opr=`</co>&nbsp;</det>`;
 let opy=`/<mat style='border-left:solid 2px; border-right:solid 2px; border-radius:5px; border-color:black; padding:5px; margin:1px'><op>J</op><co><su>F</su><su>X</su></co></mat><co><sup style='translate: 0em -1.35lh'>2</sup>&nbsp;</co>`;
 let opz=`/<mat><op>J</op><co><su>F</su><su>X</su></co></mat>`;
 
@@ -1065,6 +1056,22 @@ function bestimme_Matrix_4() {
     }
   
   Table=Table+'</wbody></wable></div>\n';
+
+  JWR='<div style="display:flex; overflow:auto; border:"><var><mat><op><u>J</u></op><co><su>F</su><su>X</su></co></mat> = <mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
+  if (hf&&gf&&lf&&kf) JWR=JWR+/*' +h+g+l+k '*/'+'
+    +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+    +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+    +opr+'·'
+    +opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,3)
+    +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,3)+opr
+    +opz;
+  if (hf&&gf) JWR=JWR+/*' +h+g '*/'+d<sub><vg/><vh/></sub>·'+bestimme_JFX(0,1);
+  if (lf&&gf) JWR=JWR+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'+bestimme_JFX(0,3);
+  if (hf&&kf) JWR=JWR+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'+bestimme_JFX(2,1);
+  if (lf&&kf) JWR=JWR+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'+bestimme_JFX(2,3);
+  JWR=JWR+'</var></div>\n';
+  Table=Table+JWR;
+
   Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
   for (let j=0;j<IL.length;j++) {
     let il=IL[j];
@@ -1073,105 +1080,105 @@ function bestimme_Matrix_4() {
       let ir=IR[i];
       Table=Table+'<wr><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
 
-  Table=Table+'</wd><wd>';
-  if (hf&&gf&&lf&&kf) Table=Table+/*' +h+g+l+k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'
-  +opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
-  +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)
-  +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr
-  +opy;
+      Table=Table+'</wd><wd>';
+      if (hf&&gf&&lf&&kf) Table=Table+/*' +h+g+l+k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'
+        +opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
+        +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)
+        +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr
+        +opy;
 
-  Table=Table+'</wd><wd>';
-  if (hf&&!gf&&lf&&kf) if (ir==0) Table=Table+/*' +h-g+l+k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+opl+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)
-  +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,3)+opr+opz;
-  Table=Table+'</wd><wd>';
-  if (hf&&gf&&lf&&!kf) if (ir==2) Table=Table+/*' +h+g+l-k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+opl+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)
-  +opm+bestimme_JFX(0,1)+' '+bestimme_JFX(0,3)+opr+opz;
-  Table=Table+'</wd><wd>';
-  if (!hf&&gf&&lf&&kf) if (il==1) Table=Table+/*' -h+g+l+k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+opl+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
-  +opm+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)+opr+opz;
-  Table=Table+'</wd><wd>';
-  if (hf&&gf&&!lf&&kf) if (il==3) Table=Table+/*' +h+g-l+k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,ir)
-  +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,ir)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (hf&&!gf&&lf&&kf) if (ir==0) Table=Table+/*' +h-g+l+k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+opl+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)
+        +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,3)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (hf&&gf&&lf&&!kf) if (ir==2) Table=Table+/*' +h+g+l-k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+opl+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)
+        +opm+bestimme_JFX(0,1)+' '+bestimme_JFX(0,3)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (!hf&&gf&&lf&&kf) if (il==1) Table=Table+/*' -h+g+l+k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+opl+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
+        +opm+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (hf&&gf&&!lf&&kf) if (il==3) Table=Table+/*' +h+g-l+k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,ir)
+        +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,ir)+opr+opz;
 
-  Table=Table+'</wd><wd>';
-  if (hf&&gf&&!lf&&!kf) if (il==3&&ir==2) Table=Table+/*' +h+g-l-k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+bestimme_JFX(0,1);
-  Table=Table+'</wd><wd>';
-  if (!hf&&!gf&&lf&&kf) if (il==1&&ir==0) Table=Table+/*i' -h-g+l+k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+bestimme_JFX(2,3);
-  Table=Table+'</wd><wd>';
-  if (!hf&&gf&&lf&&!kf) if (il==1&&ir==2) Table=Table+/*' -h+g+l-k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+bestimme_JFX(0,3);
-  Table=Table+'</wd><wd>';
-  if (hf&&!gf&&!lf&&kf) if (il==3&&ir==0) Table=Table+/*' +h-g-l+k '*/'+'
-  +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
-  +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
-  +opr+'·'+bestimme_JFX(2,1);
+      Table=Table+'</wd><wd>';
+      if (hf&&gf&&!lf&&!kf) if (il==3&&ir==2) Table=Table+/*' +h+g-l-k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+bestimme_JFX(0,1);
+      Table=Table+'</wd><wd>';
+      if (!hf&&!gf&&lf&&kf) if (il==1&&ir==0) Table=Table+/*i' -h-g+l+k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+bestimme_JFX(2,3);
+      Table=Table+'</wd><wd>';
+      if (!hf&&gf&&lf&&!kf) if (il==1&&ir==2) Table=Table+/*' -h+g+l-k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+bestimme_JFX(0,3);
+      Table=Table+'</wd><wd>';
+      if (hf&&!gf&&!lf&&kf) if (il==3&&ir==0) Table=Table+/*' +h-g-l+k '*/'+'
+        +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
+        +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
+        +opr+'·'+bestimme_JFX(2,1);
 
-  Table=Table+'</wd><wd>';
-  if (hf&&gf) Table=Table+/*' +h+g '*/'+d<sub><vg/><vh/></sub>·'
-  +opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,ir)
-  +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,ir)+opr+opz;
-  Table=Table+'</wd><wd>';
-  if (lf&&gf) Table=Table+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'
-  +opl+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
-  +opm+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr+opz;
-  Table=Table+'</wd><wd>';
-  if (hf&&kf) Table=Table+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'
-  +opl+bestimme_JFX(2,1)+' '+bestimme_JFX(2,ir)
-  +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,ir)+opr+opz;
-  Table=Table+'</wd><wd>';
-  if (lf&&kf) Table=Table+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'
-  +opl+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)
-  +opm+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (hf&&gf) Table=Table+/*' +h+g '*/'+d<sub><vg/><vh/></sub>·'
+        +opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,ir)
+        +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,ir)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (lf&&gf) Table=Table+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'
+        +opl+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
+        +opm+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (hf&&kf) Table=Table+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'
+        +opl+bestimme_JFX(2,1)+' '+bestimme_JFX(2,ir)
+        +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,ir)+opr+opz;
+      Table=Table+'</wd><wd>';
+      if (lf&&kf) Table=Table+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'
+        +opl+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)
+        +opm+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr+opz;
 
-  Table=Table+'</wd><wd>';
-  if (hf&&!gf) if (ir==0) Table=Table+/*' +h-g '*/'+d<sub><vg/><vh/></sub>·'+bestimme_JFX(il,1);
-  Table=Table+'</wd><wd>';
-  if (lf&&!gf) if (ir==0) Table=Table+/*' +l-g '*/'+d<sub><vg/><vl/></sub>·'+bestimme_JFX(il,3);
-  Table=Table+'</wd><wd>';
-  if (hf&&!kf) if (ir==2) Table=Table+/*' +h-k '*/'+d<sub><vk/><vh/></sub>·'+bestimme_JFX(il,1);
-  Table=Table+'</wd><wd>';
-  if (lf&&!kf) if (ir==2) Table=Table+/*' +l-k '*/'+d<sub><vk/><vl/></sub>·'+bestimme_JFX(il,3);
+      Table=Table+'</wd><wd>';
+      if (hf&&!gf) if (ir==0) Table=Table+/*' +h-g '*/'+d<sub><vg/><vh/></sub>·'+bestimme_JFX(il,1);
+      Table=Table+'</wd><wd>';
+      if (lf&&!gf) if (ir==0) Table=Table+/*' +l-g '*/'+d<sub><vg/><vl/></sub>·'+bestimme_JFX(il,3);
+      Table=Table+'</wd><wd>';
+      if (hf&&!kf) if (ir==2) Table=Table+/*' +h-k '*/'+d<sub><vk/><vh/></sub>·'+bestimme_JFX(il,1);
+      Table=Table+'</wd><wd>';
+      if (lf&&!kf) if (ir==2) Table=Table+/*' +l-k '*/'+d<sub><vk/><vl/></sub>·'+bestimme_JFX(il,3);
 
-  Table=Table+'</wd><wd>';
-  if (!hf&&gf) if (il==1) Table=Table+/*' -h+g '*/'-d<sub><vg/><vh/></sub>·'+bestimme_JFX(0,ir);
-  Table=Table+'</wd><wd>';
-  if (!lf&&gf) if (il==3) Table=Table+/*' -l+g '*/'-d<sub><vg/><vl/></sub>·'+bestimme_JFX(0,ir);
-  Table=Table+'</wd><wd>';
-  if (!hf&&kf) if (il==1) Table=Table+/*' -h+k '*/'-d<sub><vk/><vh/></sub>·'+bestimme_JFX(2,ir);
-  Table=Table+'</wd><wd>';
-  if (!lf&&kf) if (il==3) Table=Table+/*' -l+k '*/'-d<sub><vk/><vl/></sub>·'+bestimme_JFX(2,ir);
+      Table=Table+'</wd><wd>';
+      if (!hf&&gf) if (il==1) Table=Table+/*' -h+g '*/'-d<sub><vg/><vh/></sub>·'+bestimme_JFX(0,ir);
+      Table=Table+'</wd><wd>';
+      if (!lf&&gf) if (il==3) Table=Table+/*' -l+g '*/'-d<sub><vg/><vl/></sub>·'+bestimme_JFX(0,ir);
+      Table=Table+'</wd><wd>';
+      if (!hf&&kf) if (il==1) Table=Table+/*' -h+k '*/'-d<sub><vk/><vh/></sub>·'+bestimme_JFX(2,ir);
+      Table=Table+'</wd><wd>';
+      if (!lf&&kf) if (il==3) Table=Table+/*' -l+k '*/'-d<sub><vk/><vl/></sub>·'+bestimme_JFX(2,ir);
 
-  Table=Table+'</wd><wd>';
-  if (!hf&&!gf) if (il==1&&ir==0) Table=Table+/*' -h-g '*/'+d<sub><vg/><vh/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
-  Table=Table+'</wd><wd>';
-  if (!lf&&!gf) if (il==3&&ir==0) Table=Table+/*' -l-g '*/'+d<sub><vg/><vl/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
-  Table=Table+'</wd><wd>';
-  if (!hf&&!kf) if (il==1&&ir==2) Table=Table+/*' -h-k '*/'+d<sub><vk/><vh/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
-  Table=Table+'</wd><wd>';
-  if (!lf&&!kf) if (il==3&&ir==2) Table=Table+/*' -l-k '*/'+d<sub><vk/><vl/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
+      Table=Table+'</wd><wd>';
+      if (!hf&&!gf) if (il==1&&ir==0) Table=Table+/*' -h-g '*/'+d<sub><vg/><vh/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
+      Table=Table+'</wd><wd>';
+      if (!lf&&!gf) if (il==3&&ir==0) Table=Table+/*' -l-g '*/'+d<sub><vg/><vl/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
+      Table=Table+'</wd><wd>';
+      if (!hf&&!kf) if (il==1&&ir==2) Table=Table+/*' -h-k '*/'+d<sub><vk/><vh/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
+      Table=Table+'</wd><wd>';
+      if (!lf&&!kf) if (il==3&&ir==2) Table=Table+/*' -l-k '*/'+d<sub><vk/><vl/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
       Table=Table+'</wd></wr>\n';
       }
     }
