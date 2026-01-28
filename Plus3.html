@@ -505,15 +505,16 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   if (j==-1) RET=RET+gemeinsamer_Nenner; else RET=RET+Aij;
   RET=RET+'</span> wurde berechnet nach einer der Gleichungen ';
   if (npiv) {if (npiv.length==3) RET=RET+'<gl>90</gl> bis <gl3>105</gl3>.</div>'; else {
-    RET=RET+'ab <gl4>124?</gl4>, konkret nach Gleichung '
     //RET=RET+'i='+i+'; j='+j+'; td_class='+td_class+'; g='+gg+'; h='+hh+'; k='+kk+'; l='+ll;
     let pqrs='';
-    if (td_class=='yx') { l=D[j];    k=-1-B[i]; pqrs=[7,6]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (k==kk) pqrs[1]=2; if (k==gg) pqrs[1]=0}
-    if (td_class=='yy') { g=-1-D[j]; k=-1-B[i]; pqrs=[4,6]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (k==kk) pqrs[1]=2; if (k==gg) pqrs[1]=0}
-    if (td_class=='xy') { g=-1-D[j]; h=B[i];    pqrs=[4,5]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
-    if (td_class=='xx') { l=D[j];    h=B[i];    pqrs=[7,5]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
+    let ghkl=[0,0];
+    if (td_class=='yx') { l=D[j];    k=-1-B[i]; ghkl=[l,k]; pqrs=[7,6]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (k==kk) pqrs[1]=2; if (k==gg) pqrs[1]=0}
+    if (td_class=='yy') { g=-1-D[j]; k=-1-B[i]; ghkl=[g,k]; pqrs=[4,6]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (k==kk) pqrs[1]=2; if (k==gg) pqrs[1]=0}
+    if (td_class=='xy') { g=-1-D[j]; h=B[i];    ghkl=[g,h]; pqrs=[4,5]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
+    if (td_class=='xx') { l=D[j];    h=B[i];    ghkl=[l,h]; pqrs=[7,5]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
     //RET=RET+'; pqrs='+pqrs+'; ';
-    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1])+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> siehe weiter <a href="#id_Ausgabe_zum_Artikel">unten</a>.</div>';
+    RET=RET+'ab <gl4>124?</gl4>, konkret mit '+'ghklpqrs'[pqrs[0]]+'='+ghkl[0]+', '+'ghklpqrs'[pqrs[1]]+'='+ghkl[1]+' nach Gleichung '
+    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1])+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#id_Ausgabe_zum_Artikel">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
     } } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
   RET=RET+'<div>Als Probe die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
@@ -1304,7 +1305,7 @@ function bestimme_Matrix_4() {
 <div>  <code>a(g,l)+<input id='id_dgl' size='2' value='3'/></code> </div>
 <div>  <code>a(k,h)+<input id='id_dkh' size='2' value='5'/></code> </div>
 <div>  <code>a(k,l)+<input id='id_dkl' size='2' value='7'/></code> </div>
-<div>  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='2'/></code> </div>
+<div id="id_g4">  <code>mit g=<input id='id_g3' size='1' value='1'/>, h=<input id='id_h3' size='1' value='2'/></code> </div>
 <div>  <code>und k=<input id='id_k' size='1' value='3'/>, l=<input id='id_l' size='1' value='4'/></code> </div>
     
 <p>abgeänderte Ausgangsmatrix (<span><button onclick='bestimme_Matrix_3();Ausgabe()'>neu berechnen</button></span>):</p>
