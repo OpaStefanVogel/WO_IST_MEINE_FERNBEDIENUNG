@@ -61,6 +61,27 @@ function Los() {
   bestimme_Matrix_2();
   bestimme_Matrix_3();
   Ausgabe();
+  id_Ausgabe2_zum_Artikel.innerHTML
+    =bestimme_Matrix_0([0,2,4,7],[1,3,5,6])
+    +bestimme_Matrix_0([0,1,2,3,4,7],[5,6])
+    +bestimme_Matrix_0([0,2,3,4,7],[1,5,6])
+    +bestimme_Matrix_0([0,3,4,7],[1,2,5,6])
+    +bestimme_Matrix_0([1,3,4,7],[0,2,5,6])
+    +bestimme_Matrix_0([3,4,7],[0,1,2,5,6])
+    +bestimme_Matrix_0([4,7],[0,1,2,3,5,6])
+    +bestimme_Matrix_0([0,4,7],[1,2,3,5,6])
+    +bestimme_Matrix_0([0,1,3,4,7],[2,5,6])
+
+    +bestimme_Matrix_0([1,4,7],[0,2,3,5,6])
+    +bestimme_Matrix_0([2,4,7],[0,1,3,5,6])
+    +bestimme_Matrix_0([0,1,4,7],[2,3,5,6])
+    +bestimme_Matrix_0([1,2,4,7],[0,3,5,6])
+    +bestimme_Matrix_0([2,3,4,7],[0,1,5,6])
+    +bestimme_Matrix_0([0,1,2,4,7],[3,5,6])
+    +bestimme_Matrix_0([1,2,3,4,7],[0,5,6])
+    
+    ;
+
   }
 
 function tausche(r,s) {
@@ -125,7 +146,7 @@ function Ausgabe() {
   Pivot2.click();
   HCode_Matrix_3=Ausgabe_HCode(Matrix_3,gemeinsamer_Nenner,B,D,p,npiv3);
   document.getElementById("id_HCode_Matrix_3").innerHTML=HCode_Matrix_3;
-  id_Ausgabe_zum_Artikel.innerHTML=A4+'<hr/>'+B4+'<hr/>'+C4;
+  id_Ausgabe_zum_Artikel.innerHTML=A4+'<hr/>'+B4+'<hr/>';//+C4;
   Pivot3.click();
   }
 
@@ -514,7 +535,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     if (td_class=='xx') { l=D[j];    h=B[i];    ghkl=[l,h]; pqrs=[7,5]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
     //RET=RET+'; pqrs='+pqrs+'; ';
     RET=RET+'ab <gl4>124?</gl4>, konkret mit '+'ghklpqrs'[pqrs[0]]+'='+ghkl[0]+', '+'ghklpqrs'[pqrs[1]]+'='+ghkl[1]+' nach Gleichung '
-    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1],true)+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#'+bestimme_JFX(pqrs[0],pqrs[1])+'">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
+    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1],true)+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#'+bestimme_JFX(pqrs[0],pqrs[1])+IL+','+IR+'">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
     } } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
   RET=RET+'<div>Als Probe die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
@@ -1034,14 +1055,14 @@ function bestimme_Matrix_4() {
   
   C4='';
   //C4='g='+g+'; h='+h+'; k='+k+'; l='+l+';\n';
-  if (B.indexOf(-g-1)==-1) {IL.push(0); C4=C4+'<b>f<sup>g</sup> links</b>, '; gf=true} else {IR.push(0); C4=C4+'f<sup>g</sup> rechts, '; gf=false}
-  if (D.indexOf(h)==-1) {IR.push(1); C4=C4+'<b>x<sub>h</sub> rechts</b>, '; hf=true} else {IL.push(1); C4=C4+'x<sub>h</sub> links, '; hf=false}
-  if (B.indexOf(-k-1)==-1) {IL.push(2); C4=C4+'<b>f<sup>k</sup> links</b>, '; kf=true} else {IR.push(2); C4=C4+'f<sup>k</sup> rechts, '; kf=false}
-  if (D.indexOf(l)==-1) {IR.push(3); C4=C4+'<b>x<sub>l</sub> rechts</b>, '; lf=true} else {IL.push(3); C4=C4+'x<sub>l</sub> links, '; lf=false}
+  if (B.indexOf(-g-1)==-1) IL.push(0); else IR.push(0);
+  if (D.indexOf(h)==-1) IR.push(1); else IL.push(1);
+  if (B.indexOf(-k-1)==-1) IL.push(2); else IR.push(2);
+  if (D.indexOf(l)==-1) IR.push(3); else IL.push(3);
   IL.push(4,7); IR.push(5,6);
   //C4=C4+'\n<div>IL=['+IL+']; IR=['+IR+'];</div>\n';
 
-  C4=C4+bestimme_Matrix_0();
+  C4=C4+bestimme_Matrix_0(IL,IR);
   return C4;
 /*
 ♦0  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
@@ -1151,8 +1172,16 @@ function bestimme_Matrix_4() {
   */
   }
 
-function bestimme_Matrix_0() {
-  Table='<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
+function bestimme_Matrix_0(IL,IR) {
+  Table='<hr/><div>';
+  if (IR.indexOf(0)==-1) {Table=Table+'<b>f<sup>g</sup> links</b>, '; gf=true} else {Table=Table+'f<sup>g</sup> rechts, '; gf=false}
+  if (IL.indexOf(1)==-1) {Table=Table+'<b>x<sub>h</sub> rechts</b>, '; hf=true} else {Table=Table+'x<sub>h</sub> links, '; hf=false}
+  if (IR.indexOf(2)==-1) {Table=Table+'<b>f<sup>k</sup> links</b>, '; kf=true} else {Table=Table+'f<sup>k</sup> rechts, '; kf=false}
+  if (IL.indexOf(3)==-1) {Table=Table+'<b>x<sub>l</sub> rechts</b>, '; lf=true} else {Table=Table+'x<sub>l</sub> links, '; lf=false}
+  Table=Table+'</div>\n';
+  //Table=Table+'<div>IL=['+IL+']; IR=['+IR+'];</div>\n';
+
+  Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
   for (let i=0;i<IR.length;i++) {
     let ir=IR[i];
     Table=Table+'<wr><wd>&ctdot;</wd>';
@@ -1189,7 +1218,7 @@ function bestimme_Matrix_0() {
     Table=Table+'<wr><wd>vor '+IT[IL[j]]+':</wd></wr>\n';
     for (let i=0;i<IR.length;i++) {
       let ir=IR[i];
-      Table=Table+'<wr id="'+bestimme_JFX(il,ir)+'"><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
+      Table=Table+'<wr id="'+bestimme_JFX(il,ir)+IL+','+IR+'"><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
 
       Table=Table+'</wd><wd>';
       if (il!=0&&il!=2&&ir!=1&&ir!=3) if (hf&&gf&&lf&&kf) Table=Table+/*' +h+g+l+k '*/'+'
@@ -1327,6 +1356,9 @@ function bestimme_Matrix_0() {
 <button onclick="err=false;zufaellig_weiter(true)">einmal zufällig weiter</button>
 <div id='aktuell'></div>
 <div id="id_Ausgabe_zum_Artikel">zum Artikel</div>
+
+  </div>
+<div id="id_Ausgabe2_zum_Artikel">zum Artikel</div>
 
   </div>
 <div style="height:800px">...</div>
