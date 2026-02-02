@@ -61,26 +61,27 @@ function Los() {
   bestimme_Matrix_2();
   bestimme_Matrix_3();
   Ausgabe();
-  id_Ausgabe2_zum_Artikel.innerHTML
+  let bM
     =bestimme_Matrix_0([0,2,4,7],[1,3,5,6])
-    +bestimme_Matrix_0([0,1,2,3,4,7],[5,6])
     +bestimme_Matrix_0([0,2,3,4,7],[1,5,6])
-    +bestimme_Matrix_0([0,3,4,7],[1,2,5,6])
-    +bestimme_Matrix_0([1,3,4,7],[0,2,5,6])
-    +bestimme_Matrix_0([3,4,7],[0,1,2,5,6])
-    +bestimme_Matrix_0([4,7],[0,1,2,3,5,6])
-    +bestimme_Matrix_0([0,4,7],[1,2,3,5,6])
+    +bestimme_Matrix_0([0,1,2,3,4,7],[5,6])
     +bestimme_Matrix_0([0,1,3,4,7],[2,5,6])
+    +bestimme_Matrix_0([0,3,4,7],[1,2,5,6])
+    +bestimme_Matrix_0([0,4,7],[1,2,3,5,6])
+    +bestimme_Matrix_0([4,7],[0,1,2,3,5,6])
+    +bestimme_Matrix_0([3,4,7],[0,1,2,5,6])
+    +bestimme_Matrix_0([1,3,4,7],[0,2,5,6])
 
-    +bestimme_Matrix_0([1,4,7],[0,2,3,5,6])
-    +bestimme_Matrix_0([2,4,7],[0,1,3,5,6])
-    +bestimme_Matrix_0([0,1,4,7],[2,3,5,6])
-    +bestimme_Matrix_0([1,2,4,7],[0,3,5,6])
-    +bestimme_Matrix_0([2,3,4,7],[0,1,5,6])
-    +bestimme_Matrix_0([0,1,2,4,7],[3,5,6])
     +bestimme_Matrix_0([1,2,3,4,7],[0,5,6])
-    
+    +bestimme_Matrix_0([2,3,4,7],[0,1,5,6])
+    +bestimme_Matrix_0([2,4,7],[0,1,3,5,6])
+    +bestimme_Matrix_0([1,2,4,7],[0,3,5,6])
+    +bestimme_Matrix_0([0,1,2,4,7],[3,5,6])
+    +bestimme_Matrix_0([0,1,4,7],[2,3,5,6])
+    +bestimme_Matrix_0([1,4,7],[0,2,3,5,6])
     ;
+  id_Ausgabe2_zum_Artikel.innerHTML=bM;
+  id_Ausgabe3_zum_Artikel.innerText=bM;
 
   }
 
@@ -534,8 +535,8 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     if (td_class=='xy') { g=-1-D[j]; h=B[i];    ghkl=[g,h]; pqrs=[4,5]; if (g==kk) pqrs[0]=2; if (g==gg) pqrs[0]=0; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
     if (td_class=='xx') { l=D[j];    h=B[i];    ghkl=[l,h]; pqrs=[7,5]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
     //RET=RET+'; pqrs='+pqrs+'; ';
-    RET=RET+'ab <gl4>124?</gl4>, konkret mit '+'ghklpqrs'[pqrs[0]]+'='+ghkl[0]+', '+'ghklpqrs'[pqrs[1]]+'='+ghkl[1]+' nach Gleichung '
-    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1],true)+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#'+bestimme_JFX(pqrs[0],pqrs[1])+IL+','+IR+'">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
+    RET=RET+'ab <gl4>124?</gl4>, konkret mit <var><v'+'ghklpqrs'[pqrs[0]]+'/></var>='+ghkl[0]+', <var><v'+'ghklpqrs'[pqrs[1]]+'/></var>='+ghkl[1]+' nach Gleichung '
+    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1],true)+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#'+pqrs[0]+','+pqrs[1]+','+IL+','+IR+'">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
     } } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
   RET=RET+'<div>Als Probe die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
@@ -639,7 +640,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   let sdgl=''+dgl; if (dgl>=0) sdgl='+'+dgl;
   let sdkh=''+dkh; if (dkh>=0) sdkh='+'+dkh;
   let sdkl=''+dkl; if (dkl>=0) sdkl='+'+dkl;
-  RET=RET+'det <table style="border-left:solid 2px; border-radius:5px; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
+  RET=RET+'det <table style="border-left:solid 2px; border-radius:7px; corner-shape:squircle; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
   for (let i=0;i<m;i++) {
     RET=RET+'<tr>\n';
     for (let j=0;j<n;j++) {
@@ -665,7 +666,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
   RET=RET+'</table> = ';
   
   let AUVMAT=AUV(Ffert,Xfert);
-  RET=RET+'det<table style="border-left:solid 2px; border-radius:5px; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
+  RET=RET+'det<table style="border-left:solid 2px; border-radius:7px; corner-shape:squircle; border-color:black; border-right:solid 2px; margin:10p; text-align:right">';
   for (let i=0;i<AUVMAT.length;i++) {
     RET=RET+'<tr>\n';
     for (let j=0;j<AUVMAT[0].length;j++) {
@@ -890,7 +891,7 @@ function bestimme_Matrix_3() {
   neuer_gemeinsamer_Nenner3=gemeinsamer_Nenner;
 
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) {
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) if (i!=D.indexOf(-k-1)&&i!=D.indexOf(-g-1)&&j!=B.indexOf(h)&&j!=B.indexOf(l)) {
       let det3=det([
         [Ausgangsmatrix[j][i],Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]],
         [Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
@@ -907,22 +908,22 @@ function bestimme_Matrix_3() {
     }
 
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
-    for (let i=0;i<Matrix_2[0].length;i++)
+    for (let i=0;i<Matrix_2[0].length;i++) if (i!=B.indexOf(-k-1))
       Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+det([[dgh,dgl],[dkh,dkl]])
       *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
            [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) 
-    for (let i=0;i<Matrix_2[0].length;i++)
+    for (let i=0;i<Matrix_2[0].length;i++) if (i!=B.indexOf(-g-1))
       Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]-det([[dgh,dgl],[dkh,dkl]])
       *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]],
            [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]]])/gemeinsamer_Nenner;
   if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
-    for (let j=0;j<Matrix_2[0].length;j++)
+    for (let j=0;j<Matrix_2[0].length;j++) if (j!=D.indexOf(l))
       Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])
       *det([[Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]],
             [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) 
-    for (let j=0;j<Matrix_2[0].length;j++)
+    for (let j=0;j<Matrix_2[0].length;j++) if (j!=D.indexOf(h))
       Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])
       *det([[Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
             [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
@@ -934,22 +935,22 @@ function bestimme_Matrix_3() {
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
 
   if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) if (i!=B.indexOf(-g-1)&&j!=D.indexOf(h))
       Matrix_3[j][i]=Matrix_3[j][i]+dgh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
     neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
     }
   if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) if (i!=B.indexOf(-g-1)&&j!=D.indexOf(l))
       Matrix_3[j][i]=Matrix_3[j][i]+dgl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
     neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
     }
   if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) if (i!=B.indexOf(-k-1)&&j!=D.indexOf(h))
       Matrix_3[j][i]=Matrix_3[j][i]+dkh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
     neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
     }
   if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
+    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) if (i!=B.indexOf(-k-1)&&j!=D.indexOf(l))
       Matrix_3[j][i]=Matrix_3[j][i]+dkl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
     neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
     }
@@ -1035,10 +1036,10 @@ let pf=true;
 let qf=true;
 let rf=false;
 let sf=false;
-let opl=`<op><b>det</b></op><det style='border-left:solid 2px; border-right:solid 2px; border-radius:5px; border-color:black; padding:1px; margin:1px'>&nbsp;<co>`;
+let opl=`<op><b>det</b></op><det style='border-left:solid 2px; border-right:solid 2px; border-radius:7px; corner-shape:squircle; border-color:black; padding:1px; margin:1px'>&nbsp;<co>`;
 let opm=`</co>&nbsp;<co>`;
 let opr=`</co>&nbsp;</det>`;
-let opy=`/<mat style='border-left:solid 2px; border-right:solid 2px; border-radius:5px; border-color:black; padding:5px; margin:1px'><op>J</op><co><su>F</su><su>X</su></co></mat><co><sup style='translate: 0em -1.35lh'>2</sup>&nbsp;</co>`;
+let opy=`/<mat style='border-left:solid 2px; border-right:solid 2px; border-radius:7px; corner-shape:squircle; border-color:black; padding:5px; margin:1px'><op>J</op><co><su>F</su><su>X</su></co></mat><co><sup style='translate: 0em -1.35lh'>2</sup>&nbsp;</co>`;
 let opz=`/<mat><op>J</op><co><su>F</su><su>X</su></co></mat>`;
 
 function bestimme_Matrix_4() {
@@ -1062,126 +1063,23 @@ function bestimme_Matrix_4() {
   IL.push(4,7); IR.push(5,6);
   //C4=C4+'\n<div>IL=['+IL+']; IR=['+IR+'];</div>\n';
 
-  C4=C4+bestimme_Matrix_0(IL,IR);
+  //C4=C4+bestimme_Matrix_0(IL,IR);
   return C4;
-/*
-♦0  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
-    A4=A4;
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) {
-      let det3=det([
-        [Ausgangsmatrix[j][i],Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]],
-        [Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
-        [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]
-        ]);
-      let quot3=det3/gemeinsamer_Nenner/gemeinsamer_Nenner;
-      let prod3=quot3*gemeinsamer_Nenner*gemeinsamer_Nenner;
-      if (prod3!=det3) alert('Error\ndet='+det3+'\nprod='+prod3);
-      Matrix_3[j][i]=Matrix_3[j][i]+det([[dgh,dgl],[dkh,dkl]])*quot3;
-      }
-    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+det([[dgh,dgl],[dkh,dkl]])*(
-      Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-
-      Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)])/gemeinsamer_Nenner;
-    }
-
-♦1  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
-    for (let i=0;i<Matrix_2[0].length;i++)
-      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+det([[dgh,dgl],[dkh,dkl]])
-      *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
-           [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
-♦2  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) 
-    for (let i=0;i<Matrix_2[0].length;i++)
-      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]-det([[dgh,dgl],[dkh,dkl]])
-      *det([[Ausgangsmatrix[B.indexOf(h)][i],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]],
-           [Ausgangsmatrix[B.indexOf(l)][i],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]]])/gemeinsamer_Nenner;
-♦3  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) 
-    for (let j=0;j<Matrix_2[0].length;j++)
-      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])
-      *det([[Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]],
-            [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
-♦4  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) 
-    for (let j=0;j<Matrix_2[0].length;j++)
-      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])
-      *det([[Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)],Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]],
-            [Ausgangsmatrix[j][D.indexOf(-g-1)],Ausgangsmatrix[j][D.indexOf(-k-1)]]])/gemeinsamer_Nenner;
-
-
-♦5  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
-♦6  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
-♦7  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)&&(D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
-♦8  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)&&(D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]-det([[dgh,dgl],[dkh,dkl]])*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
-
-♦9  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][i]=Matrix_3[j][i]+dgh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
-    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-g-1)];
-    }
-♦10  if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][i]=Matrix_3[j][i]+dgl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-g-1)])/gemeinsamer_Nenner;
-    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dgl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-g-1)];
-    }
-♦11  if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][i]=Matrix_3[j][i]+dkh*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(h)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
-    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkh*Ausgangsmatrix[B.indexOf(h)][D.indexOf(-k-1)];
-    }
-♦12  if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][i]=Matrix_3[j][i]+dkl*(Ausgangsmatrix[j][i]*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)]-Ausgangsmatrix[B.indexOf(l)][i]*Ausgangsmatrix[j][D.indexOf(-k-1)])/gemeinsamer_Nenner;
-    neuer_gemeinsamer_Nenner3=neuer_gemeinsamer_Nenner3+dkl*Ausgangsmatrix[B.indexOf(l)][D.indexOf(-k-1)];
-    }
-
-♦13  if ((D.indexOf(h)==-1)&&(B.indexOf(-g-1)>-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) 
-      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+dgh*Ausgangsmatrix[B.indexOf(h)][i];
-    }
-♦14  if ((D.indexOf(l)==-1)&&(B.indexOf(-g-1)>-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) 
-      Matrix_3[B.indexOf(-g-1)][i]=Matrix_3[B.indexOf(-g-1)][i]+dgl*Ausgangsmatrix[B.indexOf(l)][i];
-    }
-♦15  if ((D.indexOf(h)==-1)&&(B.indexOf(-k-1)>-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) 
-      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]+dkh*Ausgangsmatrix[B.indexOf(h)][i];
-    }
-♦16  if ((D.indexOf(l)==-1)&&(B.indexOf(-k-1)>-1)) {
-    for (let i=0;i<Matrix_2[0].length;i++) 
-      Matrix_3[B.indexOf(-k-1)][i]=Matrix_3[B.indexOf(-k-1)][i]+dkl*Ausgangsmatrix[B.indexOf(l)][i];
-    }
-
-♦17  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)==-1)) {
-    for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-dgh*Ausgangsmatrix[j][D.indexOf(-g-1)];
-    }
-♦18  if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)==-1)) {
-    for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-dgl*Ausgangsmatrix[j][D.indexOf(-g-1)];
-    }
-♦19  if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][D.indexOf(h)]=Matrix_3[j][D.indexOf(h)]-dkh*Ausgangsmatrix[j][D.indexOf(-k-1)];
-    }
-♦20  if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)==-1)) {
-    for (let j=0;j<Matrix_2.length;j++) 
-      Matrix_3[j][D.indexOf(l)]=Matrix_3[j][D.indexOf(l)]-dkl*Ausgangsmatrix[j][D.indexOf(-k-1)];
-    }
-
-♦21  if ((D.indexOf(h)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(h)]+dgh*gemeinsamer_Nenner;
-♦22  if ((D.indexOf(l)>-1)&&(B.indexOf(-g-1)>-1)) Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-g-1)][D.indexOf(l)]+dgl*gemeinsamer_Nenner;
-♦23  if ((D.indexOf(h)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(h)]+dkh*gemeinsamer_Nenner;
-♦24  if ((D.indexOf(l)>-1)&&(B.indexOf(-k-1)>-1)) Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]=Matrix_3[B.indexOf(-k-1)][D.indexOf(l)]+dkl*gemeinsamer_Nenner;
-  */
   }
 
+let GNum=124;
+function GN(f) {GNum=GNum+1;return '<gl3 id="gl"'+GNum+'">'+GNum+'</gl3>'}
+
 function bestimme_Matrix_0(IL,IR) {
-  Table='<hr/><div>';
-  if (IR.indexOf(0)==-1) {Table=Table+'<b>f<sup>g</sup> links</b>, '; gf=true} else {Table=Table+'f<sup>g</sup> rechts, '; gf=false}
-  if (IL.indexOf(1)==-1) {Table=Table+'<b>x<sub>h</sub> rechts</b>, '; hf=true} else {Table=Table+'x<sub>h</sub> links, '; hf=false}
-  if (IR.indexOf(2)==-1) {Table=Table+'<b>f<sup>k</sup> links</b>, '; kf=true} else {Table=Table+'f<sup>k</sup> rechts, '; kf=false}
-  if (IL.indexOf(3)==-1) {Table=Table+'<b>x<sub>l</sub> rechts</b>, '; lf=true} else {Table=Table+'x<sub>l</sub> links, '; lf=false}
+  Table='\n\n<hr/>\n<div>';
+  if (IR.indexOf(0)==-1) {Table=Table+'<b><var>f<sup><vg/></sup></var> links</b>, '; gf=true} else {Table=Table+'<var>f<sup><vg/></sup></var> rechts, '; gf=false}
+  if (IL.indexOf(1)==-1) {Table=Table+'<b><var>x<sub><vh/></sub></var> rechts</b>, '; hf=true} else {Table=Table+'<var>x<sub><vh/></sub></var> links, '; hf=false}
+  if (IR.indexOf(2)==-1) {Table=Table+'<b><var>f<sup><vk/></sup></var> links</b>, '; kf=true} else {Table=Table+'<var>f<sup><vk/></sup></var> rechts, '; kf=false}
+  if (IL.indexOf(3)==-1) {Table=Table+'<b><var>x<sub><vl/></sub></var> rechts</b>, '; lf=true} else {Table=Table+'<var>x<sub><vl/></sub></var> links, '; lf=false}
   Table=Table+'</div>\n';
   //Table=Table+'<div>IL=['+IL+']; IR=['+IR+'];</div>\n';
 
-  Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
+  Table=Table+'\n<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
   for (let i=0;i<IR.length;i++) {
     let ir=IR[i];
     Table=Table+'<wr><wd>&ctdot;</wd>';
@@ -1192,12 +1090,12 @@ function bestimme_Matrix_0(IL,IR) {
       }
     Table=Table+'<wd>=</wd><wd><mat><op>J</op><co><su>F</su><su>X</su></co></mat></wd><wd>·</wd>';
     if (IR[i]<4) Table=Table+'<we>'+IT[IR[i]]+'</we>'; else Table=Table+'<wd>'+IT[IR[i]]+'</wd>';
-    Table=Table+'<wd></wd><wd><gl3 id="gl...">...</gl3></wd></wr>\n';
+    Table=Table+'<wd></wd><wd>'+GN()+'</wd></wr>\n';
     }
   
   Table=Table+'</wbody></wable></div>\n';
 
-  JWR='<div style="display:flex; overflow:auto; border:"><var><mat><op><u>J</u></op><co><su>F</su><su>X</su></co></mat> = <mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
+  JWR='\n<div style="display:flex; overflow:auto; border:"><var><mat><op><u>J</u></op><co><su>F</su><su>X</su></co></mat> = <mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
   if (hf&&gf&&lf&&kf) JWR=JWR+/*' +h+g+l+k '*/'+'
     +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
     +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
@@ -1209,16 +1107,16 @@ function bestimme_Matrix_0(IL,IR) {
   if (lf&&gf) JWR=JWR+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'+bestimme_JFX(0,3);
   if (hf&&kf) JWR=JWR+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'+bestimme_JFX(2,1);
   if (lf&&kf) JWR=JWR+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'+bestimme_JFX(2,3);
-  JWR=JWR+'</var> <span style="align-self:center"><gl3 id="gl...">...</gl3></span></div>\n';
+  JWR=JWR+'</var>&nbsp;&nbsp;<span style="align-self:center">'+GN()+'</span></div>\n';
   Table=Table+JWR;
 
-  Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
+  Table=Table+'\n<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
   for (let j=0;j<IL.length;j++) {
     let il=IL[j];
-    Table=Table+'<wr><wd>vor '+IT[IL[j]]+':</wd></wr>\n';
+    Table=Table+'<wr><wd>'+IT[IL[j]]+':</wd></wr>\n';
     for (let i=0;i<IR.length;i++) {
       let ir=IR[i];
-      Table=Table+'<wr id="'+bestimme_JFX(il,ir)+IL+','+IR+'"><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
+      Table=Table+'<wr id="'+il+','+ir+','+IL+','+IR+'"><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
 
       Table=Table+'</wd><wd>';
       if (il!=0&&il!=2&&ir!=1&&ir!=3) if (hf&&gf&&lf&&kf) Table=Table+/*' +h+g+l+k '*/'+'
@@ -1319,7 +1217,7 @@ function bestimme_Matrix_0(IL,IR) {
       if (!hf&&!kf) if (il==1&&ir==2) Table=Table+/*' -h-k '*/'+d<sub><vk/><vh/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
       Table=Table+'</wd><wd>';
       if (!lf&&!kf) if (il==3&&ir==2) Table=Table+/*' -l-k '*/'+d<sub><vk/><vl/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
-      Table=Table+'</wd><wd><gl3 id="gl...">...</gl3></wd></wr>\n';
+      Table=Table+'</wd><wd>'+GN()+'</wd></wr>\n';
       }
     }
   Table=Table+'</wbody></wable></div>\n';
@@ -1355,13 +1253,16 @@ function bestimme_Matrix_0(IL,IR) {
 <div id="Ausgabe_Koeffizient3"> </div><hr/>
 <button onclick="err=false;zufaellig_weiter(true)">einmal zufällig weiter</button>
 <div id='aktuell'></div>
-<div id="id_Ausgabe_zum_Artikel">zum Artikel</div>
+<div id="id_Ausgabe_zum_Artikel">warte</div>
 
   </div>
-<div id="id_Ausgabe2_zum_Artikel">zum Artikel</div>
+<div id="id_Ausgabe2_zum_Artikel">warte</div>
 
   </div>
-<div style="height:800px">...</div>
+<div id="id_Ausgabe3_zum_Artikel" style='white-space:pre; overflow:auto'>warte</div>
+
+  </div>
+<div style="height:800px">warte</div>
 
   </body>
   </html>
