@@ -514,7 +514,7 @@ function Berechnung_Koeffizient_aus_J(i,j,td_class,npiv) {
     if (td_class=='xx') { l=D[j];    h=B[i];    ghkl=[l,h]; pqrs=[7,5]; if (l==ll) pqrs[0]=3; if (l==hh) pqrs[0]=1; if (h==ll) pqrs[1]=3; if (h==hh) pqrs[1]=1}
     //RET=RET+'; pqrs='+pqrs+'; ';
     RET=RET+'ab <gl4>124?</gl4>, konkret mit '+'ghklpqrs'[pqrs[0]]+'='+ghkl[0]+', '+'ghklpqrs'[pqrs[1]]+'='+ghkl[1]+' nach Gleichung '
-    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1])+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#id_Ausgabe_zum_Artikel">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
+    RET=RET+'<var>'+bestimme_JFX(pqrs[0],pqrs[1],true)+'='+bestimme_JFX(pqrs[0],pqrs[1])+'…</var> von <a href="#'+bestimme_JFX(pqrs[0],pqrs[1])+'">weiter unten</a>, g,h,k,l von <a href="#id_g4">oben</a>.</div>';
     } } else RET=RET+'<gl>27</gl> bis <gl>86</gl>.</div>';
   RET=RET+'<div>Als Probe die zusätzliche ausführliche Berechnung von <span style="border:solid blue; padding:3px; min-height:20px;">';
   if (j==-1) {
@@ -1069,7 +1069,7 @@ function bestimme_Matrix_4() {
   if (lf&&gf) JWR=JWR+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'+bestimme_JFX(0,3);
   if (hf&&kf) JWR=JWR+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'+bestimme_JFX(2,1);
   if (lf&&kf) JWR=JWR+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'+bestimme_JFX(2,3);
-  JWR=JWR+'</var></div>\n';
+  JWR=JWR+'</var> <span style="align-self:center"><gl3 id="gl...">...</gl3></span></div>\n';
   Table=Table+JWR;
 
   Table=Table+'<div style="display:flex; overflow:auto; border:"><wable><wbody>\n';
@@ -1078,10 +1078,10 @@ function bestimme_Matrix_4() {
     Table=Table+'<wr><wd>vor '+IT[IL[j]]+':</wd></wr>\n';
     for (let i=0;i<IR.length;i++) {
       let ir=IR[i];
-      Table=Table+'<wr><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
+      Table=Table+'<wr id="'+bestimme_JFX(il,ir)+'"><wd>'+bestimme_JFX(il,ir,true)+'</wd><wd>=</wd><wd>'+bestimme_JFX(il,ir);
 
       Table=Table+'</wd><wd>';
-      if (hf&&gf&&lf&&kf) Table=Table+/*' +h+g+l+k '*/'+'
+      if (il!=0&&il!=2&&ir!=1&&ir!=3) if (hf&&gf&&lf&&kf) Table=Table+/*' +h+g+l+k '*/'+'
         +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
         +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
         +opr+'·'
@@ -1091,25 +1091,25 @@ function bestimme_Matrix_4() {
         +opy;
 
       Table=Table+'</wd><wd>';
-      if (hf&&!gf&&lf&&kf) if (ir==0) Table=Table+/*' +h-g+l+k '*/'+'
+      if (il!=2) if (hf&&!gf&&lf&&kf) if (ir==0) Table=Table+/*' +h-g+l+k '*/'+'
         +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
         +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
         +opr+'·'+opl+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)
         +opm+bestimme_JFX(2,1)+' '+bestimme_JFX(2,3)+opr+opz;
       Table=Table+'</wd><wd>';
-      if (hf&&gf&&lf&&!kf) if (ir==2) Table=Table+/*' +h+g+l-k '*/'+'
+      if (il!=0) if (hf&&gf&&lf&&!kf) if (ir==2) Table=Table+/*' +h+g+l-k '*/'+'
         +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
         +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
         +opr+'·'+opl+bestimme_JFX(il,1)+' '+bestimme_JFX(il,3)
         +opm+bestimme_JFX(0,1)+' '+bestimme_JFX(0,3)+opr+opz;
       Table=Table+'</wd><wd>';
-      if (!hf&&gf&&lf&&kf) if (il==1) Table=Table+/*' -h+g+l+k '*/'+'
+      if (ir!=3) if (!hf&&gf&&lf&&kf) if (il==1) Table=Table+/*' -h+g+l+k '*/'+'
         +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
         +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
         +opr+'·'+opl+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
         +opm+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)+opr+opz;
       Table=Table+'</wd><wd>';
-      if (hf&&gf&&!lf&&kf) if (il==3) Table=Table+/*' +h+g-l+k '*/'+'
+      if (ir!=1) if (hf&&gf&&!lf&&kf) if (il==3) Table=Table+/*' +h+g-l+k '*/'+'
         +opl+'<span>d<sub><vg/><vh/></sub></span><span>d<sub><vk/><vh/></sub></span>'
         +opm+'<span>d<sub><vg/><vl/></sub></span><span>d<sub><vk/><vl/></sub></span>'
         +opr+'·'+opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,ir)
@@ -1137,19 +1137,19 @@ function bestimme_Matrix_4() {
         +opr+'·'+bestimme_JFX(2,1);
 
       Table=Table+'</wd><wd>';
-      if (hf&&gf) Table=Table+/*' +h+g '*/'+d<sub><vg/><vh/></sub>·'
+      if (il!=0&&ir!=1) if (hf&&gf) Table=Table+/*' +h+g '*/'+d<sub><vg/><vh/></sub>·'
         +opl+bestimme_JFX(0,1)+' '+bestimme_JFX(0,ir)
         +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,ir)+opr+opz;
       Table=Table+'</wd><wd>';
-      if (lf&&gf) Table=Table+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'
+      if (il!=0&&ir!=3) if (lf&&gf) Table=Table+/*' +l+g '*/'+d<sub><vg/><vl/></sub>·'
         +opl+bestimme_JFX(0,3)+' '+bestimme_JFX(0,ir)
         +opm+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr+opz;
       Table=Table+'</wd><wd>';
-      if (hf&&kf) Table=Table+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'
+      if (il!=2&&ir!=1) if (hf&&kf) Table=Table+/*' +h+k '*/'+d<sub><vk/><vh/></sub>·'
         +opl+bestimme_JFX(2,1)+' '+bestimme_JFX(2,ir)
         +opm+bestimme_JFX(il,1)+' '+bestimme_JFX(il,ir)+opr+opz;
       Table=Table+'</wd><wd>';
-      if (lf&&kf) Table=Table+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'
+      if (il!=2&&ir!=3) if (lf&&kf) Table=Table+/*' +l+k '*/'+d<sub><vk/><vl/></sub>·'
         +opl+bestimme_JFX(2,3)+' '+bestimme_JFX(2,ir)
         +opm+bestimme_JFX(il,3)+' '+bestimme_JFX(il,ir)+opr+opz;
 
@@ -1179,7 +1179,7 @@ function bestimme_Matrix_4() {
       if (!hf&&!kf) if (il==1&&ir==2) Table=Table+/*' -h-k '*/'+d<sub><vk/><vh/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
       Table=Table+'</wd><wd>';
       if (!lf&&!kf) if (il==3&&ir==2) Table=Table+/*' -l-k '*/'+d<sub><vk/><vl/></sub>·<mat><op>J</op><co><su>F</su><su>X</su></co></mat>';
-      Table=Table+'</wd></wr>\n';
+      Table=Table+'</wd><wd><gl3 id="gl...">...</gl3></wd></wr>\n';
       }
     }
   Table=Table+'</wbody></wable></div>\n';
@@ -1319,10 +1319,11 @@ function bestimme_Matrix_4() {
 <p style='display:flex; flex-direction:row; overflow:auto;'><div id="id_HCode_Matrix_3"> </div></p>
 <div id="Ausgabe_Koeffizient3"> </div><hr/>
 <button onclick="err=false;zufaellig_weiter(true)">einmal zufällig weiter</button>
+<div id='aktuell'></div>
 <div id="id_Ausgabe_zum_Artikel">zum Artikel</div>
-<span id='aktuell'> </span>
 
   </div>
+<div style="height:800px">...</div>
 
   </body>
   </html>

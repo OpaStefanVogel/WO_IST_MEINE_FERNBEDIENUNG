@@ -457,9 +457,9 @@ function mindist(x1,y1,TV) {
   }
 
 function Gipfel() {
-  var gipf=[["MEZ       Lat.        Lon.            Höhe    km    Haltestelle"]];
+  var gipf=[["Lat.        Lon.            Höhe    km    MEZ       Haltestelle"]];
   for (var i=0;i<TV.length;i++) if (TV[i][16]) {
-    gipf.push([TV[i][1]+"  "+TV[i][2].toFixed(8)+" "+TV[i][3].toFixed(8)+"     "+TV[i][5]+"     "+TV[i][11]+"   "+TV[i][16]]);
+    gipf.push([TV[i][2].toFixed(8)+" "+TV[i][3].toFixed(8)+"     "+TV[i][5]+"     "+TV[i][11]+"   "+TV[i][1]+"  "+TV[i][16]]);
     var graphG=graphGipf.cloneNode();
     graphG.setAttribute("cx",TV[i][12]);
     graphG.setAttribute("cy",TV[i][13]);
