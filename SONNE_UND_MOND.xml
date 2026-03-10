@@ -47,7 +47,7 @@
   <rect x="10" y="10" ry="5" width="80" height="160" fill="green" style="fill:limegreen; stroke:black;" />
   </a>
 
-<foreignObject x="700" y="10" width="300" height="400" style="border:solid"><div style='display:flex; flex-direction: column-reverse; align-items: flex-end;  overflow:auto' xmlns="http://www.w3.org/1999/xhtml"><table id='bod' xmlns="http://www.w3.org/1999/xhtml"> </table></div></foreignObject>
+<foreignObject x="660" y="10" width="300" height="400" style="border:solid"><div style='display:flex; flex-direction: column-reverse; align-items: flex-end;  overflow:auto' xmlns="http://www.w3.org/1999/xhtml"><table id='bod' xmlns="http://www.w3.org/1999/xhtml"> </table></div></foreignObject>
 
 <script type="application/ecmascript"> 
 <![CDATA[ 
