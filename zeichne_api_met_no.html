@@ -10,6 +10,7 @@
 
   <svg id="Grafik" width=90% height=90% style="border:solid 1px black" fill="none" stroke="black">
     <title>SVG C-Gleis</title>
+    <text id="Tag" x="300" y="20" stroke='none' fill='gray'>  </text>
     <g id='content'>
     <path id='idh' d='M0,0 L100,100' stroke='aqua'/>
     <path id='idd' d='M0,0 L100,100' stroke='lightgray'/>
@@ -145,16 +146,23 @@ function init() {
   d1='M0,0 L';
   d2='M0,0 L';
   for (let i=0;i<timeseries.length;i++) {
-    time=Date.parse(timeseries[i].time);
+    time=new Date(timeseries[i].time);
     x=(time-time0)/3600000*5;
-    dh=dh+x+',270 '+x+',0 '+x+',270 ';
-    if (((time/(1000*60*60)))%6==4) dd=dd+x+',270 '+x+',100 '+x+',270 ';
-    if (((time/(1000*60*60)))%12==10) dd=dd+x+',50 '+x+',270 ';
-    if (((time/(1000*60*60)))%24==22) dd=dd+x+',0 '+x+',270 ';
+    if (((time/(1000*60*60)))%6==0) dd=dd+(x-10)+',270 '+(x-10)+',100 '+(x-10)+',270 ';
+    if (((time/(1000*60*60)))%12==0) dd=dd+(x-10)+',50 '+(x-10)+',270 ';
+    if (((time/(1000*60*60)))%24==0) dd=dd+(x-10)+',0 '+(x-10)+',270 ';
+    if (((time/(1000*60*60)))%24==12) {
+      let T=Tag.cloneNode(true);
+      T.setAttribute('x',x-20);
+      T.removeAttribute('id');
+      T.innerHTML=(['So','Mo','Di','Mi','Do','Fr','Sa'])[time.getDay()];
+      content.appendChild(T);
+      }
     instant=timeseries[i].data.instant;
     d1=d1+x+','+(300-(instant.details.air_temperature*10))+' ';
     next_1_hours=timeseries[i].data.next_1_hours;
     next_6_hours=timeseries[i].data.next_6_hours;
+    if (next_1_hours) dh=dh+x+',270 '+x+',0 '+x+',270 ';
     if (next_1_hours) d2=d2+x+','+(260-(next_1_hours.details.precipitation_amount*240))+' '; 
       else if (next_6_hours) d2=d2+x+','+(260-(next_6_hours.details.precipitation_amount*40))+' ';
     }
