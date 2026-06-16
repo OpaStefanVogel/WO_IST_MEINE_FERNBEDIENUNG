@@ -1,0 +1,173 @@
+<html>
+<head>
+  <title>zeichne_api_met_no.html</title>
+  <meta charset="utf-8"/>
+  <head>
+
+<!-- <EISENB><HILLI>ok hab d=(Math.sqrt(7)-2)/3*R</HILLI></EISENB> -->
+<body>
+<p>Datenquelle: <a href='https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922'>https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922</a></p>
+
+  <svg id="Grafik" width=90% height=90% style="border:solid 1px black" fill="none" stroke="black">
+    <title>SVG C-Gleis</title>
+    <g id='content'>
+    <path id='idh' d='M0,0 L100,100' stroke='aqua'/>
+    <path id='idd' d='M0,0 L100,100' stroke='lightgray'/>
+    <path id='id1' d='M0,0 L100,100'/>
+    <path id='id2' d='M0,0 L100,100' stroke='blue'/>
+    
+    </g>
+  </svg>
+
+<div id='id_json' style='white-space:pre'>
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [12.9292, 50.8357, 315]
+  },
+  "properties": {
+    "meta": {
+      "updated_at": "2026-06-15T01:16:00Z",
+      "units": {
+        "air_pressure_at_sea_level": "hPa",
+        "air_temperature": "celsius",
+        "air_temperature_max": "celsius",
+        "air_temperature_min": "celsius",
+        "cloud_area_fraction": "%",
+        "cloud_area_fraction_high": "%",
+        "cloud_area_fraction_low": "%",
+        "cloud_area_fraction_medium": "%",
+        "dew_point_temperature": "celsius",
+        "fog_area_fraction": "%",
+        "precipitation_amount": "mm",
+        "relative_humidity": "%",
+        "ultraviolet_index_clear_sky": "1",
+        "wind_from_direction": "degrees",
+        "wind_speed": "m/s"
+      }
+    },
+    "timeseries": [
+      {
+        "time": "2026-06-15T05:00:00Z",
+        "data": {
+          "instant": {
+            "details": {
+              "air_pressure_at_sea_level": 1013.9,
+              "air_temperature": 10.5,
+              "cloud_area_fraction": 84.4,
+              "cloud_area_fraction_high": 0,
+              "cloud_area_fraction_low": 57,
+              "cloud_area_fraction_medium": 72.7,
+              "dew_point_temperature": 7.9,
+              "fog_area_fraction": 0,
+              "relative_humidity": 83.8,
+              "ultraviolet_index_clear_sky": 0.5,
+              "wind_from_direction": 263.6,
+              "wind_speed": 4.8
+            }
+          },
+          "next_12_hours": {
+            "summary": {
+              "symbol_code": "lightrainshowers_day"
+            },
+            "details": {
+
+            }
+          },
+          "next_1_hours": {
+            "summary": {
+              "symbol_code": "partlycloudy_day"
+            },
+            "details": {
+              "precipitation_amount": 0
+            }
+          },
+          "next_6_hours": {
+            "summary": {
+              "symbol_code": "lightrain"
+            },
+            "details": {
+              "air_temperature_max": 14.6,
+              "air_temperature_min": 11.1,
+              "precipitation_amount": 0.5
+            }
+          }
+        }
+      }...
+  </div>
+
+</body>
+
+<style type="text/css">
+
+
+  </style>
+
+
+
+
+
+<script>
+addEventListener('error',function(event) {alert('Fehlerausgabe von window.addEventListener("error",...)\n'+event+'\n'+event.error.name+'\n'+event.error.cause+'\n'+event.error.stack+'\n'+event.error.columnNumber+'\n'+event.error.fileName+'\n'+event.error.lineNumber+'\n'+event.error.message)});
+onerror=function(message, file, line, col, error) {alert('Fehlerausgabe von window.onerror\nmessage '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error)};
+
+
+let flow=0;
+let timeseries=0;
+let instant=0;
+let next_1_hours=0;
+let next_6_hours=0;
+let dh='';
+let dd='';
+let d1='';
+let d2='';
+let time=0;
+let time0=0;
+let x=0;
+
+//aus https://youtu.be/XW3w0KmF2fo?is=z67s6SfPDa6-WV24 das geht endlich
+async function LoadFlow() {
+  //alert('LoadFlow() gestartet');
+  let response = await fetch('../RADIOPI/api_met_no.json');
+  //alert(response);
+  flow = await response.json();
+  //alert(JSON.stringify(flow));
+  //id_json.innerHTML=JSON.stringify(flow.properties.timeseries[0]).replace(/,/g,',\n');
+  init();
+  }
+
+function init() {
+  timeseries=flow.properties.timeseries;
+  time0=Date.parse(timeseries[0].time);
+  dh='M0,0 L';
+  dd='M0,270 L';
+  d1='M0,0 L';
+  d2='M0,0 L';
+  for (let i=0;i<timeseries.length;i++) {
+    time=Date.parse(timeseries[i].time);
+    x=(time-time0)/3600000*5;
+    dh=dh+x+',270 '+x+',0 '+x+',270 ';
+    if (((time/(1000*60*60)))%6==4) dd=dd+x+',270 '+x+',100 '+x+',270 ';
+    if (((time/(1000*60*60)))%12==10) dd=dd+x+',50 '+x+',270 ';
+    if (((time/(1000*60*60)))%24==22) dd=dd+x+',0 '+x+',270 ';
+    instant=timeseries[i].data.instant;
+    d1=d1+x+','+(300-(instant.details.air_temperature*10))+' ';
+    next_1_hours=timeseries[i].data.next_1_hours;
+    next_6_hours=timeseries[i].data.next_6_hours;
+    if (next_1_hours) d2=d2+x+','+(260-(next_1_hours.details.precipitation_amount*240))+' '; 
+      else if (next_6_hours) d2=d2+x+','+(260-(next_6_hours.details.precipitation_amount*40))+' ';
+    }
+  
+  idh.setAttribute('d',dh);
+  idd.setAttribute('d',dd);
+  id1.setAttribute('d',d1);
+  id2.setAttribute('d',d2);
+  }
+
+LoadFlow();
+
+
+</script>
+
+  </html>
