@@ -6,7 +6,8 @@
 
 <!-- <EISENB><HILLI>ok hab d=(Math.sqrt(7)-2)/3*R</HILLI></EISENB> -->
 <body>
-<p>Datenquelle: <a href='https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922'>https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922</a></p>
+<p>Datenquelle: <a href='https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922'>https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922</a>
+oder 50.25535 12.28012</p>
 
   <svg id="Grafik" width=90% height=90% style="border:solid 1px black" fill="none" stroke="black">
     <title>SVG C-Gleis</title>
@@ -16,6 +17,16 @@
     <path id='idd' d='M0,0 L100,100' stroke='lightgray'/>
     <path id='id1' d='M0,0 L100,100'/>
     <path id='id2' d='M0,0 L100,100' stroke='blue'/>
+    <path id='id3' d='M0,0 L100,100' stroke='gray'/>
+    <path id='id4' d='M0,0 L100,100' stroke='gray'/>
+    <path id='id5' d='M0,0 L100,100' stroke='gray'/>
+    <path id='id6' d='M0,0 L100,100' stroke='gray'/>
+    <path id='id7' d='M0,0 L100,100' stroke='aqua'/>
+    <path id='id8' d='M0,0 L100,100' stroke='lime'/>
+    <path id='id9' d='M0,0 L100,100' stroke='orange'/>
+    <path id='id10' d='M0,0 L100,100' stroke='green'/>
+    <path id='id11' d='M0,0 L100,100' stroke='lavender'/>
+    <path id='id12' d='M0,0 L100,100' stroke='teal'/>
     
     </g>
   </svg>
@@ -113,7 +124,6 @@
 addEventListener('error',function(event) {alert('Fehlerausgabe von window.addEventListener("error",...)\n'+event+'\n'+event.error.name+'\n'+event.error.cause+'\n'+event.error.stack+'\n'+event.error.columnNumber+'\n'+event.error.fileName+'\n'+event.error.lineNumber+'\n'+event.error.message)});
 onerror=function(message, file, line, col, error) {alert('Fehlerausgabe von window.onerror\nmessage '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error)};
 
-
 let flow=0;
 let timeseries=0;
 let instant=0;
@@ -123,14 +133,27 @@ let dh='';
 let dd='';
 let d1='';
 let d2='';
+let d3='';
+let d4='';
+let d5='';
+let d6='';
+let d7='';
+let d8='';
+let d9='';
+let d10='';
+let d11='';
+let d12='';
+
 let time=0;
 let time0=0;
 let x=0;
 
-//aus https://youtu.be/XW3w0KmF2fo?is=z67s6SfPDa6-WV24 das geht endlich
+//aus https://youtu.be/XW3w0KmF2fo?is=z67s6SfPDa6-WV24 das geht endlich https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922
 async function LoadFlow() {
   //alert('LoadFlow() gestartet');
-  let response = await fetch('../RADIOPI/api_met_no.json');
+  let response0 = await fetch('../RADIOPI/api_met_no.json');
+  let response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.8357&lon=12.92922');
+  let response1 = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/?lat=50.25535&lon=12.28012');
   //alert(response);
   flow = await response.json();
   //alert(JSON.stringify(flow));
@@ -145,6 +168,16 @@ function init() {
   dd='M0,270 L';
   d1='M0,0 L';
   d2='M0,0 L';
+  d3='M0,0 L';
+  d4='M0,0 L';
+  d5='M0,0 L';
+  d6='M0,0 L';
+  d7='M0,0 L';
+  d8='M0,0 L';
+  d9='M0,0 L';
+  d10='M0,0 L';
+  d11='M0,0 L';
+  d12='M0,0 L';
   for (let i=0;i<timeseries.length;i++) {
     time=new Date(timeseries[i].time);
     x=(time-time0)/3600000*5;
@@ -165,12 +198,32 @@ function init() {
     if (next_1_hours) dh=dh+x+',270 '+x+',0 '+x+',270 ';
     if (next_1_hours) d2=d2+x+','+(260-(next_1_hours.details.precipitation_amount*240))+' '; 
       else if (next_6_hours) d2=d2+x+','+(260-(next_6_hours.details.precipitation_amount*40))+' ';
+    d3=d3+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
+    d4=d4+x+','+(450-(instant.details.cloud_area_fraction_high*1))+' ';
+    d5=d5+x+','+(500-(instant.details.cloud_area_fraction_medium*1))+' ';
+    d6=d6+x+','+(550-(instant.details.cloud_area_fraction_low*1))+' ';
+    d7=d7+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
+    d8=d8+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
+    d9=d9+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
+    d10=d10+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
+    d11=d11+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
+    d12=d12+x+','+(400-(instant.details.cloud_area_fraction*1))+' ';
     }
-  
+//alert(d3);  
   idh.setAttribute('d',dh);
   idd.setAttribute('d',dd);
   id1.setAttribute('d',d1);
   id2.setAttribute('d',d2);
+  id3.setAttribute('d',d3);
+  id4.setAttribute('d',d4);
+  id5.setAttribute('d',d5);
+  id6.setAttribute('d',d6);
+  id7.setAttribute('d',d7);
+  id8.setAttribute('d',d8);
+  id9.setAttribute('d',d9);
+  id10.setAttribute('d',d10);
+  id11.setAttribute('d',d11);
+  id12.setAttribute('d',d12);
   }
 
 LoadFlow();
