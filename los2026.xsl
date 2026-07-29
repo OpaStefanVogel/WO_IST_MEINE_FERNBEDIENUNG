@@ -20,7 +20,9 @@ function liste(tagname) {
   del.removeChild(del.lastChild);
   tl=document.getElementsByTagName(tagname);
 //  alert(tl.length);
+//  alert(tl[0].outerHTML);
 //  alert(tl[0].nodeName);
+//  alert(tl[0].getAttribute('color'));
 //  alert(tl[0].firstChild.nodeValue);
   textteil="";
   divges=document.createElement("ol");
@@ -200,6 +202,8 @@ Anfangssumme("HEU");//als letztes lassen
 
 <xsl:template match="style"><xsl:copy-of select="." /></xsl:template>
 <xsl:template match="script"><xsl:copy-of select="." /></xsl:template>
+<xsl:template match="YT"><YT>YT:<a><xsl:attribute name="href"><xsl:value-of select="substring-before(.,'?')" /></xsl:attribute>
+  <xsl:copy-of select="substring-after(.,' ')" /></a></YT></xsl:template>
 <xsl:template match="*">
   <xsl:if test="@tagname">
     <style>
@@ -208,7 +212,11 @@ Anfangssumme("HEU");//als letztes lassen
       </style>
     <span style='display:block'></span>
     </xsl:if>
-  <xsl:copy><xsl:apply-templates /></xsl:copy>
+  <xsl:copy>
+    <!--xsl:attribute name="onload">alert(99);//<xsl:value-of select="@funkt"/>()</xsl:attribute-->
+    <xsl:apply-templates />
+    <!--script>alert('<xsl:value-of select="@tagname"/>')</script-->
+    </xsl:copy>
   </xsl:template>
 
 <xsl:template match="Alizee">
