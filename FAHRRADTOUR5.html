@@ -369,11 +369,12 @@ var Track=eval(document.documentURI.split("?")[1].split(".")[0]);
 var WPunkte=[];
 function Trackplot() {
   //alert(Track.join("\n"));
-  //alert(Track[9]);
+  TV=[];
+  if (flag) alert('Track[9]='+Track[9]);
   for (var i=2;i<Track.length;i++) if (Track[i].slice(0,1)=="T") {
     var T=[];
     var S=Track[i].split(",");
-    //alert(i+"\n"+S.join("\n"));
+    //if (flag) alert(i+"\n"+S.join("\n"));
     T[2]=S[2]*1.0;
     T[3]=S[3]*1.0;
     T[5]=Math.floor(S[5]*1.0);
@@ -404,7 +405,7 @@ function Trackplot() {
     }
   TV[1][16]="los";
   
-  //alert(TV.join("\n"));
+  if (flag) alert(TV.join("\n"));
   //alert(TV.length);
   for (var i=0;i<TV.length;i++) {
     var xy=xyrech(TV[i][2],TV[i][3]);
@@ -439,7 +440,7 @@ function Trackplot() {
     d=d+" "+TV[i][12]+","+TV[i][13];
     if (TV[i][10]!=TV[i-1][10]) d=d+"h 6 h -6 L";
     }
-  //alert(d);
+  if (flag) alert(d);
   document.getElementById("Track").setAttribute("d",d);
   position_merk.coords.latitude=TV[0][2];
   position_merk.coords.longitude=TV[0][3];
@@ -528,6 +529,29 @@ function onl() {
 //requestAnimationFrame(onl);
   </script>
 
+<script>
+let x_m_l=new DOMParser();
+let doc='';
+let flag=false;
+async function LoadFlow() {
+  //alert('LoadFlow() gestartet');
+  let response = await fetch('../BackUpToDropBoxSyn/tracks/20260801-153201 - Unterheinsdorf.gpx');
+  flow = await response.text();
+  //alert(flow);
+  doc=x_m_l.parseFromString(flow,"text/xml");
+// von <trkpt lat="50.61108536" lon="12.33315670"><ele>409.970</ele><time>2026-08-01T13:32:13.999Z</time><speed>0.000</speed><sat>18</sat></trkpt>
+//nach "T,2022-03-18 03:03:35,50.25538543,12.28011525,11,548,47.077,0.000,,14,43,,",
+//"type,date time,latitude,longitude,accuracy(m),altitude(m),geoid_height(m),speed(m/s),bearing(deg),sat_used,sat_inview,name,desc",
+  doc=doc.getElementsByTagName('trkpt');
+  Track=[];
+  for (let i=0;i<doc.length;i++) Track.push('T,'+doc[i].firstElementChild.nextElementSibling.innerHTML.replace('T',' ').replace('Z','')+','+doc[i].getAttribute('lat')+','+doc[i].getAttribute('lon')+',11,'+doc[i].firstElementChild.innerHTML+',49,'+doc[i].firstElementChild.nextElementSibling.nextElementSibling.innerHTML+',,'+doc[i].lastElementChild.innerHTML+','+doc[i].lastElementChild.innerHTML+',,,');
+  //alert(Track.join('\n'));
+  flag=false;
+  Trackplot();Gipfel();Sprich("Es kann nochmal losgehen")
+  }
+
+setTimeout(LoadFlow,2000);
+  </script>
 
 </body>
 </html>
