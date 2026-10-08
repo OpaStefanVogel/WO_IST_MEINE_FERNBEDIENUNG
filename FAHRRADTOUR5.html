@@ -12,7 +12,7 @@
 
   </style>
 </head>
-<body onload='getLocation();InitBatteryStatus();Trackplot();Gipfel();Sprich("Es kann losgehen")'>
+<body onload='getLocation();InitBatteryStatus();Trackplot();Gipfel(0);Sprich("Es kann losgehen")'>
 <button onclick='Sprich("Es geht los")'>Los</button>
 <button onclick='bisherige_Distanzmarkierung=-1;bisheriger_Gipfel=-1;Batterielevel_vorher=101;showPosition(position_merk)'>nächster Gipfel</button>, 
 <button onclick="Simulator()">Simulator</button>
@@ -203,9 +203,10 @@ function showPosition(position) {
   var Gipfel_erreicht=false;
   if (gipf!=bisheriger_Gipfel) {
     if (bisheriger_Gipfel==-1) bisheriger_Gipfel=1;
-    if (TV[bisheriger_Gipfel][16].length!="geschafft") {
+    if (TV[bisheriger_Gipfel][16]!="geschafft") {
       Sprich("Vor deiner Nase liegt der Berggipfel "+TV[bisheriger_Gipfel][16]+", bei Höhe "+(TV[bisheriger_Gipfel][5])+", und Kilometer "+(TV[bisheriger_Gipfel][11])+", ");
       TV[bisheriger_Gipfel][16]="geschafft";
+      Gipfel(bisheriger_Gipfel);
       }
     bisheriger_Gipfel=gipf;
     Gipfel_erreicht=true;
@@ -342,9 +343,9 @@ function Sprich(was) {
   //start();
   }
 
-//alert(new AudioContext());
-//alert(8);
-//Sprich("Es kann losgehen");
+alert(new AudioContext());
+alert(8);
+Sprich("Es kann losgehen");
   </script>
 
 <!--script src="../../Track_Raun_ueber_Wohlhausen.js" type="text/javascript"></script-->
@@ -457,9 +458,9 @@ function mindist(x1,y1,TV) {
   return [imin,min];
   }
 
-function Gipfel() {
+function Gipfel(ia) {
   var gipf=[["Lat.        Lon.            Höhe    km    MEZ       Haltestelle"]];
-  for (var i=0;i<TV.length;i++) if (TV[i][16]) {
+  for (var i=ia+1;i<TV.length;i++) if (TV[i][16]) {
     gipf.push([TV[i][2].toFixed(8)+" "+TV[i][3].toFixed(8)+"     "+TV[i][5]+"     "+TV[i][11]+"   "+TV[i][1]+"  "+TV[i][16]]);
     var graphG=graphGipf.cloneNode();
     graphG.setAttribute("cx",TV[i][12]);
@@ -547,10 +548,10 @@ async function LoadFlow() {
   for (let i=0;i<doc.length;i++) Track.push('T,'+doc[i].firstElementChild.nextElementSibling.innerHTML.replace('T',' ').replace('Z','')+','+doc[i].getAttribute('lat')+','+doc[i].getAttribute('lon')+',11,'+doc[i].firstElementChild.innerHTML+',49,'+doc[i].firstElementChild.nextElementSibling.nextElementSibling.innerHTML+',,'+doc[i].lastElementChild.innerHTML+','+doc[i].lastElementChild.innerHTML+',,,');
   //alert(Track.join('\n'));
   flag=false;
-  Trackplot();Gipfel();Sprich("Es kann nochmal losgehen")
+  Trackplot();Gipfel(0);Sprich("Es kann nochmal losgehen")
   }
 
-setTimeout(LoadFlow,2000);
+//setTimeout(LoadFlow,2000);
   </script>
 
 </body>
