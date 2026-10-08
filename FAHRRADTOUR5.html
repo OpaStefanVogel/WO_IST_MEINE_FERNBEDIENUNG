@@ -23,10 +23,12 @@ getUserMedia audio: <svg width="200" height="10"><rect id="audio_rect" fill="red
 <div>50.71 12.76 Stollberg<div>
 <div>50.25520490,12.28000737 Raun</div>
 <p id="demo"> </p>
-<div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span>
+<main style='background-color:black; color:white; font-size:250%' ondblclick="if (rFs==false) {rFs=true;event.currentTarget.requestFullscreen()} else {rFs=false;document.exitFullscreen()}">
+<div>nahestgelegener Trackpunkt <span id="nahestgelegener_Trackpunkt"> </span></div>
+<div id="id_Ansage">id_Ansage</div>
 <div id="Gipfel" style="white-space:pre-wrap; font-family:monospace; font.size:80%">Gipfel</div>
 <div id='TV' class='Logfile'> </div>
-
+  </main>
 
 Batterie: 
   <div id="charging">(charging state unknown)</div>
@@ -226,6 +228,8 @@ function showPosition(position) {
     text="noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+", "+text+", schnell "+Geschwindigkeit+", Höhe "+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
     Sprich(text);
     text_noch.innerHTML=text;
+    text=text.replace('eher','<b style="background-color:white; color:green	">eher').replace('später','<b style="background-color:white; color:red">später').replace(', in','</b>, in')+" Batterie "+Math.floor(Batterielevel*100)+"% um "+(new Date(position.timestamp).toTimeString().slice(0,8))+' Uhr.';
+    id_Ansage.innerHTML=text;
     //if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
     if ((Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)%10==3)||Gipfel_erreicht) {
       var dat=new Date();
@@ -343,8 +347,8 @@ function Sprich(was) {
   //start();
   }
 
-alert(new AudioContext());
-alert(8);
+//alert(new AudioContext());
+//alert(8);
 Sprich("Es kann losgehen");
   </script>
 
@@ -459,9 +463,11 @@ function mindist(x1,y1,TV) {
   }
 
 function Gipfel(ia) {
-  var gipf=[["Lat.        Lon.            Höhe    km    MEZ       Haltestelle"]];
+//  var gipf=[["Lat.        Lon.            Höhe    km    MEZ       Haltestelle"]];
+  var gipf=[["Höhe km   MEZ   Haltestelle"]];
   for (var i=ia+1;i<TV.length;i++) if (TV[i][16]) {
-    gipf.push([TV[i][2].toFixed(8)+" "+TV[i][3].toFixed(8)+"     "+TV[i][5]+"     "+TV[i][11]+"   "+TV[i][1]+"  "+TV[i][16]]);
+//    gipf.push([TV[i][2].toFixed(8)+" "+TV[i][3].toFixed(8)+"     "+TV[i][5]+"     "+TV[i][11]+"   "+TV[i][1]+"  "+TV[i][16]]);
+    gipf.push([TV[i][5]+"  "+TV[i][11]+" "+TV[i][1].slice(0,5)+" "+TV[i][16]]);
     var graphG=graphGipf.cloneNode();
     graphG.setAttribute("cx",TV[i][12]);
     graphG.setAttribute("cy",TV[i][13]);
