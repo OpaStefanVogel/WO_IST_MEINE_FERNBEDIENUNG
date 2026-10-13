@@ -228,7 +228,7 @@ function showPosition(position) {
     text="noch "+Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)+", "+text+", schnell "+Geschwindigkeit+", Höhe "+Math.floor(position.coords.altitude-46.0)+", "+Vorsprung();
     Sprich(text);
     text_noch.innerHTML=text;
-    text=text.replace('eher','<b style="background-color:white; color:green	">eher').replace('später','<b style="background-color:white; color:red">später').replace(', in','</b>, in')+" ("+Math.floor(Batterielevel*100)+"%)";
+    text=text.replace('eher','<b style="background-color:white; color:green	">eher').replace('später','<b style="background-color:white; color:red">später').replace(', in','</b>, in').replace(' zu ',':')+" ("+Math.floor(Batterielevel*100)+"%)";
     id_Ansage.innerHTML=text;
     //if ((neue_Distanzmarkierung==Math.floor(neue_Distanzmarkierung))||Gipfel_erreicht) {
     if ((Math.round((TV[gipf][11]-TV[imin[0]][11])*10+1)%10==3)||Gipfel_erreicht) {
@@ -238,7 +238,7 @@ function showPosition(position) {
     pause=setTimeout(Pausenfunktion,88000);
     }
   Gipfel_erreicht=false;
-  id_nahestgelegener_Trackpunkt.innerHTML=(new Date(position.timestamp).toTimeString().slice(0,8))+' Uhr: nahestgelegener Trackpunkt <div>'+imin[0]+' '+TV[imin[0]][0].toFixed(15)+' '+neue_Distanzmarkierung+'</div>';
+  id_nahestgelegener_Trackpunkt.innerHTML=(new Date(position.timestamp).toTimeString().slice(0,8))+' Uhr: nahestgelegener Trackpunkt <div>'+imin[0]+' '+TV[imin[0]][0].toFixed(3)+' '+neue_Distanzmarkierung+'</div>';
   }
 
 function Vorsprung() {
@@ -358,6 +358,7 @@ Sprich("Es kann losgehen");
 <!--script src="../../Track_Raun_zurueck_ueber_Lugau.js" type="text/javascript"></script-->
 <script src="../BackUpToDropBoxSyn/Track_Raun_ueber_Lugau_und_Schoenlind.js" type="text/javascript"></script>
 <script src="../BackUpToDropBoxSyn/Track_Raun_zurueck_ueber_Leubetha_und_Lugau.js" type="text/javascript"></script>
+<script src="../BackUpToDropBoxSyn/Track_Raun_zurueck_ueber_Leubetha_und_Lugau_langsam.js" type="text/javascript"></script>
 <script src="../BackUpToDropBoxSyn/Track_Plauen.js" type="text/javascript"></script>
 <script src="../BackUpToDropBoxSyn/Track_Plauen_zurueck.js" type="text/javascript"></script>
 <script src="../BackUpToDropBoxSyn/Track_Haltepunkt_Raun.js" type="text/javascript"></script>
@@ -558,6 +559,31 @@ async function LoadFlow() {
   }
 
 //setTimeout(LoadFlow,2000);
+
+/* aus MDN fetch
+const request7 = new Request("https://example.org/post", {
+  method: "POST",
+  body: JSON.stringify({ username: "example" }),
+});
+
+const response1 = await fetch(request);
+console.log(response1.status);
+*/
+
+
+async function LoadFlow2() {
+  //alert('LoadFlow() gestartet');
+  let request7 = new Request("request7.txt", {
+    method: "POST",
+    body: JSON.stringify({ username: "example" }),
+    });
+  let response = await fetch(request7);
+  alert(response);
+  flow = await response.text();
+  alert(flow);
+  }
+
+//setTimeout(LoadFlow2,2000);
   </script>
 
 </body>
